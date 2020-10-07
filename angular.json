@@ -1,0 +1,167 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "crucible-common": {
+      "projectType": "library",
+      "root": "projects/@crucible-common",
+      "sourceRoot": "projects/@crucible-common/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/@crucible-common/tsconfig.lib.json",
+            "project": "projects/@crucible-common/ng-package.json"
+          }
+        ,          "configurations": {
+            "production": {
+              "tsConfig": "projects/@crucible-common/tsconfig.lib.prod.json"
+            }
+          }
+},
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/@crucible-common/src/test.ts",
+            "tsConfig": "projects/@crucible-common/tsconfig.spec.json",
+            "karmaConfig": "projects/@crucible-common/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/@crucible-common/tsconfig.lib.json",
+              "projects/@crucible-common/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        }
+      }
+    },
+    "cwd-common-app": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/cwd-common-app",
+      "sourceRoot": "projects/cwd-common-app/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/cwd-common-app",
+            "index": "projects/cwd-common-app/src/index.html",
+            "main": "projects/cwd-common-app/src/main.ts",
+            "polyfills": "projects/cwd-common-app/src/polyfills.ts",
+            "tsConfig": "projects/cwd-common-app/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "projects/cwd-common-app/src/favicon.ico",
+              "projects/cwd-common-app/src/assets"
+            ],
+            "styles": ["projects/cwd-common-app/src/styles.scss"],
+            "scripts": [],
+            "preserveSymlinks": true
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/cwd-common-app/src/environments/environment.ts",
+                  "with": "projects/cwd-common-app/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "cwd-common-app:build",
+            "sourceMap": {
+              "scripts": true,
+              "styles": false,
+              "vendor": true
+            }
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "cwd-common-app:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "cwd-common-app:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/cwd-common-app/src/test.ts",
+            "polyfills": "projects/cwd-common-app/src/polyfills.ts",
+            "tsConfig": "projects/cwd-common-app/tsconfig.spec.json",
+            "karmaConfig": "projects/cwd-common-app/karma.conf.js",
+            "assets": [
+              "projects/cwd-common-app/src/favicon.ico",
+              "projects/cwd-common-app/src/assets"
+            ],
+            "styles": ["projects/cwd-common-app/src/styles.scss"],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/cwd-common-app/tsconfig.app.json",
+              "projects/cwd-common-app/tsconfig.spec.json",
+              "projects/cwd-common-app/e2e/tsconfig.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/cwd-common-app/e2e/protractor.conf.js",
+            "devServerTarget": "cwd-common-app:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "cwd-common-app:serve:production"
+            }
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "cwd-common-app"
+}
