@@ -17,9 +17,9 @@ jobs:
       
       - name: Version Package
         run: |
-          npm version --no-git-tag-version ${{ github.event.inputs.version }}
+          npm version --allow-same-version --no-git-tag-version ${{ github.event.inputs.version }}
           cd projects/@crucible-common
-          npm version --no-git-tag-version ${{ github.event.inputs.version }}
+          npm version --allow-same-version --no-git-tag-version ${{ github.event.inputs.version }}
       
       - name: Build Package
         run: |
