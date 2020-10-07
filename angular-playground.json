@@ -1,0 +1,6 @@
+{
+  "sourceRoots": ["./projects/cwd-common/src"],
+  "angularCli": {
+    "appName": "playground"
+  }
+}
