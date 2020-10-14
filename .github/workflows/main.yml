@@ -45,6 +45,5 @@ jobs:
         uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_APIKEY }}
-          dry-run: true
           package: projects/@crucible-common/package.json
           access: public
