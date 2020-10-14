@@ -40,7 +40,7 @@ jobs:
           message: Update version number to ${{ github.event.inputs.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
+
       - name: Build Package
         run: |
           npm install @angular/cli
@@ -76,7 +76,10 @@ jobs:
           asset_name: cmusei-crucible-common-${{ github.event.inputs.version }}.tgz
           asset_content_type: application/zip
 
-      - uses: JS-DevTools/npm-publish@v1
+      - name: Publish to npmjs 
+        uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_APIKEY }}
+          dry-run: true
+          package: projects/@crucible-common/package.json
           access: public
