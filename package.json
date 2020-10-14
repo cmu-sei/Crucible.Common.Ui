@@ -1,6 +1,7 @@
 {
   "name": "cwd-common-app",
   "version": "0.0.3",
+  "license": "MIT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --aot",

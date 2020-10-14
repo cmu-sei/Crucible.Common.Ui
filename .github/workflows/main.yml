@@ -41,41 +41,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build Package
-        run: |
-          npm install @angular/cli
-          npm run pack
-
-      - name: Create Tag
-        id: tag_creation
-        run: |
-          SHA8=${GITHUB_SHA::8}
-          TAG=$SHA8-${{ github.event.inputs.version }}
-          echo $TAG
-          echo ::set-output name=tag::$TAG
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.tag_creation.outputs.tag }}
-          release_name: Release ${{ github.event.inputs.version }}
-          draft: false
-          prerelease: false
-
-      - name: Upload Release Asset
-        id: upload-release-asset 
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/@crucible-common/cmusei-crucible-common-${{ github.event.inputs.version }}.tgz
-          asset_name: cmusei-crucible-common-${{ github.event.inputs.version }}.tgz
-          asset_content_type: application/zip
-
       - name: Publish to npmjs
         uses: JS-DevTools/npm-publish@v1
         with:
