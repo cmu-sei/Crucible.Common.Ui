@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version of the Client package'     
+        description: 'Version of the Client package'
         required: true
 
 jobs:
@@ -31,7 +31,7 @@ jobs:
           npm version --allow-same-version --no-git-tag-version ${{ github.event.inputs.version }}
           cd projects/@crucible-common
           npm version --allow-same-version --no-git-tag-version ${{ github.event.inputs.version }}
-      
+
       - name: Add & Commit
         uses: EndBug/add-and-commit@v5.1.0
         with:
@@ -53,7 +53,7 @@ jobs:
           TAG=$SHA8-${{ github.event.inputs.version }}
           echo $TAG
           echo ::set-output name=tag::$TAG
-     
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -75,3 +75,8 @@ jobs:
           asset_path: ./dist/@crucible-common/cmusei-crucible-common-${{ github.event.inputs.version }}.tgz
           asset_name: cmusei-crucible-common-${{ github.event.inputs.version }}.tgz
           asset_content_type: application/zip
+
+      - uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_APIKEY }}
+          access: public
