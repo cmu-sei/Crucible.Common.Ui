@@ -14,18 +14,39 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+
+      - name: Get Branch Name
+        id: get_branch_name
+        run: |
+          FULLNAME=${{ github.ref }}
+          BRACHNAMEORIGIN=${FULLNAME#*/}
+          BRACHNAME=${BRACHNAMEORIGIN#*/}
+          echo ::set-output name=branch::$BRACHNAME
+
       - name: Version Package
         run: |
           npm version --allow-same-version --no-git-tag-version ${{ github.event.inputs.version }}
           cd projects/@crucible-common
           npm version --allow-same-version --no-git-tag-version ${{ github.event.inputs.version }}
       
+      - name: Add & Commit
+        uses: EndBug/add-and-commit@v5.1.0
+        with:
+          author_name: Github Actions
+          branch: ${{ steps.get_branch_name.outputs.name }}
+          message: Update version number to ${{ github.event.inputs.version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
       - name: Build Package
         run: |
+          cat package.json
           npm install @angular/cli
           npm run pack
-          
+
       - name: Create Tag
         id: tag_creation
         run: |
@@ -38,7 +59,7 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.tag_creation.outputs.tag }}
           release_name: Release ${{ github.event.inputs.version }}
