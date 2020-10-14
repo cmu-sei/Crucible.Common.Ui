@@ -23,11 +23,11 @@ Run the application as normal.
 
 In some cases it may be necessary to test the library in an external application with an installed npm package. There can be slight differences in the compiled npm package and the library code.
 
-We use `npm link` to map our local instance to npm. An npm script has been created to make this easier `npm run build:link` to compile and link the library then in your external application run `npm link @crucible/common` to link the library. After you have linked the library, if you update any library code it will automatically be avaiable in the external application
+We use `npm link` to map our local instance to npm. An npm script has been created to make this easier `npm run build:link` to compile and link the library then in your external application run `npm link @cmusei/crucible-common` to link the library. After you have linked the library, if you update any library code it will automatically be avaiable in the external application
 
 ## Debugging from an external application
 
-Debugging is possible from an external application this is sometimes neccessary to debug complex issues in a spcific application. The @crucible/common library is set up to be debugged from external applications. The specific setting in a library that needs to be updated to enable debugging of the library is in
+Debugging is possible from an external application this is sometimes neccessary to debug complex issues in a spcific application. The @cmusei/crucible-common library is set up to be debugged from external applications. The specific setting in a library that needs to be updated to enable debugging of the library is in
 
 tsconfig.json
 
@@ -166,7 +166,7 @@ Finally for vscode to recognize the changes you need to override the sourcemaps 
         "/src/*": "${webRoot}/_",
         "/_": "_",
         "/./~/_": "\${webRoot}/node_modules/\*",
-+       "webpack:///ng://@crucible/common/lib/*": "${workspaceFolder}/../common.ui/projects/@crucible-common/src/lib/*"
++       "webpack:///ng://@cmusei/crucible-common/lib/*": "${workspaceFolder}/../common.ui/projects/@crucible-common/src/lib/*"
       }
     }
   ]

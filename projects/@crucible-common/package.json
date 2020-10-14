@@ -1,5 +1,5 @@
 {
-  "name": "@crucible/common",
+  "name": "@cmusei/crucible-common",
   "version": "0.0.3",
   "peerDependencies": {
     "@angular/common": "^8.2.14",

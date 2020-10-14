@@ -14,7 +14,7 @@
     "typeRoots": ["node_modules/@types"],
     "lib": ["es2018", "dom"],
     "paths": {
-      "@crucible/common": ["./projects/@crucible-common/src/public-api"]
+      "@cmusei/crucible-common": ["./projects/@crucible-common/src/public-api"]
     }
   },
   "angularCompilerOptions": {
