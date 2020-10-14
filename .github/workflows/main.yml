@@ -76,7 +76,7 @@ jobs:
           asset_name: cmusei-crucible-common-${{ github.event.inputs.version }}.tgz
           asset_content_type: application/zip
 
-      - name: Publish to npmjs 
+      - name: Publish to npmjs
         uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_APIKEY }}
