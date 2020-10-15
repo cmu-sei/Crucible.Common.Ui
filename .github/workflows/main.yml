@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version of the Client package'     
+        description: 'Version of the Client package'
         required: true
 
 jobs:
@@ -14,44 +14,36 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+
+      - name: Get Branch Name
+        id: get_branch_name
+        run: |
+          FULLNAME=${{ github.ref }}
+          BRACHNAMEORIGIN=${FULLNAME#*/}
+          BRACHNAME=${BRACHNAMEORIGIN#*/}
+          echo ::set-output name=branch::$BRACHNAME
+
       - name: Version Package
         run: |
           npm version --allow-same-version --no-git-tag-version ${{ github.event.inputs.version }}
           cd projects/@crucible-common
           npm version --allow-same-version --no-git-tag-version ${{ github.event.inputs.version }}
-      
-      - name: Build Package
-        run: |
-          npm install @angular/cli
-          npm run pack
-          
-      - name: Create Tag
-        id: tag_creation
-        run: |
-          SHA8=${GITHUB_SHA::8}
-          TAG=$SHA8-${{ github.event.inputs.version }}
-          echo $TAG
-          echo ::set-output name=tag::$TAG
-     
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-        with:
-          tag_name: ${{ steps.tag_creation.outputs.tag }}
-          release_name: Release ${{ github.event.inputs.version }}
-          draft: false
-          prerelease: false
 
-      - name: Upload Release Asset
-        id: upload-release-asset 
-        uses: actions/upload-release-asset@v1
+      - name: Add & Commit
+        uses: EndBug/add-and-commit@v5.1.0
+        with:
+          author_name: Github Actions
+          branch: ${{ steps.get_branch_name.outputs.name }}
+          message: Update version number to ${{ github.event.inputs.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to npmjs
+        uses: JS-DevTools/npm-publish@v1
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/@crucible-common/crucible-common-${{ github.event.inputs.version }}.tgz
-          asset_name: crucible-common-${{ github.event.inputs.version }}.tgz
-          asset_content_type: application/zip
+          token: ${{ secrets.NPM_APIKEY }}
+          package: projects/@crucible-common/package.json
+          access: public
