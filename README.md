@@ -175,3 +175,13 @@ Finally for vscode to recognize the changes you need to override the sourcemaps 
 ```
 
 You can then place breakpoints in the library typescript files and they will be hit with the debugger. Debugging will work with two instances of vscode open however it may be more practical to create a workspace in vscode and add the library and external application to the workspace. [Multi-root Workspaces](https://code.visualstudio.com/docs/editor/multi-root-workspaces)
+
+## Reporting bugs and requesting features
+
+Think you found a bug? Please report all Crucible bugs - including bugs for the individual Crucible apps - in the [cmu-sei/crucible issue tracker](https://github.com/cmu-sei/crucible/issues). 
+
+Include as much detail as possible including steps to reproduce, specific app involved, and any error messages you may have received.
+
+Have a good idea for a new feature? Submit all new feature requests through the [cmu-sei/crucible issue tracker](https://github.com/cmu-sei/crucible/issues). 
+
+Include the reasons why you're requesting the new feature and how it might benefit other Crucible users.
