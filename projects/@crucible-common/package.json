@@ -14,5 +14,15 @@
     "oidc-client": "^1.10.1",
     "rxjs": "~6.5.5"
   },
-  "dependencies": {}
+  "dependencies": {
+    "tslib": "^1.10.0"
+  },
+  "main": "bundles/crucible-common.umd.js",
+  "module": "fesm5/crucible-common.js",
+  "es2015": "fesm2015/crucible-common.js",
+  "esm5": "esm5/crucible-common.js",
+  "esm2015": "esm2015/crucible-common.js",
+  "fesm5": "fesm5/crucible-common.js",
+  "fesm2015": "fesm2015/crucible-common.js",
+  "typings": "crucible-common.d.ts"
 }
