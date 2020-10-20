@@ -48,3 +48,4 @@ jobs:
           npm publish dist/@crucible-common/cmusei-crucible-common-${{ github.event.inputs.version }}.tgz --access public
         env:
           NPM_TOKEN: ${{ secrets.NPM_APIKEY }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_APIKEY }}
