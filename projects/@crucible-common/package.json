@@ -1,11 +1,11 @@
 {
   "name": "@cmusei/crucible-common",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "MIT",
   "description": "A set of angular modules that are common between Crucible apps",
   "repository": {
-      "type": "git",
-      "url": "https://github.com/cmu-sei/Crucible.Common.Ui.git"
+    "type": "git",
+    "url": "https://github.com/cmu-sei/Crucible.Common.Ui.git"
   },
   "peerDependencies": {
     "@angular/common": "^8.2.14",
