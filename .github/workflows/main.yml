@@ -46,6 +46,6 @@ jobs:
           npm install
           npm run pack
           find . -name "*.tgz"
-          npm publish dist/@crucible-common/cmusei-crucible-common-0.0.3.tgz --access public --dry-run
+          npm publish dist/@crucible-common/cmusei-crucible-common-${{ github.event.inputs.version }}.tgz --access public --dry-run
         env:
           NPM_TOKEN: ${{ secrets.NPM_APIKEY }}
