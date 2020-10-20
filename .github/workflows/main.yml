@@ -42,8 +42,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to npmjs
-        uses: JS-DevTools/npm-publish@v1
-        with:
-          token: ${{ secrets.NPM_APIKEY }}
-          package: projects/@crucible-common/package.json
-          access: public
+        run: |
+          npm install
+          npm run pack
+          find . -name "*.tgz"
+          npm publish dist/@crucible-common/cmusei-crucible-common-0.0.3.tgz --access public --dry-run
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_APIKEY }}
