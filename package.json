@@ -15,7 +15,8 @@
     "build:clean": "rm -rf dist",
     "build:link": "npm run build:clean && run-p watch:* link:crucible-common ",
     "json-server": "json-server ./projects/cwd-common-app/src/assets/db/db.json",
-    "playground": "angular-playground"
+    "playground": "angular-playground",
+    "postinstall": "ngcc"
   },
   "private": true,
   "dependencies": {
