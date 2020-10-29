@@ -4,18 +4,18 @@
   "license": "MIT",
   "description": "A set of angular modules that are common between Crucible apps",
   "repository": {
-      "type": "git",
-      "url": "https://github.com/cmu-sei/Crucible.Common.Ui.git"
+    "type": "git",
+    "url": "https://github.com/cmu-sei/Crucible.Common.Ui.git"
   },
   "peerDependencies": {
-    "@angular/common": "^8.2.14",
-    "@angular/core": "^8.2.14",
-    "@datorama/akita": "^4.23.2",
+    "@angular/common": "^10.2.1",
+    "@angular/core": "^10.2.1",
+    "@datorama/akita": "^5.2.5",
     "oidc-client": "^1.10.1",
-    "rxjs": "~6.5.5"
+    "rxjs": "~6.6.3"
   },
   "dependencies": {
-    "tslib": "^1.10.0"
+    "tslib": "^2.0.3"
   },
   "main": "bundles/crucible-common.umd.js",
   "module": "fesm5/crucible-common.js",
