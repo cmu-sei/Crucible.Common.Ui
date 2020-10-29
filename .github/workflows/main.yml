@@ -41,9 +41,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish to npmjs
-        uses: JS-DevTools/npm-publish@v1
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.2
         with:
-          token: ${{ secrets.NPM_APIKEY }}
-          package: projects/@crucible-common/package.json
-          access: public
+          # Set always-auth in npmrc
+          node-version: '12'
+          registry-url: 'https://registry.npmjs.org'
+        
+      - name: Publish to npmjs
+        run: |
+          npm install
+          npm run pack
+          npm publish dist/@crucible-common/cmusei-crucible-common-${{ github.event.inputs.version }}.tgz --access public
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_APIKEY }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_APIKEY }}
