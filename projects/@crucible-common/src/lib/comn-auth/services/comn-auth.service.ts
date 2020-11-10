@@ -10,18 +10,16 @@ DM20-0181
 
 import { forwardRef, Inject, Injectable } from '@angular/core';
 import {
-  User,
+  Log, User,
   UserManager,
   UserManagerEvents,
-  WebStorageStateStore,
-  Log,
+  WebStorageStateStore
 } from 'oidc-client';
 import { ComnSettingsService } from '../../comn-settings/services/comn-settings.service';
+import { Theme } from '../state/comn-auth.model';
 import { ComnAuthQuery } from '../state/comn-auth.query';
 import { ComnAuthStore } from '../state/comn-auth.store';
 import UserSignedOutCallback = UserManagerEvents.UserSignedOutCallback;
-import { COMN_SETTINGS_TOKEN } from '../../comn-settings/comn-settings.module';
-import { Theme } from '../state/comn-auth.model';
 
 @Injectable({
   providedIn: 'root',
@@ -38,7 +36,7 @@ export class ComnAuthService {
     private authQuery: ComnAuthQuery
   ) {
     Log.logger = console;
-    Log.level = Log.DEBUG;
+
     if (this.settingsService.settings.UseLocalAuthStorage) {
       this.settingsService.settings.OIDCSettings.userStore = new WebStorageStateStore(
         { store: window.localStorage }
