@@ -15,7 +15,7 @@
     "rxjs": "~6.5.5"
   },
   "dependencies": {
-    "tslib": "^1.10.0"
+    "tslib": "^2.1.0"
   },
   "main": "bundles/crucible-common.umd.js",
   "module": "fesm5/crucible-common.js",
