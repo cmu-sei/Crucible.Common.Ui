@@ -9,6 +9,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "postinstall": "ngcc",
     "watch:crucible-common": "ng build crucible-common --watch",
     "link:crucible-common": "wait-on dist/@crucible-common/package.json && npm link dist/@crucible-common",
     "pack": "npm run build crucible-common --aot && cd dist/@crucible-common && npm pack",
