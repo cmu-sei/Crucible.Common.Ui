@@ -10,13 +10,11 @@
   "peerDependencies": {
     "@angular/common": "^10.2.4",
     "@angular/core": "^10.2.4",
-    "@angular/localize": "^9.1.13",
     "@datorama/akita": "^4.23.2",
     "oidc-client": "^1.10.1",
     "rxjs": "~6.5.5"
   },
   "dependencies": {
-    "@angular/localize": "^9.1.13",
     "tslib": "^2.1.0"
   },
   "main": "bundles/crucible-common.umd.js",
