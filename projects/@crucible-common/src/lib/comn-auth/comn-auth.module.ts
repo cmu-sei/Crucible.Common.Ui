@@ -33,6 +33,7 @@ const comnAuthRoutes: Routes = [
     ComnAuthCallbackComponent,
     ComnAuthCallbackSilentComponent,
     ComnAuthLogoutComponent,
+    ComnAuthCallbackComponent,
   ],
   providers: [
     ComnAuthService,
@@ -41,7 +42,12 @@ const comnAuthRoutes: Routes = [
     ComnAuthStore,
   ],
   imports: [CommonModule, RouterModule.forChild(comnAuthRoutes)],
-  exports: [],
+  exports: [
+    ComnAuthCallbackComponent,
+    ComnAuthCallbackSilentComponent,
+    ComnAuthLogoutComponent,
+    ComnAuthCallbackComponent,
+  ],
 })
 export class ComnAuthModule {
   constructor(@Optional() @SkipSelf() parentModule: ComnAuthModule) {

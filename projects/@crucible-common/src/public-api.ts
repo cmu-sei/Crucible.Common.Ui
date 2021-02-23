@@ -9,6 +9,4 @@
  * The Order of these exports in this file matters. Please add any exports to the bottom of the file
  */
 export * from './lib/comn-settings';
-export * from './lib/comn-settings/comn-settings.module';
 export * from './lib/comn-auth';
-export * from './lib/comn-auth/comn-auth.module';

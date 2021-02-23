@@ -3,3 +3,4 @@
 
 export * from './models/comn-settings';
 export * from './services/comn-settings.service';
+export * from './comn-settings.module';

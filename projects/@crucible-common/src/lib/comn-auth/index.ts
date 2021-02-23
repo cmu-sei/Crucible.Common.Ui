@@ -10,3 +10,4 @@ export * from './components/comn-auth-logout/comn-auth-logout.component';
 export * from './services/comn-auth.service';
 export * from './services/comn-auth-interceptor.service';
 export * from './services/comn-auth-guard.service';
+export * from './comn-auth.module';
