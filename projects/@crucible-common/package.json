@@ -10,8 +10,8 @@
   "peerDependencies": {
     "@angular/common": ">= 10.0.0",
     "@angular/core": ">= 10.0.0",
-    "@datorama/akita": "^4.23.2",
-    "oidc-client": "^1.10.1",
+    "@datorama/akita": ">= 6.2.1 < 7",
+    "oidc-client": "^1.11.5",
     "rxjs": ">= 6.5.5 < 7"
   },
   "dependencies": {
