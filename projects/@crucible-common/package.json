@@ -8,8 +8,8 @@
     "url": "https://github.com/cmu-sei/Crucible.Common.Ui.git"
   },
   "peerDependencies": {
-    "@angular/common": ">= 10.0.0",
-    "@angular/core": ">= 10.0.0",
+    "@angular/common": ">= 12.0.0",
+    "@angular/core": ">= 12.0.0",
     "@datorama/akita": ">= 6.2.1 < 7",
     "oidc-client": "^1.11.5",
     "rxjs": ">= 6.5.5 < 7"
