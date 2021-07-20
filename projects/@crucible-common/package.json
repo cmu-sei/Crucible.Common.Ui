@@ -12,10 +12,10 @@
     "@angular/core": ">= 12.0.0",
     "@datorama/akita": ">= 6.2.1 < 7",
     "oidc-client": "^1.11.5",
-    "rxjs": ">= 6.5.5 < 7"
+    "rxjs": ">= 6.6.7 < 8"
   },
   "dependencies": {
-    "tslib": "^2.0.0"
+    "tslib": "^2.3.0"
   },
   "main": "bundles/crucible-common.umd.js",
   "module": "fesm5/crucible-common.js",
