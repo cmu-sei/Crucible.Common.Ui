@@ -36,12 +36,23 @@ export class ComnAuthGuardService implements CanActivate {
   }
 
   private startAuthentication(url: string): Promise<boolean> {
-    return this.authService.startAuthentication(url).then((user) => {
-      if (user && !user.expired) {
-        return true;
-      } else {
-        return false;
-      }
-    });
+    return this.authService.startAuthentication(url)
+      .then(
+        (user) => {
+          if (user && !user.expired) {
+            return true;
+          } else {
+            return false;
+          }
+        },
+        (error) => {
+          return false;
+        }
+      )
+      .catch((error) => {
+        return new Promise<boolean>((resolve, reject) => {
+          resolve(false);
+        });
+      });
   }
 }
