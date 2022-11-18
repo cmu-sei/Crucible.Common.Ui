@@ -162,5 +162,7 @@
       }
     }
   },
-  "defaultProject": "cwd-common-app"
+  "cli": {
+    "analytics": false
+  }
 }

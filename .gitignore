@@ -43,3 +43,5 @@ Thumbs.db
 
 # Environment Files
 */**/settings.env.json
+
+.angular/cache
