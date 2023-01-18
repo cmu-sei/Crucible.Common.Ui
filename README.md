@@ -27,7 +27,7 @@ We use `npm link` to map our local instance to npm. An npm script has been creat
 
 ## Debugging from an external application
 
-Debugging is possible from an external application this is sometimes neccessary to debug complex issues in a spcific application. The @cmusei/crucible-common library is set up to be debugged from external applications. The specific setting in a library that needs to be updated to enable debugging of the library is in
+Debugging is possible from an external application this is sometimes neccessary to debug complex issues in a specific application. The @cmusei/crucible-common library is set up to be debugged from external applications. The specific setting in a library that needs to be updated to enable debugging of the library is in
 
 tsconfig.json
 
