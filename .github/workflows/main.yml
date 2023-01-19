@@ -1,9 +1,6 @@
 name: Build NPM Package as Release
 
 on:
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
     inputs:
       version:
@@ -50,11 +47,6 @@ jobs:
           # Set always-auth in npmrc
           node-version: '16'
           registry-url: 'https://registry.npmjs.org'
-
-      - name: Build and test
-        if: github.event_name == 'pull_request'
-        run: |
-          npm install
 
       - name: Publish to npmjs
         if: github.event_name != 'pull_request'

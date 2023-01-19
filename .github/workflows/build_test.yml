@@ -1,0 +1,41 @@
+name: Build NPM Package as Release
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+
+      - name: Get Branch Name
+        id: get_branch_name
+        run: |
+          FULLNAME=${{ github.ref }}
+          BRANCHNAMEORIGIN=${FULLNAME#*/}
+          BRANCHNAME=${BRANCHNAMEORIGIN#*/}
+          echo ::set-output name=branch::$BRANCHNAME
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.2
+        with:
+          # Set always-auth in npmrc
+          node-version: '16'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Build and test
+        if: github.event_name == 'pull_request'
+        run: |
+          npm install
+          npm run pack
