@@ -49,7 +49,6 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Publish to npmjs
-        if: github.event_name != 'pull_request'
         run: |
           npm install
           npm run pack
