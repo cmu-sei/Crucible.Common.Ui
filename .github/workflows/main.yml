@@ -1,6 +1,8 @@
 name: Build NPM Package as Release
 
 on:
+  pull_request:
+    branches: [ "main" ]
   workflow_dispatch:
     inputs:
       version:
@@ -22,9 +24,9 @@ jobs:
         id: get_branch_name
         run: |
           FULLNAME=${{ github.ref }}
-          BRACHNAMEORIGIN=${FULLNAME#*/}
-          BRACHNAME=${BRACHNAMEORIGIN#*/}
-          echo ::set-output name=branch::$BRACHNAME
+          BRANCHNAMEORIGIN=${FULLNAME#*/}
+          BRANCHNAME=${BRANCHNAMEORIGIN#*/}
+          echo ::set-output name=branch::$BRANCHNAME
 
       - name: Version Package
         run: |
@@ -48,7 +50,13 @@ jobs:
           node-version: '16'
           registry-url: 'https://registry.npmjs.org'
 
+      - name: Build and test
+        if: github.event_name == 'pull_request'
+        run: |
+          npm install
+
       - name: Publish to npmjs
+        if: github.event_name != 'pull_request'
         run: |
           npm install
           npm run pack
