@@ -18,6 +18,7 @@ import { ComnAuthInterceptorService } from './services/comn-auth-interceptor.ser
 import { ComnAuthService } from './services/comn-auth.service';
 import { ComnAuthQuery } from './state/comn-auth.query';
 import { ComnAuthStore } from './state/comn-auth.store';
+import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 
 const comnAuthRoutes: Routes = [
   {
@@ -40,6 +41,8 @@ const comnAuthRoutes: Routes = [
     ComnAuthGuardService,
     ComnAuthQuery,
     ComnAuthStore,
+    JwtHelperService,
+    { provide: JWT_OPTIONS, useValue: JWT_OPTIONS }
   ],
   imports: [CommonModule, RouterModule.forChild(comnAuthRoutes)],
   exports: [
@@ -65,6 +68,7 @@ export class ComnAuthModule {
         ComnAuthGuardService,
         ComnAuthQuery,
         ComnAuthStore,
+        JwtHelperService,
         {
           provide: HTTP_INTERCEPTORS,
           useClass: ComnAuthInterceptorService,
