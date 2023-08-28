@@ -11,7 +11,7 @@ import { ComnSettingsService } from '../../comn-settings/services/comn-settings.
 import { Theme } from '../state/comn-auth.model';
 import { ComnAuthQuery } from '../state/comn-auth.query';
 import { ComnAuthStore } from '../state/comn-auth.store';
-import { Observable, fromEvent, interval, merge, Subscription, of } from 'rxjs';
+import { Observable, fromEvent, interval, merge, Subscription, of, Subject } from 'rxjs';
 import { delay, switchMap, take, skipWhile, tap } from 'rxjs/operators';
 import { JwtHelperService } from "@auth0/angular-jwt";
 
@@ -23,9 +23,10 @@ export class ComnAuthService {
   private user: User;
   user$ = this.authQuery.user$;
   inactivitySubscription = new Subscription();
-  inactivityTime: number = 3600;
+  inactivityTimeSeconds: number = 3600;
   timeLapsedSinceInactivity: number = 0;
-  observeable$: Observable<any>;
+  kickstartObservable$ = new Subject<boolean>();
+  activityObserveable$: Observable<any>;
   mergedEventObservable$: Observable<any>;
   inactivityTimerEvent: Array<any>[] = [
     [document, 'click'],
@@ -67,18 +68,18 @@ export class ComnAuthService {
       }
     });
 
-    this.inactivityTime =
-      this.settingsService.settings.inactivityTime ?
-      this.settingsService.settings.inactivityTime :
-      this.inactivityTime;
+    this.inactivityTimeSeconds =
+      this.settingsService.settings.inactivityTimeMinutes ?
+      this.settingsService.settings.inactivityTimeMinutes * 60 :
+      this.inactivityTimeSeconds;
 
     // activity events observable
     let observableArray$: Observable<any>[] = [];
     this.inactivityTimerEvent.forEach(x => {
       observableArray$.push(fromEvent(x[0], x[1]))
-    })
+    });
+    observableArray$.push(this.kickstartObservable$);
     this.mergedEventObservable$ = merge(...observableArray$);
-    this.startInactivityMonitor();
   }
 
   public isAuthenticated(): Promise<boolean> {
@@ -124,29 +125,30 @@ export class ComnAuthService {
     this.user = user;
     this.store.update({ user });
     this.setExpirationTimer();
+    this.startInactivityMonitor();
   }
 
   startInactivityMonitor(): void {
     this.ngZone.runOutsideAngular(() => {
-      this.observeable$ = this.mergedEventObservable$
+      this.activityObserveable$ = this.mergedEventObservable$
       .pipe(
-        switchMap(ev => interval(1000).pipe(take(this.inactivityTime))),
-        // tap(value => this.isItTimeToShowPopUp(value)),
+        switchMap(ev => interval(1000).pipe(take(this.inactivityTimeSeconds))),
         skipWhile((x) => {
           console.log('timeLapsedSinceInactivity = ' + x.toString());
           this.timeLapsedSinceInactivity = x;
-          return x != this.inactivityTime - 1
+          return x != this.inactivityTimeSeconds - 1
         })
       );
       this.subscribeObservable();
+      this.kickstartObservable$.next(true);
     })
   }
 
   subscribeObservable() {
-    this.inactivitySubscription = this.observeable$.subscribe((x) => {
-      this.inactivitySubscription.unsubscribe();
+    this.inactivitySubscription = this.activityObserveable$.subscribe((x) => {
       this.logout();
-    })
+      this.inactivitySubscription.unsubscribe();
+    });
   }
 
   setExpirationTimer() {
@@ -156,8 +158,9 @@ export class ComnAuthService {
     this.tokenExpiredSubscription.unsubscribe();
     this.tokenExpiredSubscription = of(null).pipe(delay(expirationMilliseconds)).subscribe((expired) => {
       console.log('Access Token Expired.');
-      this.tokenExpiredSubscription.unsubscribe();
       this.logout();
+      this.tokenExpiredSubscription.unsubscribe();
+      this.inactivitySubscription.unsubscribe();
     });
   }
 
