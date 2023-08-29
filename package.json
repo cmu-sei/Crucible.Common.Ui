@@ -33,7 +33,6 @@
     "@angular/platform-browser": "^14.2.12",
     "@angular/platform-browser-dynamic": "^14.2.12",
     "@angular/router": "^14.2.12",
-    "@auth0/angular-jwt": "^5.1.2",
     "@datorama/akita": "^8.0.0",
     "angular-playground": "^10.1.0",
     "oidc-client": "^1.11.5",

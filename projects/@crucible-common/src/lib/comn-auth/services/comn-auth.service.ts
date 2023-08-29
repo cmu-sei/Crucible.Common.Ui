@@ -13,7 +13,6 @@ import { ComnAuthQuery } from '../state/comn-auth.query';
 import { ComnAuthStore } from '../state/comn-auth.store';
 import { Observable, fromEvent, interval, merge, Subscription, of, Subject } from 'rxjs';
 import { delay, switchMap, take, skipWhile, tap } from 'rxjs/operators';
-import { JwtHelperService } from "@auth0/angular-jwt";
 
 @Injectable({
   providedIn: 'root',
@@ -45,8 +44,7 @@ export class ComnAuthService {
     private settingsService: ComnSettingsService,
     private store: ComnAuthStore,
     private authQuery: ComnAuthQuery,
-    public ngZone: NgZone,
-    private jwtHelper: JwtHelperService
+    public ngZone: NgZone
   ) {
     Log.logger = console;
 
@@ -163,8 +161,8 @@ export class ComnAuthService {
   }
 
   setExpirationTimer() {
-    // calculate access_token expiration time
-    const expirationDate = this.jwtHelper.getTokenExpirationDate(this.user.access_token);
+    // calculate milliseconds until access_token expiration time
+    const expirationDate = (JSON.parse(window.atob(this.user.access_token.split('.')[1]))).exp * 1000;
     const currentDate = new Date();
     const expirationMilliseconds = expirationDate.valueOf() - currentDate.valueOf();
     // setup the access token expiration subscription
