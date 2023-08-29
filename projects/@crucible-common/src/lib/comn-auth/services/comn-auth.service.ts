@@ -23,7 +23,7 @@ export class ComnAuthService {
   private user: User;
   user$ = this.authQuery.user$;
   inactivitySubscription = new Subscription();
-  inactivityTimeSeconds: number = 3600;
+  inactivityTimeSeconds: number = 0;
   timeLapsedSinceInactivity: number = 0;
   kickstartObservable$ = new Subject<boolean>();
   activityObserveable$: Observable<any>;
@@ -67,12 +67,9 @@ export class ComnAuthService {
         this.onTokenLoaded(user);
       }
     });
-
+    // get the configured inactivity period
     this.inactivityTimeSeconds =
-      this.settingsService.settings.inactivityTimeMinutes ?
-      this.settingsService.settings.inactivityTimeMinutes * 60 :
-      this.inactivityTimeSeconds;
-
+      this.settingsService.settings.inactivityTimeMinutes ? this.settingsService.settings.inactivityTimeMinutes * 60 : 0;
     // activity events observable
     let observableArray$: Observable<any>[] = [];
     this.inactivityTimerEvent.forEach(x => {
@@ -124,43 +121,58 @@ export class ComnAuthService {
   private onTokenLoaded(user) {
     this.user = user;
     this.store.update({ user });
+    // set inactivity and token expiration monitoring
     this.setExpirationTimer();
     this.startInactivityMonitor();
   }
 
   startInactivityMonitor(): void {
-    this.ngZone.runOutsideAngular(() => {
-      this.activityObserveable$ = this.mergedEventObservable$
-      .pipe(
-        switchMap(ev => interval(1000).pipe(take(this.inactivityTimeSeconds))),
-        skipWhile((x) => {
-          console.log('timeLapsedSinceInactivity = ' + x.toString());
-          this.timeLapsedSinceInactivity = x;
-          return x != this.inactivityTimeSeconds - 1
-        })
-      );
-      this.subscribeObservable();
-      this.kickstartObservable$.next(true);
-    })
+    // No inactivityTimeSeconds means inactivity monitor is disabled
+    if (this.inactivityTimeSeconds) {
+      this.ngZone.runOutsideAngular(() => {
+        this.activityObserveable$ = this.mergedEventObservable$
+        .pipe(
+          switchMap(ev => interval(1000).pipe(take(this.inactivityTimeSeconds))),
+          skipWhile((x) => {
+            this.timeLapsedSinceInactivity = x;
+            return x != this.inactivityTimeSeconds - 1
+          })
+        );
+        this.subscribeObservable();
+        this.kickstartObservable$.next(true);
+      });
+    }
   }
 
   subscribeObservable() {
     this.inactivitySubscription = this.activityObserveable$.subscribe((x) => {
-      this.logout();
-      this.inactivitySubscription.unsubscribe();
+      // check for a configured inactivity redirect url
+      if (this.settingsService.settings.inactivityRedirectUrl)
+      {
+        // goto the configured url
+        this.inactivitySubscription.unsubscribe();
+        document.location.href = this.settingsService.settings.inactivityRedirectUrl;
+      }
+      else
+      {
+        // goto the signout redirect page
+        this.inactivitySubscription.unsubscribe();
+        this.logout();
+      }
     });
   }
 
   setExpirationTimer() {
+    // calculate access_token expiration time
     const expirationDate = this.jwtHelper.getTokenExpirationDate(this.user.access_token);
     const currentDate = new Date();
     const expirationMilliseconds = expirationDate.valueOf() - currentDate.valueOf();
+    // setup the access token expiration subscription
     this.tokenExpiredSubscription.unsubscribe();
     this.tokenExpiredSubscription = of(null).pipe(delay(expirationMilliseconds)).subscribe((expired) => {
-      console.log('Access Token Expired.');
-      this.logout();
       this.tokenExpiredSubscription.unsubscribe();
       this.inactivitySubscription.unsubscribe();
+      this.logout();
     });
   }
 
