@@ -39,7 +39,7 @@ const comnAuthRoutes: Routes = [
     ComnAuthService,
     ComnAuthGuardService,
     ComnAuthQuery,
-    ComnAuthStore
+    ComnAuthStore,
   ],
   imports: [CommonModule, RouterModule.forChild(comnAuthRoutes)],
   exports: [
