@@ -119,27 +119,29 @@ export class ComnAuthService {
   private onTokenLoaded(user) {
     this.user = user;
     this.store.update({ user });
-    // set inactivity and token expiration monitoring
-    this.setExpirationTimer();
-    this.startInactivityMonitor();
+    // if enabled, set access token expiration monitoring
+    if (this.settingsService.settings.useAccessTokenExpirationRedirect) {
+      this.setExpirationTimer();
+    }
+    // if enabled, set inactivity monitor
+    if (this.inactivityTimeSeconds) {
+      this.startInactivityMonitor();
+    }
   }
 
   startInactivityMonitor(): void {
-    // No inactivityTimeSeconds means inactivity monitor is disabled
-    if (this.inactivityTimeSeconds) {
-      this.ngZone.runOutsideAngular(() => {
-        this.activityObserveable$ = this.mergedEventObservable$
-        .pipe(
-          switchMap(ev => interval(1000).pipe(take(this.inactivityTimeSeconds))),
-          skipWhile((x) => {
-            this.timeLapsedSinceInactivity = x;
-            return x != this.inactivityTimeSeconds - 1
-          })
-        );
-        this.subscribeObservable();
-        this.kickstartObservable$.next(true);
-      });
-    }
+    this.ngZone.runOutsideAngular(() => {
+      this.activityObserveable$ = this.mergedEventObservable$
+      .pipe(
+        switchMap(ev => interval(1000).pipe(take(this.inactivityTimeSeconds))),
+        skipWhile((x) => {
+          this.timeLapsedSinceInactivity = x;
+          return x != this.inactivityTimeSeconds - 1
+        })
+      );
+      this.subscribeObservable();
+      this.kickstartObservable$.next(true);
+    });
   }
 
   subscribeObservable() {

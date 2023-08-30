@@ -177,11 +177,12 @@ Finally for vscode to recognize the changes you need to override the sourcemaps 
 You can then place breakpoints in the library typescript files and they will be hit with the debugger. Debugging will work with two instances of vscode open however it may be more practical to create a workspace in vscode and add the library and external application to the workspace. [Multi-root Workspaces](https://code.visualstudio.com/docs/editor/multi-root-workspaces)
 
 ## Access token expiration and inactivity monitoring
-In order to satisfy DFARS compliance, our apps must cease displaying information when user access times out.  Therefore, a monitor for access token expiration was incorporated to the ComnAuthService.  In addition, an optional inactivity moniter has been incorporated to the ComnAuthService, as well.
+In order to satisfy DFARS compliance, our apps must cease displaying information when user access times out.  Therefore, an optional monitor for access token expiration was incorporated to the ComnAuthService.  The access token expiration monitor will redirect to the signout redirect URL when the access token expires, if it is enabled.  To enable the access token expiration monitor, add the useAccessTokenExpirationRedirect setting as follows:
+```
+  "useAccessTokenExpirationRedirect": true,
+```
 
-The access token expiration monitor will redirect to the signout redirect URL when the access token expires.
-
-The inactivity monitor can be activated by adding an inactivityTimeMinutes setting to the application's settings.json file.  By default, the inactivity monitor will also redirect to the signout redirect URL.  However, the inactivity timer can redirect to any other url by adding an inactivityRedirectUrl setting to the application's settings.json file.
+In addition, an optional inactivity moniter has been incorporated to the ComnAuthService, as well.  The inactivity monitor can be activated by adding an inactivityTimeMinutes setting to the application's settings.json file.  By default, the inactivity monitor will also redirect to the signout redirect URL.  However, the inactivity timer can redirect to any other url by adding an inactivityRedirectUrl setting to the application's settings.json file.
 ```
   "inactivityTimeMinutes": 60,
   "inactivityRedirectUrl": "http://my-special-site.com",
