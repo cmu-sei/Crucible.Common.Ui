@@ -1,6 +1,6 @@
 {
   "name": "cwd-common-app",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -37,7 +37,7 @@
     "angular-playground": "^10.1.0",
     "oidc-client": "^1.11.5",
     "rimraf": "^3.0.2",
-    "rxjs": "^7.5.0",
+    "rxjs": "^7.8.1",
     "tslib": "^2.4.1",
     "zone.js": "~0.11.4"
   },

@@ -1,18 +1,18 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { forwardRef, Inject, Injectable } from '@angular/core';
+import { forwardRef, Inject, Injectable, NgZone } from '@angular/core';
 import {
   Log, User,
   UserManager,
-  UserManagerEvents,
   WebStorageStateStore
 } from 'oidc-client';
 import { ComnSettingsService } from '../../comn-settings/services/comn-settings.service';
 import { Theme } from '../state/comn-auth.model';
 import { ComnAuthQuery } from '../state/comn-auth.query';
 import { ComnAuthStore } from '../state/comn-auth.store';
-import UserSignedOutCallback = UserManagerEvents.UserSignedOutCallback;
+import { Observable, fromEvent, interval, merge, Subscription, of, Subject } from 'rxjs';
+import { delay, switchMap, take, skipWhile, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -21,12 +21,30 @@ export class ComnAuthService {
   private userManager: UserManager;
   private user: User;
   user$ = this.authQuery.user$;
+  inactivitySubscription = new Subscription();
+  inactivityTimeSeconds: number = 0;
+  timeLapsedSinceInactivity: number = 0;
+  kickstartObservable$ = new Subject<boolean>();
+  activityObserveable$: Observable<any>;
+  mergedEventObservable$: Observable<any>;
+  inactivityTimerEvent: Array<any>[] = [
+    [document, 'click'],
+    [document, 'wheel'],
+    [document, 'scroll'],
+    [document, 'mousemove'],
+    [document, 'keyup'],
+    [window, 'resize'],
+    [window, 'scroll'],
+    [window, 'mousemove']
+  ];
+  tokenExpiredSubscription = new Subscription();
 
   constructor(
     @Inject(forwardRef(() => ComnSettingsService))
     private settingsService: ComnSettingsService,
     private store: ComnAuthStore,
-    private authQuery: ComnAuthQuery
+    private authQuery: ComnAuthQuery,
+    public ngZone: NgZone
   ) {
     Log.logger = console;
 
@@ -47,6 +65,16 @@ export class ComnAuthService {
         this.onTokenLoaded(user);
       }
     });
+    // get the configured inactivity period
+    this.inactivityTimeSeconds =
+      this.settingsService.settings.inactivityTimeMinutes ? this.settingsService.settings.inactivityTimeMinutes * 60 : 0;
+    // activity events observable
+    let observableArray$: Observable<any>[] = [];
+    this.inactivityTimerEvent.forEach(x => {
+      observableArray$.push(fromEvent(x[0], x[1]))
+    });
+    observableArray$.push(this.kickstartObservable$);
+    this.mergedEventObservable$ = merge(...observableArray$);
   }
 
   public isAuthenticated(): Promise<boolean> {
@@ -91,6 +119,61 @@ export class ComnAuthService {
   private onTokenLoaded(user) {
     this.user = user;
     this.store.update({ user });
-    const userGuid = user.profile.sub;
+    // if enabled, set access token expiration monitoring
+    if (this.settingsService.settings.useAccessTokenExpirationRedirect) {
+      this.setExpirationTimer();
+    }
+    // if enabled, set inactivity monitor
+    if (this.inactivityTimeSeconds) {
+      this.startInactivityMonitor();
+    }
   }
+
+  startInactivityMonitor(): void {
+    this.ngZone.runOutsideAngular(() => {
+      this.activityObserveable$ = this.mergedEventObservable$
+      .pipe(
+        switchMap(ev => interval(1000).pipe(take(this.inactivityTimeSeconds))),
+        skipWhile((x) => {
+          this.timeLapsedSinceInactivity = x;
+          return x != this.inactivityTimeSeconds - 1
+        })
+      );
+      this.subscribeObservable();
+      this.kickstartObservable$.next(true);
+    });
+  }
+
+  subscribeObservable() {
+    this.inactivitySubscription = this.activityObserveable$.subscribe((x) => {
+      // check for a configured inactivity redirect url
+      if (this.settingsService.settings.inactivityRedirectUrl)
+      {
+        // goto the configured url
+        this.inactivitySubscription.unsubscribe();
+        document.location.href = this.settingsService.settings.inactivityRedirectUrl;
+      }
+      else
+      {
+        // goto the signout redirect page
+        this.inactivitySubscription.unsubscribe();
+        this.logout();
+      }
+    });
+  }
+
+  setExpirationTimer() {
+    // calculate milliseconds until access_token expiration time
+    const expirationDate = (JSON.parse(window.atob(this.user.access_token.split('.')[1]))).exp * 1000;
+    const currentDate = new Date();
+    const expirationMilliseconds = expirationDate.valueOf() - currentDate.valueOf();
+    // setup the access token expiration subscription
+    this.tokenExpiredSubscription.unsubscribe();
+    this.tokenExpiredSubscription = of(null).pipe(delay(expirationMilliseconds)).subscribe((expired) => {
+      this.tokenExpiredSubscription.unsubscribe();
+      this.inactivitySubscription.unsubscribe();
+      this.logout();
+    });
+  }
+
 }
