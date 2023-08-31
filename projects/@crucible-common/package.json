@@ -12,7 +12,7 @@
     "@angular/core": ">= 14.0.0",
     "@datorama/akita": "^8.0.0",
     "oidc-client": "^1.11.5",
-    "rxjs": ">= 6.6.7 < 8"
+    "rxjs": "^7.8.1"
   },
   "dependencies": {
     "tslib": "^2.4.1"
