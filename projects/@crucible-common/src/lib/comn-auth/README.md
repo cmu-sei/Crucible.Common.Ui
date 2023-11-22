@@ -7,7 +7,7 @@ to the application.
 
 #### Dependencies
 
-- 'oidc-client' - npm
+- 'oidc-client-ts' - npm
 - Common Settings Service Located in the [Common Settings Module](../comn-settings/README.md)
 
 #### Routes
@@ -20,7 +20,7 @@ The ComnAuthModule provides its own routes for the application.
 
 #### Implementation
 
-CWD Auth module only needs to be imported into your NgModule declaration. Keep in mind the ComnAuthModule is dependent on the ComnSettingService.
+CWD Auth module needs to be imported into your NgModule declaration. Keep in mind the ComnAuthModule is dependent on the ComnSettingService.
 
 ```typescript
 export const settings: ComnSettingsConfig = {
@@ -39,4 +39,42 @@ export const settings: ComnSettingsConfig = {
   providers: [],
   bootstrap: [AppComponent]
 })
+```
+
+##### Silent Callback
+
+The auth-callback-silent component is implemented as a static html page, to avoid loading the entirety of the Angular app in the background iframe to refresh authentication. To use this in a consuming application, you must add the following to the list of assets to include in the build in your Angular.json file:
+
+```
+{
+  "glob": "auth-callback-silent.html",
+  "input": "node_modules/@cmusei/crucible-common/src/lib/comn-auth/assets/",
+  "output": "/"
+}
+```
+
+Example:
+
+```
+"architect": {
+  "build": {
+    "builder": "@angular-devkit/build-angular:browser",
+    "options": {
+      ...
+      ...
+      ...
+      "assets": [
+        "src/assets",
+        {
+          "glob": "auth-callback-silent.html",
+          "input": "node_modules/@cmusei/crucible-common/src/lib/comn-auth/assets/",
+          "output": "/"
+        }
+      ],
+      ...
+      ...
+      ...
+    }
+  }
+}
 ```

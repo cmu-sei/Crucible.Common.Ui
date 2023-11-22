@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1>OIDC Silent Renew</h1>
+    <script>
+      (function () {
+        if (window.parent && window !== window.parent) {
+          window.parent.postMessage(
+            {
+              source: 'oidc-client',
+              url: window.location.href,
+              keepOpen: false,
+            },
+            window.location.origin
+          );
+        }
+      })();
+    </script>
+  </body>
+</html>

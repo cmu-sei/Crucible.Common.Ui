@@ -4,6 +4,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ComnAuthService } from '../../services/comn-auth.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'comn-auth-callback',
@@ -19,7 +20,7 @@ export class ComnAuthCallbackComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.route.fragment.subscribe((frag) => {
+    this.route.fragment.pipe(take(1)).subscribe((frag) => {
       this.validate(frag);
     });
   }
@@ -28,13 +29,18 @@ export class ComnAuthCallbackComponent implements OnInit {
     this.authService.completeAuthentication(frag).then(
       (user) => {
         if (user && user.state) {
-          const userGuid = user.profile.sub;
-          this.router.navigateByUrl(user.state || '/');
+          this.router.navigateByUrl('' + user.state || '/', {
+            replaceUrl: true,
+          });
         }
       },
       (err) => {
         console.log(err);
         this.errorMessage = err;
+
+        if (this.authService.isAuthenticated()) {
+          this.router.navigateByUrl('/', { replaceUrl: true });
+        }
       }
     );
   }

@@ -3,5 +3,6 @@
   "dest": "../../dist/@crucible-common",
   "lib": {
     "entryFile": "src/public-api.ts"
-  }
+  },
+  "assets": ["./src/lib/comn-auth/assets/auth-callback-silent.html"]
 }

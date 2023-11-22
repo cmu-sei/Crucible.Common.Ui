@@ -10,7 +10,6 @@ import {
   SkipSelf,
 } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ComnAuthCallbackSilentComponent } from './components/comn-auth-callback-silent/comn-auth-callback-silent.component';
 import { ComnAuthCallbackComponent } from './components/comn-auth-callback/comn-auth-callback.component';
 import { ComnAuthLogoutComponent } from './components/comn-auth-logout/comn-auth-logout.component';
 import { ComnAuthGuardService } from './services/comn-auth-guard.service';
@@ -24,14 +23,12 @@ const comnAuthRoutes: Routes = [
     path: 'auth-callback',
     component: ComnAuthCallbackComponent,
   },
-  { path: 'auth-callback-silent', component: ComnAuthCallbackSilentComponent },
   { path: 'logout', component: ComnAuthLogoutComponent },
 ];
 
 @NgModule({
   declarations: [
     ComnAuthCallbackComponent,
-    ComnAuthCallbackSilentComponent,
     ComnAuthLogoutComponent,
     ComnAuthCallbackComponent,
   ],
@@ -44,7 +41,6 @@ const comnAuthRoutes: Routes = [
   imports: [CommonModule, RouterModule.forChild(comnAuthRoutes)],
   exports: [
     ComnAuthCallbackComponent,
-    ComnAuthCallbackSilentComponent,
     ComnAuthLogoutComponent,
     ComnAuthCallbackComponent,
   ],

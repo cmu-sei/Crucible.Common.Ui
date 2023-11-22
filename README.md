@@ -29,14 +29,6 @@ We use `npm link` to map our local instance to npm. An npm script has been creat
 
 Debugging is possible from an external application this is sometimes neccessary to debug complex issues in a specific application. The @cmusei/crucible-common library is set up to be debugged from external applications. The specific setting in a library that needs to be updated to enable debugging of the library is in
 
-tsconfig.json
-
-```
-"angularCompilerOptions": {
-    "enableIvy": false
-  }
-```
-
 In your external application some settings need to be changed
 
 angular.json
@@ -137,14 +129,6 @@ angular.json
     },
 ```
 
-tsconfig.json
-
-```diff
-+   "angularCompilerOptions": {
-+     "enableIvy": false
-+   }
-```
-
 Finally for vscode to recognize the changes you need to override the sourcemaps for the library
 
 .vscode/launch.json
@@ -177,12 +161,15 @@ Finally for vscode to recognize the changes you need to override the sourcemaps 
 You can then place breakpoints in the library typescript files and they will be hit with the debugger. Debugging will work with two instances of vscode open however it may be more practical to create a workspace in vscode and add the library and external application to the workspace. [Multi-root Workspaces](https://code.visualstudio.com/docs/editor/multi-root-workspaces)
 
 ## Access token expiration and inactivity monitoring
-In order to satisfy DFARS compliance, our apps must cease displaying information when user access times out.  Therefore, an optional monitor for access token expiration was incorporated to the ComnAuthService.  The access token expiration monitor will redirect to the signout redirect URL when the access token expires, if it is enabled.  To enable the access token expiration monitor, add the useAccessTokenExpirationRedirect setting as follows:
+
+In order to satisfy DFARS compliance, our apps must cease displaying information when user access times out. Therefore, an optional monitor for access token expiration was incorporated to the ComnAuthService. The access token expiration monitor will redirect to the signout redirect URL when the access token expires, if it is enabled. To enable the access token expiration monitor, add the useAccessTokenExpirationRedirect setting as follows:
+
 ```
   "useAccessTokenExpirationRedirect": true,
 ```
 
-In addition, an optional inactivity moniter has been incorporated to the ComnAuthService, as well.  The inactivity monitor can be activated by adding an inactivityTimeMinutes setting to the application's settings.json file.  By default, the inactivity monitor will also redirect to the signout redirect URL.  However, the inactivity timer can redirect to any other url by adding an inactivityRedirectUrl setting to the application's settings.json file.
+In addition, an optional inactivity moniter has been incorporated to the ComnAuthService, as well. The inactivity monitor can be activated by adding an inactivityTimeMinutes setting to the application's settings.json file. By default, the inactivity monitor will also redirect to the signout redirect URL. However, the inactivity timer can redirect to any other url by adding an inactivityRedirectUrl setting to the application's settings.json file.
+
 ```
   "inactivityTimeMinutes": 60,
   "inactivityRedirectUrl": "http://my-special-site.com",
@@ -190,10 +177,10 @@ In addition, an optional inactivity moniter has been incorporated to the ComnAut
 
 ## Reporting bugs and requesting features
 
-Think you found a bug? Please report all Crucible bugs - including bugs for the individual Crucible apps - in the [cmu-sei/crucible issue tracker](https://github.com/cmu-sei/crucible/issues). 
+Think you found a bug? Please report all Crucible bugs - including bugs for the individual Crucible apps - in the [cmu-sei/crucible issue tracker](https://github.com/cmu-sei/crucible/issues).
 
 Include as much detail as possible including steps to reproduce, specific app involved, and any error messages you may have received.
 
-Have a good idea for a new feature? Submit all new feature requests through the [cmu-sei/crucible issue tracker](https://github.com/cmu-sei/crucible/issues). 
+Have a good idea for a new feature? Submit all new feature requests through the [cmu-sei/crucible issue tracker](https://github.com/cmu-sei/crucible/issues).
 
 Include the reasons why you're requesting the new feature and how it might benefit other Crucible users.

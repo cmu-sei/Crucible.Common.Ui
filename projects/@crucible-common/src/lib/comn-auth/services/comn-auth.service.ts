@@ -3,16 +3,26 @@
 
 import { forwardRef, Inject, Injectable, NgZone } from '@angular/core';
 import {
-  Log, User,
+  Log,
+  SigninRedirectArgs,
+  User,
   UserManager,
-  WebStorageStateStore
-} from 'oidc-client';
+  WebStorageStateStore,
+} from 'oidc-client-ts';
 import { ComnSettingsService } from '../../comn-settings/services/comn-settings.service';
 import { Theme } from '../state/comn-auth.model';
 import { ComnAuthQuery } from '../state/comn-auth.query';
 import { ComnAuthStore } from '../state/comn-auth.store';
-import { Observable, fromEvent, interval, merge, Subscription, of, Subject } from 'rxjs';
-import { delay, switchMap, take, skipWhile, tap } from 'rxjs/operators';
+import {
+  Observable,
+  fromEvent,
+  interval,
+  merge,
+  Subscription,
+  of,
+  Subject,
+} from 'rxjs';
+import { delay, switchMap, take, skipWhile } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -35,7 +45,7 @@ export class ComnAuthService {
     [document, 'keyup'],
     [window, 'resize'],
     [window, 'scroll'],
-    [window, 'mousemove']
+    [window, 'mousemove'],
   ];
   tokenExpiredSubscription = new Subscription();
 
@@ -46,16 +56,20 @@ export class ComnAuthService {
     private authQuery: ComnAuthQuery,
     public ngZone: NgZone
   ) {
-    Log.logger = console;
+    Log.setLogger(console);
+
+    if (this.settingsService.settings.DebugLogging) {
+      Log.setLevel(Log.DEBUG);
+    }
 
     if (this.settingsService.settings.UseLocalAuthStorage) {
-      this.settingsService.settings.OIDCSettings.userStore = new WebStorageStateStore(
-        { store: window.localStorage }
-      );
+      this.settingsService.settings.OIDCSettings.userStore =
+        new WebStorageStateStore({ store: window.localStorage });
     }
     this.userManager = new UserManager(
       this.settingsService.settings.OIDCSettings
     );
+
     this.userManager.events.addUserLoaded((user) => {
       this.onTokenLoaded(user);
     });
@@ -65,13 +79,17 @@ export class ComnAuthService {
         this.onTokenLoaded(user);
       }
     });
+
     // get the configured inactivity period
-    this.inactivityTimeSeconds =
-      this.settingsService.settings.inactivityTimeMinutes ? this.settingsService.settings.inactivityTimeMinutes * 60 : 0;
+    this.inactivityTimeSeconds = this.settingsService.settings
+      .inactivityTimeMinutes
+      ? this.settingsService.settings.inactivityTimeMinutes * 60
+      : 0;
+
     // activity events observable
     let observableArray$: Observable<any>[] = [];
-    this.inactivityTimerEvent.forEach(x => {
-      observableArray$.push(fromEvent(x[0], x[1]))
+    this.inactivityTimerEvent.forEach((x) => {
+      observableArray$.push(fromEvent(x[0], x[1]));
     });
     observableArray$.push(this.kickstartObservable$);
     this.mergedEventObservable$ = merge(...observableArray$);
@@ -83,21 +101,16 @@ export class ComnAuthService {
     });
   }
 
-  public startAuthentication(url: string): Promise<User> {
-    this.userManager.signinRedirect({ state: url });
-    return this.userManager.signinRedirectCallback(url);
+  public startAuthentication(url?: string): Promise<void> {
+    return this.userManager.signinRedirect({ state: url });
   }
 
-  public completeAuthentication(url: string): Promise<User> {
-    return this.userManager.signinRedirectCallback(url);
+  public completeAuthentication(url?: string): Promise<void | User> {
+    return this.userManager.signinCallback();
   }
 
   public startSilentAuthentication(): Promise<User> {
     return this.userManager.signinSilent();
-  }
-
-  public completeSilentAuthentication(): Promise<User> {
-    return this.userManager.signinSilentCallback();
   }
 
   public getAuthorizationHeader(): string {
@@ -119,10 +132,12 @@ export class ComnAuthService {
   private onTokenLoaded(user) {
     this.user = user;
     this.store.update({ user });
+
     // if enabled, set access token expiration monitoring
     if (this.settingsService.settings.useAccessTokenExpirationRedirect) {
       this.setExpirationTimer();
     }
+
     // if enabled, set inactivity monitor
     if (this.inactivityTimeSeconds) {
       this.startInactivityMonitor();
@@ -131,12 +146,13 @@ export class ComnAuthService {
 
   startInactivityMonitor(): void {
     this.ngZone.runOutsideAngular(() => {
-      this.activityObserveable$ = this.mergedEventObservable$
-      .pipe(
-        switchMap(ev => interval(1000).pipe(take(this.inactivityTimeSeconds))),
+      this.activityObserveable$ = this.mergedEventObservable$.pipe(
+        switchMap((ev) =>
+          interval(1000).pipe(take(this.inactivityTimeSeconds))
+        ),
         skipWhile((x) => {
           this.timeLapsedSinceInactivity = x;
-          return x != this.inactivityTimeSeconds - 1
+          return x != this.inactivityTimeSeconds - 1;
         })
       );
       this.subscribeObservable();
@@ -147,14 +163,12 @@ export class ComnAuthService {
   subscribeObservable() {
     this.inactivitySubscription = this.activityObserveable$.subscribe((x) => {
       // check for a configured inactivity redirect url
-      if (this.settingsService.settings.inactivityRedirectUrl)
-      {
+      if (this.settingsService.settings.inactivityRedirectUrl) {
         // goto the configured url
         this.inactivitySubscription.unsubscribe();
-        document.location.href = this.settingsService.settings.inactivityRedirectUrl;
-      }
-      else
-      {
+        document.location.href =
+          this.settingsService.settings.inactivityRedirectUrl;
+      } else {
         // goto the signout redirect page
         this.inactivitySubscription.unsubscribe();
         this.logout();
@@ -164,16 +178,19 @@ export class ComnAuthService {
 
   setExpirationTimer() {
     // calculate milliseconds until access_token expiration time
-    const expirationDate = (JSON.parse(window.atob(this.user.access_token.split('.')[1]))).exp * 1000;
+    const expirationDate =
+      JSON.parse(window.atob(this.user.access_token.split('.')[1])).exp * 1000;
     const currentDate = new Date();
-    const expirationMilliseconds = expirationDate.valueOf() - currentDate.valueOf();
+    const expirationMilliseconds =
+      expirationDate.valueOf() - currentDate.valueOf();
     // setup the access token expiration subscription
     this.tokenExpiredSubscription.unsubscribe();
-    this.tokenExpiredSubscription = of(null).pipe(delay(expirationMilliseconds)).subscribe((expired) => {
-      this.tokenExpiredSubscription.unsubscribe();
-      this.inactivitySubscription.unsubscribe();
-      this.logout();
-    });
+    this.tokenExpiredSubscription = of(null)
+      .pipe(delay(expirationMilliseconds))
+      .subscribe((expired) => {
+        this.tokenExpiredSubscription.unsubscribe();
+        this.inactivitySubscription.unsubscribe();
+        this.logout();
+      });
   }
-
 }
