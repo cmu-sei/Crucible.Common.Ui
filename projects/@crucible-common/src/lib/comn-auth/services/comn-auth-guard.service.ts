@@ -36,14 +36,11 @@ export class ComnAuthGuardService implements CanActivate {
   }
 
   private startAuthentication(url: string): Promise<boolean> {
-    return this.authService.startAuthentication(url)
+    return this.authService
+      .startAuthentication(url)
       .then(
-        (user) => {
-          if (user && !user.expired) {
-            return true;
-          } else {
-            return false;
-          }
+        () => {
+          return true;
         },
         (error) => {
           return false;

@@ -88,10 +88,12 @@ export class ComnSettingsService {
         )
         .subscribe((result: any) => {
           this.settings = result.reduce((p, v) => {
-            return {
-              ...p,
-              ...v,
+            let settingsResult = { ...p, ...v };
+            settingsResult.OIDCSettings = {
+              ...p.OIDCSettings,
+              ...v.OIDCSettings,
             };
+            return settingsResult;
           }, this._settings);
           this.notify(this.settings).pipe(take(1)).subscribe();
           resolve(true);
