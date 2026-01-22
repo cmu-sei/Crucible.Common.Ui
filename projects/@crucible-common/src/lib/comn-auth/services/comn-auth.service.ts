@@ -131,7 +131,11 @@ export class ComnAuthService {
 
   private onTokenLoaded(user) {
     this.user = user;
-    this.store.update({ user });
+    // Run store update inside Angular's zone to ensure change detection triggers
+    // for all subscribers. oidc-client callbacks run outside Angular's zone.
+    this.ngZone.run(() => {
+      this.store.update({ user });
+    });
 
     // if enabled, set access token expiration monitoring
     if (this.settingsService.settings.useAccessTokenExpirationRedirect) {
