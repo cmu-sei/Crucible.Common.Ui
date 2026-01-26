@@ -7,9 +7,10 @@ import { ComnAuthService } from '../../services/comn-auth.service';
 import { take } from 'rxjs';
 
 @Component({
-  selector: 'comn-auth-callback',
-  templateUrl: './comn-auth-callback.component.html',
-  styleUrls: ['./comn-auth-callback.component.scss'],
+    selector: 'comn-auth-callback',
+    templateUrl: './comn-auth-callback.component.html',
+    styleUrls: ['./comn-auth-callback.component.scss'],
+    standalone: false
 })
 export class ComnAuthCallbackComponent implements OnInit {
   errorMessage: string;

@@ -7,9 +7,10 @@ import { HttpClient } from '@angular/common/http';
 import { ComnSettingsService } from 'projects/@crucible-common/src/public-api';
 
 @Component({
-  selector: 'app-posts',
-  templateUrl: './posts.component.html',
-  styleUrls: ['./posts.component.scss'],
+    selector: 'app-posts',
+    templateUrl: './posts.component.html',
+    styleUrls: ['./posts.component.scss'],
+    standalone: false
 })
 export class PostsComponent implements OnInit {
   posts$: Observable<any> = of([]);

@@ -2,15 +2,8 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
-import {
-  APP_INITIALIZER,
-  InjectionToken,
-  ModuleWithProviders,
-  NgModule,
-  Optional,
-  SkipSelf,
-} from '@angular/core';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { InjectionToken, ModuleWithProviders, NgModule, Optional, SkipSelf, inject, provideAppInitializer } from '@angular/core';
 
 import {
   ComnSettingsConfig,
@@ -27,19 +20,14 @@ export function get_settings(settings: ComnSettingsService) {
 
 export const COMN_SETTINGS_TOKEN = new InjectionToken('ComnSettings');
 
-@NgModule({
-  declarations: [],
-  imports: [CommonModule, HttpClientModule],
-  providers: [
-    {
-      provide: APP_INITIALIZER,
-      useFactory: get_settings,
-      deps: [ComnSettingsService],
-      multi: true,
-    },
-  ],
-  exports: [],
-})
+@NgModule({ declarations: [],
+    exports: [], imports: [CommonModule], providers: [
+        provideAppInitializer(() => {
+        const initializerFn = (get_settings)(inject(ComnSettingsService));
+        return initializerFn();
+      }),
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class ComnSettingsModule {
   constructor(@Optional() @SkipSelf() parentModule: ComnSettingsModule) {
     if (parentModule) {
@@ -56,12 +44,10 @@ export class ComnSettingsModule {
       ngModule: ComnSettingsModule,
       providers: [
         ComnSettingsService,
-        {
-          provide: APP_INITIALIZER,
-          useFactory: get_settings,
-          deps: [ComnSettingsService],
-          multi: true,
-        },
+        provideAppInitializer(() => {
+        const initializerFn = (get_settings)(inject(ComnSettingsService));
+        return initializerFn();
+      }),
         { provide: COMN_SETTINGS_CONFIG, useValue: config },
       ],
     };

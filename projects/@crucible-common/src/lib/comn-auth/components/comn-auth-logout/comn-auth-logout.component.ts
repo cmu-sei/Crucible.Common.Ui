@@ -5,9 +5,10 @@ import { Component, OnInit } from '@angular/core';
 import { ComnAuthService } from '../../services/comn-auth.service';
 
 @Component({
-  selector: 'comn-auth-logout',
-  templateUrl: './comn-auth-logout.component.html',
-  styleUrls: ['./comn-auth-logout.component.scss'],
+    selector: 'comn-auth-logout',
+    templateUrl: './comn-auth-logout.component.html',
+    styleUrls: ['./comn-auth-logout.component.scss'],
+    standalone: false
 })
 export class ComnAuthLogoutComponent implements OnInit {
   constructor(private authService: ComnAuthService) {}

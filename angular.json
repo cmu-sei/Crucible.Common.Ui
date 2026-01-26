@@ -53,12 +53,12 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/cwd-common-app",
+            "outputPath": {
+              "base": "dist/cwd-common-app"
+            },
             "index": "projects/cwd-common-app/src/index.html",
-            "main": "projects/cwd-common-app/src/main.ts",
-            "polyfills": "projects/cwd-common-app/src/polyfills.ts",
             "tsConfig": "projects/cwd-common-app/tsconfig.app.json",
             "aot": true,
             "assets": [
@@ -67,7 +67,8 @@
             ],
             "styles": ["projects/cwd-common-app/src/styles.scss"],
             "scripts": [],
-            "preserveSymlinks": true
+            "preserveSymlinks": true,
+            "browser": "projects/cwd-common-app/src/main.ts"
           },
           "configurations": {
             "production": {
@@ -82,8 +83,6 @@
               "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
@@ -102,30 +101,29 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "cwd-common-app:build",
+            "buildTarget": "cwd-common-app:build"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "cwd-common-app:build:production"
+            },
             "sourceMap": {
               "scripts": true,
               "styles": false,
               "vendor": true
-            }
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "cwd-common-app:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "cwd-common-app:build"
+            "buildTarget": "cwd-common-app:build"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "main": "projects/cwd-common-app/src/test.ts",
-            "polyfills": "projects/cwd-common-app/src/polyfills.ts",
             "tsConfig": "projects/cwd-common-app/tsconfig.spec.json",
             "karmaConfig": "projects/cwd-common-app/karma.conf.js",
             "assets": [
