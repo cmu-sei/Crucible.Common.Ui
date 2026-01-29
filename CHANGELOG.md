@@ -1,3 +1,7 @@
+## 0.4.3
+
+- Updated from Angular 14 to 21. This update requires that consuming apps use Angular 16.1 or higher.
+
 ## 0.4.0
 
 - **BREAKING CHANGE** - Removed auth-callback-silent endpoint and replaced with a static html page. See comn-auth/README.md for how to configure your application to use this asset.
