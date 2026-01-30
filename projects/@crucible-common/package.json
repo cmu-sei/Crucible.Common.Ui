@@ -1,6 +1,6 @@
 {
   "name": "@cmusei/crucible-common",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "license": "MIT",
   "description": "A set of angular modules that are common between Crucible apps",
   "repository": {
