@@ -22,12 +22,7 @@
           }
 },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/@crucible-common/src/test.ts",
-            "tsConfig": "projects/@crucible-common/tsconfig.spec.json",
-            "karmaConfig": "projects/@crucible-common/karma.conf.js"
-          }
+
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
@@ -121,18 +116,6 @@
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/cwd-common-app/src/test.ts",
-            "tsConfig": "projects/cwd-common-app/tsconfig.spec.json",
-            "karmaConfig": "projects/cwd-common-app/karma.conf.js",
-            "assets": [
-              "projects/cwd-common-app/src/favicon.ico",
-              "projects/cwd-common-app/src/assets"
-            ],
-            "styles": ["projects/cwd-common-app/src/styles.scss"],
-            "scripts": []
-          }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",

@@ -15,5 +15,5 @@
     "strictInjectionParameters": false,
     "enableResourceInlining": true
   },
-  "exclude": ["src/test.ts", "**/*.spec.ts", "**/*.stories.ts"]
+  "exclude": ["**/*.spec.ts", "**/*.stories.ts"]
 }
