@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.ref }}
           fetch-depth: 0
@@ -33,7 +33,7 @@ jobs:
           npm version --allow-same-version --no-git-tag-version ${{ github.event.inputs.version }}
 
       - name: Add & Commit
-        uses: EndBug/add-and-commit@v5.1.0
+        uses: EndBug/add-and-commit@v9.1.4
         with:
           author_name: Github Actions
           branch: ${{ steps.get_branch_name.outputs.name }}
@@ -42,10 +42,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.2
+        uses: actions/setup-node@v6.2.0
         with:
           # Set always-auth in npmrc
-          node-version: '16'
+          node-version: '21'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Publish to npmjs
