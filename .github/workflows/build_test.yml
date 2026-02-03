@@ -31,7 +31,7 @@ jobs:
         uses: actions/setup-node@v6.2.0
         with:
           # Set always-auth in npmrc
-          node-version: '21'
+          node-version: '24'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Build and test
