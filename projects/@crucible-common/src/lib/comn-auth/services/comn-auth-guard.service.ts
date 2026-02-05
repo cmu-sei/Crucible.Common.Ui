@@ -2,13 +2,13 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot } from '@angular/router';
 import { ComnAuthService } from './comn-auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ComnAuthGuardService  {
+export class ComnAuthGuardService implements CanActivate {
   constructor(private authService: ComnAuthService) {}
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     return this.authService.isAuthenticated().then((isAuthenticated) => {
