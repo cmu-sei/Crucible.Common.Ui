@@ -1,6 +1,6 @@
 ## 0.4.3
 
-- Updated from Angular 14 to 21. This update requires that consuming apps use Angular 16.1 or higher.
+- Updated from Angular 14 to 21. This update requires that consuming apps use Angular 21.0.0 or higher.
 
 ## 0.4.0
 
