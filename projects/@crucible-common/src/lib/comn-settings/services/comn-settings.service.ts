@@ -1,11 +1,7 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import {
-  HttpBackend,
-  HttpClient,
-  HttpErrorResponse,
-} from '@angular/common/http';
+import { HttpBackend, HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Inject, Injectable, Optional, forwardRef } from '@angular/core';
 import { Observable, of, zip } from 'rxjs';
 import { catchError, map, take, tap } from 'rxjs/operators';
