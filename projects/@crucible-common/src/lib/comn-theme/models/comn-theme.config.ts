@@ -11,6 +11,8 @@ export interface CrucibleThemeConfig {
   defaultThemeColor?: string;
   /** Path to an SVG asset for favicon coloring. Omit to skip favicon updates. */
   faviconSvgPath?: string;
+  /** CSS class in the favicon SVG to apply the fill color to. Defaults to 'cls-1'. */
+  faviconFillClass?: string;
   /** Override --mat-sys-primary with the exact hex color instead of Material 3 tone. Defaults to true. */
   useExactPrimaryColor?: boolean;
 }
@@ -26,4 +28,9 @@ export const CRUCIBLE_THEME_CONFIG = new InjectionToken<CrucibleThemeConfig>(
 /** Injection token for the favicon SVG asset path. */
 export const CRUCIBLE_FAVICON_SVG_PATH = new InjectionToken<string>(
   'CrucibleFaviconSvgPath'
+);
+
+/** Injection token for the favicon SVG CSS fill class name. */
+export const CRUCIBLE_FAVICON_FILL_CLASS = new InjectionToken<string>(
+  'CrucibleFaviconFillClass'
 );

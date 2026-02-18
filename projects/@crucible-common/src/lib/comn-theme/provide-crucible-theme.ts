@@ -9,6 +9,7 @@ import {
   CrucibleThemeConfig,
   CRUCIBLE_THEME_CONFIG,
   CRUCIBLE_FAVICON_SVG_PATH,
+  CRUCIBLE_FAVICON_FILL_CLASS,
   CRUCIBLE_DEFAULT_THEME_COLOR,
 } from './models/comn-theme.config';
 import { ComnSettingsService } from '../comn-settings';
@@ -54,6 +55,7 @@ export function provideCrucibleTheme(
   if (config.faviconSvgPath) {
     providers.push(
       { provide: CRUCIBLE_FAVICON_SVG_PATH, useValue: config.faviconSvgPath },
+      { provide: CRUCIBLE_FAVICON_FILL_CLASS, useValue: config.faviconFillClass || 'cls-1' },
       ComnFaviconService
     );
   }

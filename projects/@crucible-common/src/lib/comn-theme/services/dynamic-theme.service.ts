@@ -42,6 +42,7 @@ export class ComnDynamicThemeService {
     const useExact = this.config.useExactPrimaryColor !== false;
     this.injectLightTheme(light, useExact ? hexColor : undefined);
     this.injectDarkTheme(dark, useExact ? hexColor : undefined);
+    this.injectComponentOverrides();
   }
 
   /**
@@ -115,6 +116,75 @@ export class ComnDynamicThemeService {
   }
 
   /**
+   * Injects shared Crucible component CSS overrides into the document head (idempotent).
+   */
+  private injectComponentOverrides(): void {
+    const styleId = 'crucible-component-overrides';
+    if (document.getElementById(styleId)) {
+      return;
+    }
+
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.textContent = `
+/* Crucible shared component overrides */
+
+/* mat-menu and mat-select panels */
+.mat-mdc-select-panel,
+.mat-mdc-menu-panel {
+  background-color: var(--mat-sys-outline-variant) !important;
+}
+
+/* mat-option styling */
+.mat-mdc-option {
+  --mat-option-label-text-color: var(--mat-sys-on-background);
+  --mat-option-hover-state-layer-color: var(--mat-sys-outline);
+  --mat-option-focus-state-layer-color: var(--mat-sys-outline);
+  --mat-option-selected-state-layer-color: var(--mat-sys-outline);
+}
+.mat-mdc-option:not(.mat-mdc-option-disabled) {
+  background-color: var(--mat-sys-background);
+}
+.mat-mdc-option:hover:not(.mat-mdc-option-disabled) {
+  background-color: var(--mat-sys-surface-variant);
+}
+
+/* Disabled icon button color */
+.mat-mdc-icon-button[disabled] .mat-icon {
+  --mat-icon-color-disabled: var(--mat-sys-outline-variant);
+}
+
+/* Form field transparency */
+.mat-mdc-text-field-wrapper.mdc-text-field--filled {
+  --mdc-filled-text-field-container-color: transparent !important;
+  --mat-form-field-container-color: transparent !important;
+  background-color: transparent !important;
+}
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: transparent !important;
+}
+
+/* Datepicker overrides */
+.mat-datepicker-content {
+  --mat-datepicker-calendar-container-background-color: var(--mat-sys-outline-variant);
+  --mat-datepicker-calendar-date-selected-state-text-color: var(--mat-sys-primary);
+  --mat-datepicker-calendar-container-text-color: var(--mat-sys-on-background);
+}
+
+/* Icon button color */
+.mat-mdc-icon-button {
+  --mat-icon-button-icon-color: var(--mat-sys-primary);
+}
+
+/* Form field filled background */
+.mat-mdc-form-field {
+  --mat-form-field-filled-container-color: transparent;
+}
+`;
+    document.head.appendChild(style);
+  }
+
+  /**
    * Builds CSS variable object from Material 3 DynamicScheme (44 variables)
    */
   private buildCssVariables(scheme: DynamicScheme): Record<string, string> {
@@ -166,20 +236,20 @@ export class ComnDynamicThemeService {
       '--mat-sys-background': hexFromArgb(scheme.background),
       '--mat-sys-on-background': hexFromArgb(scheme.onBackground),
 
-      // Surface
-      '--mat-sys-surface': hexFromArgb(scheme.surface),
-      '--mat-sys-surface-dim': hexFromArgb(scheme.surfaceDim),
-      '--mat-sys-surface-bright': hexFromArgb(scheme.surfaceBright),
+      // Surface — alias to background for flat Crucible appearance
+      '--mat-sys-surface': 'var(--mat-sys-background)',
+      '--mat-sys-surface-variant': 'var(--mat-sys-background)',
+      '--mat-sys-surface-dim': 'var(--mat-sys-background)',
+      '--mat-sys-surface-bright': 'var(--mat-sys-background)',
       '--mat-sys-on-surface': hexFromArgb(scheme.onSurface),
-      '--mat-sys-surface-variant': hexFromArgb(scheme.surfaceVariant),
       '--mat-sys-on-surface-variant': hexFromArgb(scheme.onSurfaceVariant),
 
-      // Surface Containers
-      '--mat-sys-surface-container-lowest': hexFromArgb(scheme.surfaceContainerLowest),
-      '--mat-sys-surface-container-low': hexFromArgb(scheme.surfaceContainerLow),
-      '--mat-sys-surface-container': hexFromArgb(scheme.surfaceContainer),
-      '--mat-sys-surface-container-high': hexFromArgb(scheme.surfaceContainerHigh),
-      '--mat-sys-surface-container-highest': hexFromArgb(scheme.surfaceContainerHighest),
+      // Surface Containers — alias to background for flat Crucible appearance
+      '--mat-sys-surface-container-lowest': 'var(--mat-sys-background)',
+      '--mat-sys-surface-container-low': 'var(--mat-sys-background)',
+      '--mat-sys-surface-container': 'var(--mat-sys-background)',
+      '--mat-sys-surface-container-high': 'var(--mat-sys-background)',
+      '--mat-sys-surface-container-highest': 'var(--mat-sys-background)',
 
       // Inverse
       '--mat-sys-inverse-surface': hexFromArgb(scheme.inverseSurface),
@@ -192,7 +262,10 @@ export class ComnDynamicThemeService {
       // Shadow, Scrim, and Tint
       '--mat-sys-shadow': hexFromArgb(scheme.shadow),
       '--mat-sys-scrim': hexFromArgb(scheme.scrim),
-      '--mat-sys-surface-tint': hexFromArgb(scheme.surfaceTint),
+      '--mat-sys-surface-tint': 'var(--mat-sys-primary)',
+
+      // Icon alias
+      '--mat-sys-icon': 'var(--mat-sys-primary)',
     };
   }
 }

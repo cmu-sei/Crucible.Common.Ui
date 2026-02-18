@@ -3,12 +3,13 @@
 
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { CRUCIBLE_FAVICON_SVG_PATH } from '../models/comn-theme.config';
+import { CRUCIBLE_FAVICON_SVG_PATH, CRUCIBLE_FAVICON_FILL_CLASS } from '../models/comn-theme.config';
 
 @Injectable()
 export class ComnFaviconService {
   private http = inject(HttpClient);
   private svgPath = inject(CRUCIBLE_FAVICON_SVG_PATH);
+  private fillClass = inject(CRUCIBLE_FAVICON_FILL_CLASS);
 
   private svgContent: string | null = null;
   private isLoading = false;
@@ -54,8 +55,8 @@ export class ComnFaviconService {
     }
 
     const coloredSvg = this.svgContent.replace(
-      '.cls-1{}',
-      `.cls-1{fill:${hexColor};}`
+      `.${this.fillClass}{}`,
+      `.${this.fillClass}{fill:${hexColor};}`
     );
 
     const encodedSvg = encodeURIComponent(coloredSvg);
