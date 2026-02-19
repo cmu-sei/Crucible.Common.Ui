@@ -126,61 +126,6 @@ export class ComnDynamicThemeService {
 
     const style = document.createElement('style');
     style.id = styleId;
-    style.textContent = `
-/* Crucible shared component overrides */
-
-/* mat-menu and mat-select panels */
-.mat-mdc-select-panel,
-.mat-mdc-menu-panel {
-  background-color: var(--mat-sys-outline-variant) !important;
-}
-
-/* mat-option styling */
-.mat-mdc-option {
-  --mat-option-label-text-color: var(--mat-sys-on-background);
-  --mat-option-hover-state-layer-color: var(--mat-sys-outline);
-  --mat-option-focus-state-layer-color: var(--mat-sys-outline);
-  --mat-option-selected-state-layer-color: var(--mat-sys-outline);
-}
-.mat-mdc-option:not(.mat-mdc-option-disabled) {
-  background-color: var(--mat-sys-background);
-}
-.mat-mdc-option:hover:not(.mat-mdc-option-disabled) {
-  background-color: var(--mat-sys-surface-variant);
-}
-
-/* Disabled icon button color */
-.mat-mdc-icon-button[disabled] .mat-icon {
-  --mat-icon-color-disabled: var(--mat-sys-outline-variant);
-}
-
-/* Form field transparency */
-.mat-mdc-text-field-wrapper.mdc-text-field--filled {
-  --mdc-filled-text-field-container-color: transparent !important;
-  --mat-form-field-container-color: transparent !important;
-  background-color: transparent !important;
-}
-.mdc-text-field--filled:not(.mdc-text-field--disabled) {
-  background-color: transparent !important;
-}
-
-/* Datepicker overrides */
-.mat-datepicker-content {
-  --mat-datepicker-calendar-container-background-color: var(--mat-sys-outline-variant);
-  --mat-datepicker-calendar-date-selected-state-text-color: var(--mat-sys-primary);
-  --mat-datepicker-calendar-container-text-color: var(--mat-sys-on-background);
-}
-
-/* Icon button color */
-.mat-mdc-icon-button {
-  --mat-icon-button-icon-color: var(--mat-sys-primary);
-}
-
-/* Form field filled background */
-.mat-mdc-form-field {
-  --mat-form-field-filled-container-color: transparent;
-}
-`;
     document.head.appendChild(style);
   }
 
