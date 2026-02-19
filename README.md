@@ -160,6 +160,56 @@ Finally for vscode to recognize the changes you need to override the sourcemaps 
 
 You can then place breakpoints in the library typescript files and they will be hit with the debugger. Debugging will work with two instances of vscode open however it may be more practical to create a workspace in vscode and add the library and external application to the workspace. [Multi-root Workspaces](https://code.visualstudio.com/docs/editor/multi-root-workspaces)
 
+## Color Theming
+
+Crucible apps use a shared dynamic theming system provided by this library. A single **primary hex color** drives the entire Material 3 color scheme at runtime -- no SCSS rebuild is needed to change the theme.
+
+### How it works
+
+1. **`ComnDynamicThemeService`** generates a full Material 3 palette (primary, secondary, tertiary, error, background, outline, etc.) from one hex color using `@material/material-color-utilities` (`SchemeTonalSpot`).
+2. It writes 44+ CSS custom properties (e.g. `--mat-sys-primary`, `--mat-sys-background`) as inline styles on `:root` (light) and via a `<style>` element for `body.darkMode` (dark).
+3. All surface tokens (`--mat-sys-surface`, `--mat-sys-surface-container-*`) are aliased to `--mat-sys-background` so Crucible apps display a flat background instead of Material 3's layered surface system.
+4. A shared `<style id="crucible-component-overrides">` element is injected once with global rules for mat-menu panels, mat-option, datepicker, form-field transparency, and icon-button colors.
+
+### Where to set the theme color
+
+The primary color is resolved in this order (first match wins):
+
+| Priority | Location | Example |
+|----------|----------|---------|
+| 1 | **`settings.json`** | `"AppPrimaryThemeColor": "#008740"` |
+| 2 | **`provideCrucibleTheme()`** `defaultThemeColor` | `defaultThemeColor: '#008740'` |
+| 3 | Library default | `#4c7aa2` |
+
+- **`src/assets/config/settings.json`** -- The runtime configuration file deployed with the app. This is the primary place to change the theme color for a deployment. Set the `AppPrimaryThemeColor` field to any hex color.
+- **`app.module.ts`** -- The `defaultThemeColor` passed to `provideCrucibleTheme()` acts as a compile-time fallback when `settings.json` does not contain `AppPrimaryThemeColor`.
+- **`src/styles/_theme-colors.scss`** -- Contains a pre-generated SCSS palette used as a baseline when the Angular Material theme is compiled. This palette should match the default primary color so the initial CSS paint is consistent before the runtime service takes over.
+
+### Integrating in an app
+
+```typescript
+// app.module.ts
+...provideCrucibleTheme({
+  defaultThemeColor: '#008740',
+  faviconSvgPath: 'assets/svg-icons/crucible-icon-app.svg',
+}),
+```
+
+This registers:
+- `ComnDynamicThemeService` -- generates and injects CSS variables
+- `ComnFaviconService` -- recolors the SVG favicon to match the theme
+- An `APP_INITIALIZER` that applies the theme before the app renders
+
+### Regenerating the SCSS palette
+
+If you change the default primary color, regenerate the SCSS palette so the compile-time baseline matches:
+
+```bash
+npx ng generate @angular/material:theme-color --primaryColor=#008740
+```
+
+Copy the generated palette into `src/styles/_theme-colors.scss`.
+
 ## Access token expiration and inactivity monitoring
 
 In order to satisfy DFARS compliance, our apps must cease displaying information when user access times out. Therefore, an optional monitor for access token expiration was incorporated to the ComnAuthService. The access token expiration monitor will redirect to the signout redirect URL when the access token expires, if it is enabled. To enable the access token expiration monitor, add the useAccessTokenExpirationRedirect setting as follows:
