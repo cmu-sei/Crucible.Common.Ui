@@ -1,10 +1,8 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Injectable, Inject, Optional, inject } from '@angular/core';
+//import { HttpClient } from '@angular/common/http';
 import { ComnSettingsService } from '../../../comn-settings/services/comn-settings.service';
 
 @Component({
@@ -15,13 +13,30 @@ import { ComnSettingsService } from '../../../comn-settings/services/comn-settin
 })
 export class ComnHeaderBarComponent {
   constructor(
-    private http: HttpClient,
-    private settingsService: ComnSettingsService
-  ) {
-    this.MESSAGE_API_URL = this.settingsService.settings.HeaderBarSettings.url;
+    private settingsService: ComnSettingsService) {
+    try {
+      this.BannerBackgroundColor = this.settingsService.settings.HeaderBarSettings.banner_background_color?.trim() ? this.settingsService.settings.HeaderBarSettings.banner_background_color : '#d40000ff';
+      this.ClassificationText = this.settingsService.settings.HeaderBarSettings.classification_text?.trim() ? this.settingsService.settings.HeaderBarSettings.classification_text : '';
+      this.ClassificationTextColor = this.settingsService.settings.HeaderBarSettings.classification_text_color?.trim() ? this.settingsService.settings.HeaderBarSettings.classification_text_color : '#ffffff';
+      this.ClassificationTextFontSize = this.settingsService.settings.HeaderBarSettings.classification_text_fontsize?.trim() ? this.settingsService.settings.HeaderBarSettings.classification_text_fontsize : '22';
+      this.MessageText = this.settingsService.settings.HeaderBarSettings.message_text?.trim() ? this.settingsService.settings.HeaderBarSettings.message_text : '';
+      this.MessageTextColor = this.settingsService.settings.HeaderBarSettings.message_text_color?.trim() ? this.settingsService.settings.HeaderBarSettings.message_text_color : '#ffff';
+      this.MessageTextFontSize = this.settingsService.settings.HeaderBarSettings.message_text_fontsize?.trim() ?  this.settingsService.settings.HeaderBarSettings.message_text_fontsize : '18';
+      this.Enabled = this.settingsService.settings.HeaderBarSettings.enabled ? this.settingsService.settings.HeaderBarSettings.enabled : false;
+    }
+    catch (e: unknown) {
+      this.setUIDefaults();
+    }
+
+    // detect if the component it is running in an iframe.
+    // if it is, do not diplay the component because the parent
+    // page should handle this
+    if(window.top !== window.self) {
+      this.Enabled = false;
+    }
   }
 
-  MESSAGE_API_URL = '';
+  //MESSAGE_API_URL = '';
   @Input() BannerBackgroundColor?: string = '';
   @Input() ClassificationText?: string = '';
   @Input() ClassificationTextColor?: string = '';
@@ -31,37 +46,37 @@ export class ComnHeaderBarComponent {
   @Input() MessageTextFontSize?: string = '';
   @Input() Enabled: boolean = true;
 
-  ngOnInit() {
-    if (this.MESSAGE_API_URL) {
-      this.http.get<any>(this.MESSAGE_API_URL).subscribe({
-        next: (result) => {
-          this.BannerBackgroundColor = result.banner_background_color?.trim() ? result.banner_background_color : '#d40000ff';
-          this.ClassificationText = result.classification_text?.trim() ? result.classification_text : '';
-          this.ClassificationTextColor = result.classification_text_color?.trim() ? result.classification_text_color : '#ffffff';
-          this.ClassificationTextFontSize = result.classification_text_font_size?.trim() ? result.classification_text_font_size : '22px';
-          this.MessageText = result.message_text?.trim() ? result.message_text : '';
-          this.MessageTextColor = result.message_text_color?.trim() ? result.message_text_color : '#ffffff';
-          this.MessageTextFontSize = result.message_text_font_size?.trim() ?  result.message_text_font_size : '18px';
-          this.Enabled = result.enabled ? result.enabled : false;
-        },
-        error: (err) => {
-          this.setUIDefaults();
-        }
-      });
-    }
-    else {
-      this.setUIDefaults();
-    }
-  }
+  // ngOnInit() {
+  //   if (this.MESSAGE_API_URL) {
+  //     this.http.get<any>(this.MESSAGE_API_URL).subscribe({
+  //       next: (result) => {
+  //         this.BannerBackgroundColor = result.banner_background_color?.trim() ? result.banner_background_color : '#d40000ff';
+  //         this.ClassificationText = result.classification_text?.trim() ? result.classification_text : '';
+  //         this.ClassificationTextColor = result.classification_text_color?.trim() ? result.classification_text_color : '#ffffff';
+  //         this.ClassificationTextFontSize = result.classification_text_font_size?.trim() ? result.classification_text_fontsize : '22';
+  //         this.MessageText = result.message_text?.trim() ? result.message_text : '';
+  //         this.MessageTextColor = result.message_text_color?.trim() ? result.message_text_color : '#ffff';
+  //         this.MessageTextFontSize = result.message_text_font_size?.trim() ?  result.message_text_fontsize : '18';
+  //         this.Enabled = result.enabled ? result.enabled : false;
+  //       },
+  //       error: (err) => {
+  //         this.setUIDefaults();
+  //       }
+  //     });
+  //   }
+  //   else {
+  //     this.setUIDefaults();
+  //   }
+  // }
 
   private setUIDefaults() {
     this.BannerBackgroundColor = "#d40000ff";
     this.ClassificationText = "";
     this.ClassificationTextColor = "#ffffff";
-    this.ClassificationTextFontSize = "22px";
+    this.ClassificationTextFontSize = "22";
     this.MessageText = "";
     this.MessageTextColor = "#ffffff";
-    this.MessageTextFontSize = "18px";
+    this.MessageTextFontSize = "18";
     this.Enabled = true;
   }
 }
