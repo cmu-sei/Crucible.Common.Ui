@@ -2,7 +2,6 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, Input } from '@angular/core';
-//import { HttpClient } from '@angular/common/http';
 import { ComnSettingsService } from '../../../comn-settings/services/comn-settings.service';
 
 @Component({
@@ -36,7 +35,6 @@ export class ComnHeaderBarComponent {
     }
   }
 
-  //MESSAGE_API_URL = '';
   @Input() BannerBackgroundColor?: string = '';
   @Input() ClassificationText?: string = '';
   @Input() ClassificationTextColor?: string = '';
@@ -45,29 +43,6 @@ export class ComnHeaderBarComponent {
   @Input() MessageTextColor?: string = '';
   @Input() MessageTextFontSize?: string = '';
   @Input() Enabled: boolean = true;
-
-  // ngOnInit() {
-  //   if (this.MESSAGE_API_URL) {
-  //     this.http.get<any>(this.MESSAGE_API_URL).subscribe({
-  //       next: (result) => {
-  //         this.BannerBackgroundColor = result.banner_background_color?.trim() ? result.banner_background_color : '#d40000ff';
-  //         this.ClassificationText = result.classification_text?.trim() ? result.classification_text : '';
-  //         this.ClassificationTextColor = result.classification_text_color?.trim() ? result.classification_text_color : '#ffffff';
-  //         this.ClassificationTextFontSize = result.classification_text_font_size?.trim() ? result.classification_text_fontsize : '22';
-  //         this.MessageText = result.message_text?.trim() ? result.message_text : '';
-  //         this.MessageTextColor = result.message_text_color?.trim() ? result.message_text_color : '#ffff';
-  //         this.MessageTextFontSize = result.message_text_font_size?.trim() ?  result.message_text_fontsize : '18';
-  //         this.Enabled = result.enabled ? result.enabled : false;
-  //       },
-  //       error: (err) => {
-  //         this.setUIDefaults();
-  //       }
-  //     });
-  //   }
-  //   else {
-  //     this.setUIDefaults();
-  //   }
-  // }
 
   private setUIDefaults() {
     this.BannerBackgroundColor = "#d40000ff";
