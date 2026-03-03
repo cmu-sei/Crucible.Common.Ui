@@ -1,3 +1,7 @@
+## 0.6.0
+
+- Added the comn-header-bar for displaying classification levels and maintenance messages.
+
 ## 0.4.3
 
 - Updated from Angular 14 to 21. This update requires that consuming apps use Angular 21.0.0 or higher.

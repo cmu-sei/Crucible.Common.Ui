@@ -19,7 +19,11 @@ Find out more on the [Github Page](https://github.com/cmu-sei/Crucible.Common.Ui
 
 #### Auth Module
 
-The Common Auth module is a module that interacts with the Identity server, providing authentication  
+The Common Auth module is a module that interacts with the Identity server, providing authentication
 to the application.
 
 Find out more on the [Github Page](https://github.com/cmu-sei/Crucible.Common.Ui/tree/main/projects/%40crucible-common/src/lib/comn-auth).
+
+#### Header Bar Module
+
+The purpose of this component is to display classification levels and maintenance messages, which are read from the common settings.
