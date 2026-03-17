@@ -1,8 +1,13 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
+:host {
+    display: block;
+}
+
 .message-bar {
     padding: 4px;
+    box-sizing: border-box;
     background-color: #d40000ff;
     color: #ffffff;
     font-weight: 500;
