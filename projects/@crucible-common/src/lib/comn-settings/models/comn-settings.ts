@@ -5,6 +5,7 @@ import { InjectionToken } from '@angular/core';
 
 export interface ComnSettingsConfig {
   url: string;
+  sharedUrl: string;
   envUrl: string;
 }
 

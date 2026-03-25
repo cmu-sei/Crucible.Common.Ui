@@ -28,8 +28,8 @@ export class ComnHeaderBarComponent {
     }
 
     // detect if the component it is running in an iframe.
-    // if it is, do not diplay the component because the parent
-    // page should handle this
+    // do not display the component - the parent
+    // page should handle the display of this component if needed
     if(window.top !== window.self) {
       this.Enabled = false;
     }

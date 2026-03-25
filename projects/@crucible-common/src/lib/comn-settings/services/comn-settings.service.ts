@@ -15,8 +15,10 @@ import {
 })
 export class ComnSettingsService {
   private _url: string;
+  private _sharedUrl: string;
   private _envUrl: string;
   private _settings: any = {};
+  private _http: HttpClient;
 
   get url() {
     return this._url;
@@ -24,6 +26,14 @@ export class ComnSettingsService {
 
   set url(value) {
     this._url = value;
+  }
+
+  get sharedUrl() {
+    return this._sharedUrl;
+  }
+
+  set sharedUrl(value) {
+    this._sharedUrl = value;
   }
 
   get envUrl() {
@@ -47,34 +57,57 @@ export class ComnSettingsService {
     @Inject(forwardRef(() => COMN_SETTINGS_CONFIG))
     config: ComnSettingsConfig = {
       url: `assets/config/settings.json`,
+      sharedUrl: `assets/config/settings.shared.json`,
       envUrl: `assets/config/settings.env.json`,
     },
     private handler: HttpBackend
   ) {
     this.url = config.url;
+    this.sharedUrl = config.sharedUrl;
     this.envUrl = config.envUrl;
+    // Use HttpBackend directly to avoid HTTP_INTERCEPTOR dependency cycle.
+    // https://stackoverflow.com/questions/56928730/app-initializer-and-dependent-token-resolution-issue
+    this._http = new HttpClient(this.handler);
+  }
+
+  private deepMerge(target, source) {
+    const result = { ...target, ...source };
+    for (const key of Object.keys(source)) {
+      if (
+        source[key] &&
+        typeof source[key] === 'object' &&
+        !Array.isArray(source[key]) &&
+        target[key] &&
+        typeof target[key] === 'object' &&
+        !Array.isArray(target[key])
+      ) {
+        result[key] = { ...target[key], ...source[key] };
+      }
+    }
+    return result;
   }
 
   load(): Promise<any> {
     return new Promise<any>((resolve) => {
       zip(
-        // Here we use an HttpBackend handler to fetch the config JSON files, since
-        // using HttpClient initializes the HTTP_INTERCEPTOR. Which is dependant on the
-        // Settings.
-        // https://stackoverflow.com/questions/56928730/app-initializer-and-dependent-token-resolution-issue
-        new HttpClient(this.handler).get(this.url).pipe(
+        this._http.get(this.url).pipe(
           catchError((err) => {
             return this.notify(err);
           })
         ),
-        new HttpClient(this.handler).get(this.envUrl).pipe(
+        this._http.get(this.sharedUrl).pipe(
+          catchError((err) => {
+            return this.notify(err);
+          })
+        ),
+        this._http.get(this.envUrl).pipe(
           catchError((err) => {
             return this.notify(err);
           })
         )
       )
         .pipe(
-          // Remove error objects, typically these are files or endpoints that don't exists.
+          // Remove error objects, typically these are files or endpoints that don't exist.
           map((result) =>
             result.filter((f) => !(f instanceof HttpErrorResponse))
           ),
@@ -83,14 +116,18 @@ export class ComnSettingsService {
           })
         )
         .subscribe((result: any) => {
-          this.settings = result.reduce((p, v) => {
-            let settingsResult = { ...p, ...v };
-            settingsResult.OIDCSettings = {
-              ...p.OIDCSettings,
-              ...v.OIDCSettings,
-            };
-            return settingsResult;
-          }, this._settings);
+          this.settings = result.reduce(
+            (p, v) => this.deepMerge(p, v),
+            this._settings
+          );
+          // this.settings = result.reduce((p, v) => {
+          // let settingsResult = { ...p, ...v };
+          // settingsResult.OIDCSettings = {
+          //   ...p.OIDCSettings,
+          //   ...v.OIDCSettings,
+          // };
+          //   return settingsResult;
+          // }, this._settings);
           this.notify(this.settings).pipe(take(1)).subscribe();
           resolve(true);
         });
