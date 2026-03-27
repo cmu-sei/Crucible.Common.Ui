@@ -81,7 +81,7 @@ export class ComnSettingsService {
         typeof target[key] === 'object' &&
         !Array.isArray(target[key])
       ) {
-        result[key] = { ...target[key], ...source[key] };
+        result[key] = this.deepMerge(target[key], source[key]);
       }
     }
     return result;
