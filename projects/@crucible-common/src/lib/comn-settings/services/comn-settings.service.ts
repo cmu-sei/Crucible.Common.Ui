@@ -1,7 +1,11 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { HttpBackend, HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {
+  HttpBackend,
+  HttpClient,
+  HttpErrorResponse,
+} from '@angular/common/http';
 import { Inject, Injectable, Optional, forwardRef } from '@angular/core';
 import { Observable, of, zip } from 'rxjs';
 import { catchError, map, take, tap } from 'rxjs/operators';
@@ -60,7 +64,7 @@ export class ComnSettingsService {
       sharedUrl: `assets/config/settings.shared.json`,
       envUrl: `assets/config/settings.env.json`,
     },
-    private handler: HttpBackend
+    private handler: HttpBackend,
   ) {
     this.url = config.url;
     this.sharedUrl = config.sharedUrl;
@@ -93,41 +97,33 @@ export class ComnSettingsService {
         this._http.get(this.url).pipe(
           catchError((err) => {
             return this.notify(err);
-          })
+          }),
         ),
         this._http.get(this.sharedUrl).pipe(
           catchError((err) => {
             return this.notify(err);
-          })
+          }),
         ),
         this._http.get(this.envUrl).pipe(
           catchError((err) => {
             return this.notify(err);
-          })
-        )
+          }),
+        ),
       )
         .pipe(
           // Remove error objects, typically these are files or endpoints that don't exist.
           map((result) =>
-            result.filter((f) => !(f instanceof HttpErrorResponse))
+            result.filter((f) => !(f instanceof HttpErrorResponse)),
           ),
           catchError((err) => {
             return this.notify(err);
-          })
+          }),
         )
         .subscribe((result: any) => {
           this.settings = result.reduce(
             (p, v) => this.deepMerge(p, v),
-            this._settings
+            this._settings,
           );
-          // this.settings = result.reduce((p, v) => {
-          // let settingsResult = { ...p, ...v };
-          // settingsResult.OIDCSettings = {
-          //   ...p.OIDCSettings,
-          //   ...v.OIDCSettings,
-          // };
-          //   return settingsResult;
-          // }, this._settings);
           this.notify(this.settings).pipe(take(1)).subscribe();
           resolve(true);
         });
@@ -146,7 +142,7 @@ export class ComnSettingsService {
             console.log(JSON.stringify(error, null, 2));
           }
         }
-      })
+      }),
     );
   }
 }
