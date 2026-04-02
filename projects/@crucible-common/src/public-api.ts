@@ -11,3 +11,4 @@
 export * from './lib/comn-settings';
 export * from './lib/comn-auth';
 export * from './lib/comn-theme';
+export * from './lib/comn-header-bar';
