@@ -15,18 +15,7 @@ export class ComnAuthGuardService implements CanActivate {
       if (isAuthenticated) {
         return true;
       } else {
-        return this.authService
-          .startSilentAuthentication()
-          .then((user) => {
-            if (user && !user.expired) {
-              return true;
-            } else {
-              return this.startAuthentication(state.url);
-            }
-          })
-          .catch((e) => {
-            return this.startAuthentication(state.url);
-          });
+        return this.startAuthentication(state.url);
       }
     });
   }
