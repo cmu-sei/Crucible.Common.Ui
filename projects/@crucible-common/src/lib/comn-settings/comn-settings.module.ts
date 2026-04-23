@@ -21,13 +21,7 @@ export function get_settings(settings: ComnSettingsService) {
 export const COMN_SETTINGS_TOKEN = new InjectionToken('ComnSettings');
 
 @NgModule({ declarations: [],
-    exports: [], imports: [CommonModule], providers: [
-        provideAppInitializer(() => {
-        const initializerFn = (get_settings)(inject(ComnSettingsService));
-        return initializerFn();
-      }),
-        provideHttpClient(withInterceptorsFromDi()),
-    ] })
+    exports: [], imports: [CommonModule], providers: [] })
 export class ComnSettingsModule {
   constructor(@Optional() @SkipSelf() parentModule: ComnSettingsModule) {
     if (parentModule) {
@@ -48,6 +42,7 @@ export class ComnSettingsModule {
         const initializerFn = (get_settings)(inject(ComnSettingsService));
         return initializerFn();
       }),
+        provideHttpClient(withInterceptorsFromDi()),
         { provide: COMN_SETTINGS_CONFIG, useValue: config },
       ],
     };
