@@ -6,8 +6,13 @@ import { AppComponent } from './app.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { PostsComponent } from './posts/posts.component';
+import { DialogDemoComponent } from './dialog-demo/dialog-demo.component';
 
 const routes: Routes = [
+  {
+    path: 'dialogs',
+    component: DialogDemoComponent,
+  },
   {
     path: '',
     component: PostsComponent,

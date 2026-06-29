@@ -6,8 +6,11 @@ Crucible Common modules are a set of angular modules that are common between Cru
 
 #### Modules
 
-- [Settings Module](projects/@crucible-common/src/lib/comn-settings/README.md)
-- [Auth Module](projects/@crucible-common/src/lib/comn-auth/README.md)
+- [Settings Module](projects/@crucible-common/src/lib/comn-settings/README.md) — loads runtime app settings from a JSON file and exposes them via a service.
+- [Auth Module](projects/@crucible-common/src/lib/comn-auth/README.md) — OpenID Connect authentication, with optional access-token-expiration and inactivity monitoring (see [below](#access-token-expiration-and-inactivity-monitoring)).
+- **Theme Module (`comn-theme`)** — shared dynamic Material 3 color theming driven by a single primary hex color (see [Color Theming](#color-theming) below).
+- **Header Bar Module (`comn-header-bar`)** — displays classification levels and maintenance messages read from the common settings.
+- [Dialog Module (`crucible-dialog`)](projects/@crucible-common/src/lib/crucible-dialog/README.md) — shared, app-agnostic modal building blocks (confirm dialogs, reactive-form modals, content/custom-footer dialogs) with consistent structure and dismissal behavior.
 
 ### **Running the sample application.**
 
@@ -17,7 +20,63 @@ To run the application start the `json-server`
 
 `npm run json-server`
 
-Run the application as normal.
+Run the application as normal. The sample app includes a `/dialogs` route
+(`dialog-demo`) that exercises the `crucible-dialog` module — confirm dialogs,
+reactive-form modals, and content/custom-footer dialogs.
+
+## Unit testing
+
+The library and the sample app are unit-tested with [Karma](https://karma-runner.github.io/)
+and [Jasmine](https://jasmine.github.io/), wired through the Angular CLI
+`@angular-devkit/build-angular:karma` builder.
+
+### Running the tests
+
+```bash
+# Library specs (projects/@crucible-common)
+ng test crucible-common
+
+# Sample/demo app specs (projects/cwd-common-app)
+ng test cwd-common-app
+```
+
+`npm test` maps to `ng test`. There is no default project, so pass the project
+name (`crucible-common` or `cwd-common-app`) to choose which suite runs.
+
+### Layout and configuration
+
+- **Spec files** live next to the code they cover as `*.spec.ts` (e.g.
+  `crucible-dialog/services/crucible-dialog.service.spec.ts`). Both the
+  `crucible-dialog` components and its service ship specs.
+- **Karma config** is per-project: `projects/@crucible-common/karma.conf.js`
+  for the library and `projects/cwd-common-app/karma.conf.cjs` for the app
+  (the app uses the `.cjs` extension because its `package.json` is ESM).
+- **Spec TypeScript config** is per-project: `tsconfig.spec.json` in each
+  project root, referenced by the `test` target in `angular.json`.
+- **Test target wiring** is the `test` architect target for each project in
+  `angular.json`.
+
+### Headless Chrome
+
+Both Karma configs define a `ChromeHeadlessNoSandbox` launcher (the default
+browser) that runs headless Chrome with `--no-sandbox --disable-gpu
+--disable-dev-shm-usage`, so the suites run unattended in CI and containers.
+Set the `CHROME_BIN` environment variable if Karma can't locate a Chrome
+binary, e.g.:
+
+```bash
+CHROME_BIN=$(which google-chrome) ng test crucible-common
+```
+
+Coverage reports (html + text summary) are written under `coverage/` per
+project.
+
+### Dev dependencies
+
+The Karma/Jasmine toolchain (`karma`, `karma-chrome-launcher`,
+`karma-coverage`, `karma-jasmine`, `karma-jasmine-html-reporter`,
+`jasmine-core`, `@types/jasmine`) is declared in the root `package.json`
+`devDependencies` and is installed by `npm install`.
 
 ## **External Testing.**
 

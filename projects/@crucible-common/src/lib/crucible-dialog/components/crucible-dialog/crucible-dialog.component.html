@@ -1,0 +1,81 @@
+<!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
+<!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
+
+<h2 mat-dialog-title>
+  @if (projectedTitle) {
+    <!-- Custom header (e.g. title text + an icon button). Projected once. -->
+    <ng-content select="[crucibleDialogTitle]"></ng-content>
+  } @else {
+    {{ title() }}
+  }
+</h2>
+
+@if (form(); as fg) {
+  <!-- Branch A: form modal. The single <form> wraps content AND actions so
+       type="submit" and Enter-to-submit work (§2b). -->
+  <form [formGroup]="fg" (ngSubmit)="onFormSubmit($event)">
+    <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
+    <ng-container [ngTemplateOutlet]="actionsTpl"></ng-container>
+  </form>
+} @else {
+  <!-- Branch B: content modal (no form). Primary is type="button". -->
+  <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
+  <ng-container [ngTemplateOutlet]="actionsTpl"></ng-container>
+}
+
+<!-- Content and actions are defined ONCE here and projected into whichever
+     branch renders. Declaring each <ng-content> selector a single time is
+     required: a selector duplicated across @if branches binds the projected
+     nodes to the slot in the branch that is NOT rendered, leaving the visible
+     branch empty. -->
+<ng-template #contentTpl>
+  <mat-dialog-content>
+    <ng-content select="[crucibleDialogContent]"></ng-content>
+    @if (errorMessage()) {
+      <p role="alert" class="crucible-dialog-error">{{ errorMessage() }}</p>
+    }
+  </mat-dialog-content>
+</ng-template>
+
+<ng-template #actionsTpl>
+  <mat-dialog-actions align="end">
+    @if (showDefaultActions) {
+      <!-- Cancel ALWAYS closes the dialog declaratively via [mat-dialog-close],
+           just like the confirm dialog — a host that omits a (cancel) handler
+           still gets a working dismiss button (and Cancel stays the deliberate
+           way out even while Escape is suppressed). (cancel) remains for hosts
+           that need to react (reset/confirm-discard/logging) on dismissal. The
+           [mat-dialog-close] is inert when rendered outside a MatDialog. -->
+      <button
+        matButton="outlined"
+        type="button"
+        mat-dialog-close
+        (click)="onCancel()"
+      >
+        {{ cancelLabel() }}
+      </button>
+      <!-- Unconditional cdkFocusInitial: Material's focus trap skips a disabled
+           cdkFocusInitial element and falls back to the next tabbable element
+           (Cancel, always enabled), so initial focus is never lost — no
+           conditional binding (and no focusPrimary input) needed. -->
+      <button
+        matButton="filled"
+        [type]="form() ? 'submit' : 'button'"
+        cdkFocusInitial
+        [disabled]="primaryDisabled"
+        (click)="onSubmitClick()"
+      >
+        {{ loading() ? loadingLabel() : submitLabel() }}
+        @if (loading()) {
+          <mat-progress-spinner
+            mode="indeterminate"
+            diameter="18"
+            aria-hidden="true"
+          ></mat-progress-spinner>
+        }
+      </button>
+    } @else {
+      <ng-content select="[crucibleDialogActions]"></ng-content>
+    }
+  </mat-dialog-actions>
+</ng-template>

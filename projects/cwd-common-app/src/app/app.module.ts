@@ -8,6 +8,7 @@ import {
   ComnSettingsConfig,
 } from 'projects/@crucible-common/src/public-api';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -24,13 +25,16 @@ const settings: ComnSettingsConfig = {
 
 akitaDevtools();
 @NgModule({
-  declarations: [AppComponent, PostsComponent],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     environment.production ? [] : AkitaNgDevtools,
     ComnSettingsModule.forRoot(settings),
     ComnAuthModule.forRoot(),
+    // AppComponent and PostsComponent are standalone; import rather than declare.
+    AppComponent,
+    PostsComponent,
   ],
   bootstrap: [AppComponent],
 })

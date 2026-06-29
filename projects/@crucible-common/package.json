@@ -10,6 +10,9 @@
   "peerDependencies": {
     "@angular/common": ">=21.0.0",
     "@angular/core": ">=21.0.0",
+    "@angular/forms": ">=21.0.0",
+    "@angular/material": ">=21.0.0",
+    "@angular/cdk": ">=21.0.0",
     "@datorama/akita": "^8.0.0",
     "oidc-client-ts": "^2.4.0 || ^3.0.0",
     "rxjs": "^7.8.1",
