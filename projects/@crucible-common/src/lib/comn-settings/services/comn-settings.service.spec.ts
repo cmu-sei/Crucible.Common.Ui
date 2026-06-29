@@ -9,7 +9,7 @@ describe('ComnSettingsService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: ComnSettingsService = TestBed.get(ComnSettingsService);
+    const service: ComnSettingsService = TestBed.inject(ComnSettingsService);
     expect(service).toBeTruthy();
   });
 });

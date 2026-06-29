@@ -22,7 +22,12 @@
           }
 },
         "test": {
-
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "tsConfig": "projects/@crucible-common/tsconfig.spec.json",
+            "karmaConfig": "projects/@crucible-common/karma.conf.js",
+            "polyfills": ["zone.js", "zone.js/testing"]
+          }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
@@ -116,6 +121,12 @@
           }
         },
         "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "tsConfig": "projects/cwd-common-app/tsconfig.spec.json",
+            "karmaConfig": "projects/cwd-common-app/karma.conf.cjs",
+            "polyfills": ["zone.js", "zone.js/testing"]
+          }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",

@@ -9,7 +9,7 @@ describe('CommAuthGuardService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: ComnAuthGuardService = TestBed.get(ComnAuthGuardService);
+    const service: ComnAuthGuardService = TestBed.inject(ComnAuthGuardService);
     expect(service).toBeTruthy();
   });
 });
