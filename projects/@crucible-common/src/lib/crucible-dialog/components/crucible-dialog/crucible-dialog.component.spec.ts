@@ -13,7 +13,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
 import { CrucibleDialogComponent } from './crucible-dialog.component';
-import { CrucibleDialogModule } from '../../crucible-dialog.module';
+import { CRUCIBLE_DIALOG_IMPORTS } from '../../index';
 
 class MatDialogRefStub {
   disableClose = false;
@@ -146,7 +146,11 @@ describe('CrucibleDialogComponent', () => {
       // ReactiveFormsModule is imported the way a real consumer does (the wrapper
       // imports it internally but does not re-export it, since the projected
       // [formGroup]/formControlName resolve in the consumer's own context).
-      imports: [CrucibleDialogModule, ReactiveFormsModule, NoopAnimationsModule],
+      imports: [
+        ...CRUCIBLE_DIALOG_IMPORTS,
+        ReactiveFormsModule,
+        NoopAnimationsModule,
+      ],
       declarations: [
         FormHostComponent,
         ContentHostComponent,

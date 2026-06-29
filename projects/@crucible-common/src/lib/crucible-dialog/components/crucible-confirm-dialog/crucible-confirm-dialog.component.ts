@@ -1,8 +1,10 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
+import { A11yModule } from '@angular/cdk/a11y';
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { CrucibleConfirmOptions } from '../../models/crucible-confirm-options';
 
 /**
@@ -17,7 +19,7 @@ import { CrucibleConfirmOptions } from '../../models/crucible-confirm-options';
 @Component({
   selector: 'crucible-confirm-dialog',
   templateUrl: './crucible-confirm-dialog.component.html',
-  standalone: false,
+  imports: [MatDialogModule, MatButtonModule, A11yModule],
 })
 export class CrucibleConfirmDialogComponent {
   constructor(

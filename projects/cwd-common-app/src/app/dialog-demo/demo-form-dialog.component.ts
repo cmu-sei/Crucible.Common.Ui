@@ -12,7 +12,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
-import { CrucibleDialogModule } from 'projects/@crucible-common/src/public-api';
+import { CRUCIBLE_DIALOG_IMPORTS } from 'projects/@crucible-common/src/public-api';
 
 /**
  * Example form modal. Demonstrates the §2b form shape using <crucible-dialog>
@@ -26,7 +26,7 @@ import { CrucibleDialogModule } from 'projects/@crucible-common/src/public-api';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    CrucibleDialogModule,
+    ...CRUCIBLE_DIALOG_IMPORTS,
   ],
   template: `
     <crucible-dialog

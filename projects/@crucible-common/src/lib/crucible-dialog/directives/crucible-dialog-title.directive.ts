@@ -11,6 +11,5 @@ import { Directive } from '@angular/core';
  */
 @Directive({
   selector: '[crucibleDialogTitle]',
-  standalone: false,
 })
 export class CrucibleDialogTitleDirective {}

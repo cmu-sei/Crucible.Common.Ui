@@ -5,7 +5,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { CrucibleConfirmDialogComponent } from './crucible-confirm-dialog.component';
-import { CrucibleDialogModule } from '../../crucible-dialog.module';
 import { CrucibleConfirmOptions } from '../../models/crucible-confirm-options';
 
 class MatDialogRefStub {
@@ -26,7 +25,7 @@ function setup(data: Partial<CrucibleConfirmOptions>) {
   };
   const ref = new MatDialogRefStub();
   TestBed.configureTestingModule({
-    imports: [CrucibleDialogModule, NoopAnimationsModule],
+    imports: [CrucibleConfirmDialogComponent, NoopAnimationsModule],
     providers: [
       { provide: MAT_DIALOG_DATA, useValue: merged },
       { provide: MatDialogRef, useValue: ref },

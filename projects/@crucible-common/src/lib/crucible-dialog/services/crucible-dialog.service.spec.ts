@@ -4,7 +4,6 @@
 import { TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { CrucibleDialogModule } from '../crucible-dialog.module';
 import { CrucibleConfirmDialogComponent } from '../components/crucible-confirm-dialog/crucible-confirm-dialog.component';
 import { CrucibleDialogService } from './crucible-dialog.service';
 
@@ -15,7 +14,7 @@ describe('CrucibleDialogService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [CrucibleDialogModule, NoopAnimationsModule],
+      imports: [NoopAnimationsModule],
       providers: [CrucibleDialogService],
     });
     service = TestBed.inject(CrucibleDialogService);

@@ -6,7 +6,6 @@ import {
   ComnSettingsModule,
   ComnAuthModule,
   ComnSettingsConfig,
-  CrucibleDialogModule,
 } from 'projects/@crucible-common/src/public-api';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -34,7 +33,6 @@ akitaDevtools();
     environment.production ? [] : AkitaNgDevtools,
     ComnSettingsModule.forRoot(settings),
     ComnAuthModule.forRoot(),
-    CrucibleDialogModule,
   ],
   bootstrap: [AppComponent],
 })

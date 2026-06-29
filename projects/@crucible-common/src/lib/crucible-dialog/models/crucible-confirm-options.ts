@@ -5,9 +5,9 @@
  * Options for {@link CrucibleDialogService.confirm}. Pure, app-agnostic types.
  */
 export interface CrucibleConfirmOptions {
-  /** Dialog title; rendered as <h2 mat-dialog-title> and used as the accessible name. */
+  /** Dialog title; used as the accessible name. */
   title: string;
-  /** Message body; rendered as a <p> inside mat-dialog-content. */
+  /** Message body. */
   message: string;
   /** Affirmative button label. Title Case verb. Default 'Yes'. */
   confirmText?: string;

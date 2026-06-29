@@ -10,8 +10,24 @@ structure (title → content → actions) and look across every app, inherited f
 the consuming app's M3 Material theme — the components ship **almost no CSS of
 their own**.
 
-Import `CrucibleDialogModule` into the NgModule (or standalone component) that
-declares your dialog.
+Spread `CRUCIBLE_DIALOG_IMPORTS` into the `imports` of the standalone component
+(or NgModule) that declares your dialog:
+
+```ts
+import { CRUCIBLE_DIALOG_IMPORTS } from '@crucible-common';
+
+@Component({
+  // …
+  imports: [...CRUCIBLE_DIALOG_IMPORTS],
+})
+```
+
+The components and directives are standalone, so you can also import them
+individually if you prefer. The Material/CDK pieces a dialog needs **inside its
+own projected content** (e.g. `mat-dialog-close` on a custom footer button,
+`matIconButton`/`mat-icon` in a custom title, or `cdkFocusInitial` on a field)
+compile in the consumer's template context — import those in the consuming
+component yourself.
 
 ## Picking a shape
 
