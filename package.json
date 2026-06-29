@@ -15,8 +15,7 @@
     "pack": "npm run build crucible-common --aot && cd dist/@crucible-common && npm pack",
     "build:clean": "rimraf dist",
     "build:link": "npm run build:clean && run-p watch:* link:crucible-common ",
-    "json-server": "json-server ./projects/cwd-common-app/src/assets/db/db.json",
-    "playground": "angular-playground"
+    "json-server": "json-server ./projects/cwd-common-app/src/assets/db/db.json"
   },
   "private": true,
   "dependencies": {
@@ -35,7 +34,6 @@
     "@angular/router": ">=21.2.0",
     "@datorama/akita": "^8.0.0",
     "@material/material-color-utilities": "^0.4.0",
-    "angular-playground": "^10.1.0",
     "oidc-client-ts": "^2.4.0",
     "rimraf": "^3.0.2",
     "rxjs": "^7.8.1",
@@ -50,7 +48,7 @@
     "@angular/language-service": "^21.2.0",
     "@babel/core": "^7.14.8",
     "@datorama/akita-ngdevtools": "^6.0.1",
-    "@types/node": "^16.3.3",
+    "@types/node": "^22.10.0",
     "babel-loader": "^8.2.2",
     "codelyzer": "^6.0.2",
     "jsdom": "^29.1.1",
