@@ -1,0 +1,13 @@
+// Copyright 2021 Carnegie Mellon University. All Rights Reserved.
+// Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+
+// MINIMAL, justified-only CSS (spec Principle 2 / §7b).
+// Everything else (font, type scale, padding, button fill/shape, field underline,
+// contrast) falls out of the consuming app's M3 theme and is intentionally absent.
+
+// §7b: error region colored with the error system token only (never literal hex,
+// never the sole failure signal — the text states what failed).
+.crucible-dialog-error {
+  color: var(--mat-sys-error);
+  margin: 0;
+}

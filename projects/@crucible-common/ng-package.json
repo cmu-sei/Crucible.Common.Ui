@@ -4,5 +4,7 @@
   "lib": {
     "entryFile": "src/public-api.ts"
   },
-  "assets": ["./src/lib/comn-auth/assets/auth-callback-silent.html"]
+  "assets": [
+    "./src/lib/comn-auth/assets/auth-callback-silent.html"
+  ]
 }

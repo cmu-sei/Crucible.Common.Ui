@@ -1,3 +1,12 @@
+## 0.6.1
+
+- Added the crucible-dialog module: shared, app-agnostic modal building blocks
+  (`CrucibleDialogService.confirm(...)` for confirm dialogs and the
+  `<crucible-dialog>` wrapper for reactive-form, template-driven, and
+  content-only modals) with consistent structure, theming, and dismissal
+  behavior. Adds `@angular/forms`, `@angular/material`, and `@angular/cdk` as
+  peer dependencies. See crucible-dialog/README.md.
+
 ## 0.6.0
 
 - Added the comn-header-bar for displaying classification levels and maintenance messages.
