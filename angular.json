@@ -10,23 +10,23 @@
       "prefix": "lib",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "builder": "@angular/build:ng-packagr",
           "options": {
             "tsConfig": "projects/@crucible-common/tsconfig.lib.json",
             "project": "projects/@crucible-common/ng-package.json"
-          }
-        ,          "configurations": {
+          },
+          "configurations": {
             "production": {
               "tsConfig": "projects/@crucible-common/tsconfig.lib.prod.json"
             }
           }
-},
+        },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
             "tsConfig": "projects/@crucible-common/tsconfig.spec.json",
-            "karmaConfig": "projects/@crucible-common/karma.conf.js",
-            "polyfills": ["zone.js", "zone.js/testing"]
+            "buildTarget": "crucible-common:build",
+            "runnerConfig": true
           }
         },
         "lint": {
@@ -53,7 +53,7 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@angular/build:application",
           "options": {
             "outputPath": {
               "base": "dist/cwd-common-app"
@@ -99,7 +99,7 @@
           }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular/build:dev-server",
           "options": {
             "buildTarget": "cwd-common-app:build"
           },
@@ -115,17 +115,17 @@
           }
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "builder": "@angular/build:extract-i18n",
           "options": {
             "buildTarget": "cwd-common-app:build"
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
             "tsConfig": "projects/cwd-common-app/tsconfig.spec.json",
-            "karmaConfig": "projects/cwd-common-app/karma.conf.cjs",
-            "polyfills": ["zone.js", "zone.js/testing"]
+            "buildTarget": "cwd-common-app:build",
+            "runnerConfig": true
           }
         },
         "lint": {

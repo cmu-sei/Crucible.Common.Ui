@@ -25,7 +25,6 @@ const settings: ComnSettingsConfig = {
 
 akitaDevtools();
 @NgModule({
-  declarations: [AppComponent, PostsComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -33,6 +32,9 @@ akitaDevtools();
     environment.production ? [] : AkitaNgDevtools,
     ComnSettingsModule.forRoot(settings),
     ComnAuthModule.forRoot(),
+    // AppComponent and PostsComponent are standalone; import rather than declare.
+    AppComponent,
+    PostsComponent,
   ],
   bootstrap: [AppComponent],
 })

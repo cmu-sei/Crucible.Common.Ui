@@ -2,6 +2,7 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { ComnSettingsService } from 'projects/@crucible-common/src/public-api';
@@ -10,7 +11,7 @@ import { ComnSettingsService } from 'projects/@crucible-common/src/public-api';
     selector: 'app-posts',
     templateUrl: './posts.component.html',
     styleUrls: ['./posts.component.scss'],
-    standalone: false
+    imports: [CommonModule],
 })
 export class PostsComponent implements OnInit {
   posts$: Observable<any> = of([]);
