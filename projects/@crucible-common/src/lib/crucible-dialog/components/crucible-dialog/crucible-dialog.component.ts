@@ -130,6 +130,33 @@ export class CrucibleDialogComponent {
     return !this.hideDefaultActions() && !this.projectedActions;
   }
 
+  onEnterKeydown(event: Event): void {
+    const keyEvent = event as KeyboardEvent;
+    // Mirror native implicit submission: Enter in a multiline control inserts a
+    // newline, it does not submit. Only single-line inputs submit on Enter.
+    const target = keyEvent.target as HTMLElement | null;
+    if (target?.tagName === 'TEXTAREA') {
+      return;
+    }
+    // A host app's global key handler may register an "enter" shortcut that
+    // calls preventDefault() on the keydown (e.g. @ngneat/hotkeys with
+    // allowIn:["INPUT"]), which suppresses the browser's native implicit form
+    // submission. The dialog's own form-level handler runs first (bubbling from
+    // the focused control), so we drive submission ourselves rather than relying
+    // on the default action surviving. preventDefault here also stops a second,
+    // native submit from firing — submit emits exactly once.
+    keyEvent.preventDefault();
+    // Respect the disabled primary: Enter must not submit what the button can't.
+    if (this.primaryDisabled) {
+      return;
+    }
+    // Route through the real form submission pipeline (runs validation and fires
+    // (ngSubmit) → onFormSubmit) rather than emitting submit directly, so Enter
+    // and clicking the primary behave identically.
+    const form = (event.currentTarget ?? event.target) as HTMLFormElement | null;
+    form?.requestSubmit?.();
+  }
+
   onFormSubmit(event: Event): void {
     // Form mode: the projected form's (ngSubmit) is the single submit signal.
     // The native DOM 'submit' event bubbles up to the host <crucible-dialog>,

@@ -42,6 +42,7 @@ class MatDialogRefStub {
     >
       <ng-container crucibleDialogContent [formGroup]="form">
         <input id="name-field" formControlName="name" />
+        <textarea id="notes-field" formControlName="notes"></textarea>
       </ng-container>
     </crucible-dialog>
   `,
@@ -51,7 +52,10 @@ class FormHostComponent {
     @ViewChild(CrucibleDialogComponent)
     dialog!: CrucibleDialogComponent;
     title = 'Edit Directory';
-    form = new FormGroup({ name: new FormControl('', Validators.required) });
+    form = new FormGroup({
+        name: new FormControl('', Validators.required),
+        notes: new FormControl(''),
+    });
     submitLabel = 'Save';
     // Signals so that mutating them in a zoneless test schedules change
     // detection, which `await fixture.whenStable()` then flushes.
@@ -236,6 +240,54 @@ describe('CrucibleDialogComponent', () => {
             form.dispatchEvent(new Event('submit'));
             await fixture.whenStable();
             expect(host.submitted).toBe(1);
+        });
+
+        it('submits when Enter is pressed in a text input, even if a host cancels the default action', async () => {
+            // A consuming app may register a global keydown handler that calls
+            // preventDefault() on Enter (e.g. @ngneat/hotkeys with a default
+            // "enter" shortcut and allowIn:["INPUT"]), which suppresses the
+            // browser's native implicit form submission. The dialog must submit
+            // on Enter regardless, so form modals are operable by keyboard (§7).
+            const input: HTMLInputElement = fixture.nativeElement.querySelector('#name-field');
+            const event = new KeyboardEvent('keydown', {
+                key: 'Enter',
+                bubbles: true,
+                cancelable: true,
+            });
+            // Simulate the host having already cancelled the default action.
+            event.preventDefault();
+            input.dispatchEvent(event);
+            await fixture.whenStable();
+            expect(host.submitted).toBe(1);
+        });
+
+        it('emits submit exactly once on Enter (no double-fire with native submit)', async () => {
+            const input: HTMLInputElement = fixture.nativeElement.querySelector('#name-field');
+            input.dispatchEvent(
+                new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }),
+            );
+            await fixture.whenStable();
+            expect(host.submitted).toBe(1);
+        });
+
+        it('does NOT submit on Enter from a textarea (preserves newline entry)', async () => {
+            const textarea: HTMLTextAreaElement = fixture.nativeElement.querySelector('#notes-field');
+            textarea.dispatchEvent(
+                new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }),
+            );
+            await fixture.whenStable();
+            expect(host.submitted).toBe(0);
+        });
+
+        it('does NOT submit on Enter while the primary is disabled', async () => {
+            host.submitDisabled.set(true);
+            await fixture.whenStable();
+            const input: HTMLInputElement = fixture.nativeElement.querySelector('#name-field');
+            input.dispatchEvent(
+                new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }),
+            );
+            await fixture.whenStable();
+            expect(host.submitted).toBe(0);
         });
 
         it('emits submit exactly once when the type="submit" primary is clicked (no double-fire)', async () => {

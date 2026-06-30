@@ -12,8 +12,16 @@
 
 @if (form(); as fg) {
   <!-- Branch A: form modal. The single <form> wraps content AND actions so
-       type="submit" and Enter-to-submit work (§2b). -->
-  <form [formGroup]="fg" (ngSubmit)="onFormSubmit($event)">
+       type="submit" and Enter-to-submit work (§2b). The explicit (keydown.enter)
+       handler guarantees Enter submits even when a host app's global key handler
+       (e.g. @ngneat/hotkeys with a default "enter" shortcut + allowIn:["INPUT"])
+       calls preventDefault() and suppresses the browser's native implicit
+       submission. See onEnterKeydown. -->
+  <form
+    [formGroup]="fg"
+    (ngSubmit)="onFormSubmit($event)"
+    (keydown.enter)="onEnterKeydown($event)"
+  >
     <ng-container [ngTemplateOutlet]="contentTpl"></ng-container>
     <ng-container [ngTemplateOutlet]="actionsTpl"></ng-container>
   </form>
