@@ -6,6 +6,9 @@ on:
       version:
         description: 'Version of the Client package'
         required: true
+      tag:
+        description: 'npm dist-tag (required for prerelease versions, e.g. next, rc)'
+        required: false
 
 jobs:
   build:
@@ -13,7 +16,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.ref }}
           fetch-depth: 0
@@ -24,7 +27,7 @@ jobs:
           FULLNAME=${{ github.ref }}
           BRANCHNAMEORIGIN=${FULLNAME#*/}
           BRANCHNAME=${BRANCHNAMEORIGIN#*/}
-          echo ::set-output name=branch::$BRANCHNAME
+          echo "branch=$BRANCHNAME" >> $GITHUB_OUTPUT
 
       - name: Version Package
         run: |
@@ -33,16 +36,15 @@ jobs:
           npm version --allow-same-version --no-git-tag-version ${{ github.event.inputs.version }}
 
       - name: Add & Commit
-        uses: EndBug/add-and-commit@v9.1.4
-        with:
-          author_name: Github Actions
-          branch: ${{ steps.get_branch_name.outputs.name }}
-          message: Update version number to ${{ github.event.inputs.version }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "Github Actions"
+          git config user.email "actions@github.com"
+          git add package.json projects/@crucible-common/package.json
+          git commit -m "Update version number to ${{ github.event.inputs.version }}"
+          git push origin ${{ steps.get_branch_name.outputs.branch }}
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v6.2.0
+        uses: actions/setup-node@v6
         with:
           # Set always-auth in npmrc
           node-version: '24'
@@ -52,7 +54,10 @@ jobs:
         run: |
           npm install
           npm run pack
-          npm publish dist/@crucible-common/cmusei-crucible-common-${{ github.event.inputs.version }}.tgz --access public
+          TAG_ARG=""
+          if [ -n "$INPUT_TAG" ]; then TAG_ARG="--tag $INPUT_TAG"; fi
+          npm publish dist/@crucible-common/cmusei-crucible-common-${{ github.event.inputs.version }}.tgz --access public $TAG_ARG
         env:
           NPM_TOKEN: ${{ secrets.NPM_APIKEY }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_APIKEY }}
+          INPUT_TAG: ${{ github.event.inputs.tag }}
