@@ -8,8 +8,14 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button matButton="outlined" [mat-dialog-close]="false">{{ data.cancelText }}</button>
-  <button matButton="filled" [mat-dialog-close]="true" cdkFocusInitial>
-    {{ data.confirmText }}
-  </button>
+  <!-- An empty label hides the button, so a message dialog can show a single
+       acknowledge button (e.g. OK) without a spurious blank-labelled sibling. -->
+  @if (data.cancelText) {
+    <button matButton="outlined" [mat-dialog-close]="false">{{ data.cancelText }}</button>
+  }
+  @if (data.confirmText) {
+    <button matButton="filled" [mat-dialog-close]="true" cdkFocusInitial>
+      {{ data.confirmText }}
+    </button>
+  }
 </mat-dialog-actions>
