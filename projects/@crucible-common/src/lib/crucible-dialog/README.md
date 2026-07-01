@@ -55,6 +55,17 @@ this.crucibleDialog
 A confirm that needs an embedded control (e.g. a checkbox) or a non-boolean
 result is really a **form modal** — use `<crucible-dialog>`, not `confirm()`.
 
+### Single-button (message) dialogs
+
+For an acknowledge-only message ("Cannot delete — destroy resources first"),
+pass an empty string for the button you don't want. An empty label hides that
+button, leaving one:
+
+```ts
+// OK-only info dialog (no cancel button):
+this.crucibleDialog.confirm({ title: 'Cannot Delete', message: '…', confirmText: 'OK', cancelText: '' });
+```
+
 ## Reactive form modal
 
 ```html

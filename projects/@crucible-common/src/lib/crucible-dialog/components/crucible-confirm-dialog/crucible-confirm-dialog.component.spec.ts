@@ -82,6 +82,20 @@ describe('CrucibleConfirmDialogComponent', () => {
         expect(ref.closed).toBe(false);
     });
 
+    it('hides the cancel button when cancelText is empty (single affirmative button)', () => {
+        const { fixture } = setup({ confirmText: 'OK', cancelText: '' });
+        const buttons = fixture.nativeElement.querySelectorAll('mat-dialog-actions button');
+        expect(buttons.length).toBe(1);
+        expect(buttons[0].textContent?.trim()).toBe('OK');
+    });
+
+    it('hides the affirmative button when confirmText is empty (single dismiss button)', () => {
+        const { fixture } = setup({ confirmText: '', cancelText: 'Ok' });
+        const buttons = fixture.nativeElement.querySelectorAll('mat-dialog-actions button');
+        expect(buttons.length).toBe(1);
+        expect(buttons[0].textContent?.trim()).toBe('Ok');
+    });
+
     it('renders no error region or spinner (pure static skin)', () => {
         const { fixture } = setup({});
         expect(fixture.nativeElement.querySelector('[role="alert"]')).toBeNull();
