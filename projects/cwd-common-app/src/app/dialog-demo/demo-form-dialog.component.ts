@@ -30,7 +30,7 @@ import { CRUCIBLE_DIALOG_IMPORTS } from 'projects/@crucible-common/src/public-ap
   ],
   template: `
     <crucible-dialog
-      [title]="'Create New Project?'"
+      [dialogTitle]="'Create New Project?'"
       [form]="form"
       submitLabel="Save"
       cancelLabel="Cancel"

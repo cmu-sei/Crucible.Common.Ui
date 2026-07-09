@@ -36,6 +36,9 @@ import { CrucibleDialogTitleDirective } from '../../directives/crucible-dialog-t
   selector: 'crucible-dialog',
   templateUrl: './crucible-dialog.component.html',
   styleUrls: ['./crucible-dialog.component.scss'],
+  host: {
+    '[attr.title]': 'null',
+  },
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -49,7 +52,12 @@ export class CrucibleDialogComponent {
   /**
    * Dialog title rendered as <h2 mat-dialog-title>; provides the accessible name.
    * Optional only when a `[crucibleDialogTitle]` header is projected instead (e.g.
-   * a title with an icon button). One of `title` or a projected title must be set.
+   * a title with an icon button). One of `dialogTitle` or a projected title must be set.
+   */
+  dialogTitle = input<string>('');
+  /**
+   * @deprecated Use `dialogTitle`. The `title` input name overlaps with the native
+   * HTML title attribute and can create unwanted browser tooltips with static usage.
    */
   title = input<string>('');
   /** In-flight flag. Disables the primary, shows a spinner, swaps to loadingLabel, guards close. */
@@ -90,7 +98,7 @@ export class CrucibleDialogComponent {
   @ContentChild(CrucibleDialogActionsDirective)
   projectedActions?: CrucibleDialogActionsDirective;
 
-  /** Auto-detected custom title; presence renders the projected header instead of the `title` string. */
+  /** Auto-detected custom title; presence renders the projected header instead of the `dialogTitle` string. */
   @ContentChild(CrucibleDialogTitleDirective)
   projectedTitle?: CrucibleDialogTitleDirective;
 
@@ -123,6 +131,11 @@ export class CrucibleDialogComponent {
   /** Effective disabled state of the primary button. */
   get primaryDisabled(): boolean {
     return this.submitDisabled() || this.loading();
+  }
+
+  /** Preferred dialog title, falling back to the deprecated native-name alias. */
+  get resolvedTitle(): string {
+    return this.dialogTitle() || this.title();
   }
 
   /** True when the default Cancel/Submit pair should render. */

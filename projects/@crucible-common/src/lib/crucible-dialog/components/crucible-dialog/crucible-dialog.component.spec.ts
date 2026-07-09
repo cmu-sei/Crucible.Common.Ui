@@ -29,7 +29,7 @@ class MatDialogRefStub {
 @Component({
     template: `
     <crucible-dialog
-      [title]="title"
+      [dialogTitle]="title"
       [form]="form"
       [submitLabel]="submitLabel"
       [submitDisabled]="submitDisabled()"
@@ -73,7 +73,7 @@ class FormHostComponent {
 @Component({
     template: `
     <crucible-dialog
-      [title]="title"
+      [dialogTitle]="title"
       [submitDisabled]="submitDisabled()"
       (submit)="onSubmit()"
       (cancel)="onCancel()"
@@ -106,7 +106,7 @@ class ContentHostComponent {
     // projected [crucibleDialogActions] block. This is the combination that
     // regressed when the wrapper duplicated <ng-content> across @if branches.
     template: `
-    <crucible-dialog [title]="title" [hideDefaultActions]="true">
+    <crucible-dialog [dialogTitle]="title" [hideDefaultActions]="true">
       <p crucibleDialogContent id="projected-message">{{ message }}</p>
       <ng-container crucibleDialogActions>
         <button id="proj-no" matButton="outlined" type="button">No</button>
@@ -123,7 +123,7 @@ class ProjectedActionsHostComponent {
 
 @Component({
     // A custom title/header (e.g. an icon button alongside the title text) projected
-    // via [crucibleDialogTitle] instead of the plain `title` string input.
+    // via [crucibleDialogTitle] instead of the plain `dialogTitle` string input.
     template: `
     <crucible-dialog>
       <div crucibleDialogTitle>
@@ -136,6 +136,19 @@ class ProjectedActionsHostComponent {
     imports: [...CRUCIBLE_DIALOG_IMPORTS],
 })
 class ProjectedTitleHostComponent {
+}
+
+@Component({
+    // Deprecated compatibility path: static title="..." should still feed the
+    // dialog title but must not leave a native host title tooltip behind.
+    template: `
+    <crucible-dialog title="Legacy Static Title" [hideDefaultActions]="true">
+      <p crucibleDialogContent>Body</p>
+    </crucible-dialog>
+  `,
+    imports: [...CRUCIBLE_DIALOG_IMPORTS],
+})
+class LegacyStaticTitleHostComponent {
 }
 
 describe('CrucibleDialogComponent', () => {
@@ -155,6 +168,7 @@ describe('CrucibleDialogComponent', () => {
                 ContentHostComponent,
                 ProjectedActionsHostComponent,
                 ProjectedTitleHostComponent,
+                LegacyStaticTitleHostComponent,
             ],
             providers: [{ provide: MatDialogRef, useValue: dialogRef }],
         }).compileComponents();
@@ -179,6 +193,11 @@ describe('CrucibleDialogComponent', () => {
             expect(host.dialog).toBeTruthy();
             const h2: HTMLElement = fixture.nativeElement.querySelector('h2[mat-dialog-title]');
             expect(h2.textContent?.trim()).toBe('Edit Directory');
+        });
+
+        it('does not set a native title attribute on the crucible-dialog host', () => {
+            const dialogHost: HTMLElement = fixture.nativeElement.querySelector('crucible-dialog');
+            expect(dialogHost.hasAttribute('title')).toBe(false);
         });
 
         it('projects content into mat-dialog-content', () => {
@@ -372,7 +391,7 @@ describe('CrucibleDialogComponent', () => {
     });
 
     // A projected [crucibleDialogTitle] renders custom title markup (e.g. an icon
-    // button) inside the h2 mat-dialog-title, instead of the plain `title` string.
+    // button) inside the h2 mat-dialog-title, instead of the plain `dialogTitle` string.
     describe('projected custom title', () => {
         let fixture: ComponentFixture<ProjectedTitleHostComponent>;
 
@@ -386,6 +405,25 @@ describe('CrucibleDialogComponent', () => {
             expect(h2.querySelector('#custom-title-text')?.textContent).toContain('Edit Organization');
             // the icon affordance the string-only title could not express
             expect(h2.querySelector('#title-icon')).toBeTruthy();
+        });
+    });
+
+    describe('deprecated title input compatibility', () => {
+        let fixture: ComponentFixture<LegacyStaticTitleHostComponent>;
+
+        beforeEach(async () => {
+            fixture = TestBed.createComponent(LegacyStaticTitleHostComponent);
+            await fixture.whenStable();
+        });
+
+        it('renders a static title attribute as the dialog title', () => {
+            const h2: HTMLElement = fixture.nativeElement.querySelector('h2[mat-dialog-title]');
+            expect(h2.textContent?.trim()).toBe('Legacy Static Title');
+        });
+
+        it('removes the native host title attribute to prevent browser tooltips', () => {
+            const dialogHost: HTMLElement = fixture.nativeElement.querySelector('crucible-dialog');
+            expect(dialogHost.hasAttribute('title')).toBe(false);
         });
     });
 });

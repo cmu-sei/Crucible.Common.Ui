@@ -70,7 +70,7 @@ this.crucibleDialog.confirm({ title: 'Cannot Delete', message: '…', confirmTex
 
 ```html
 <crucible-dialog
-  title="Edit Directory"
+  dialogTitle="Edit Directory"
   [form]="form"
   submitLabel="Save"
   [submitDisabled]="!form.valid || !form.dirty"
@@ -110,7 +110,9 @@ Enter-to-submit** — convert to a reactive `FormGroup` + `[form]` if you need i
 
 ## Custom title (icon / markup)
 
-`title` is a plain string. When the header needs markup (e.g. an inline icon
+`dialogTitle` is a plain string and is preferred over the deprecated `title`
+input, which overlaps with the native HTML `title` attribute and can create
+unwanted browser tooltips. When the header needs markup (e.g. an inline icon
 button), project `[crucibleDialogTitle]` instead — it renders inside the
 `<h2 mat-dialog-title>`:
 
@@ -124,7 +126,8 @@ button), project `[crucibleDialogTitle]` instead — it renders inside the
 </crucible-dialog>
 ```
 
-Set **either** `title` or a projected `[crucibleDialogTitle]` (the latter wins).
+Set **either** `dialogTitle` or a projected `[crucibleDialogTitle]` (the latter
+wins).
 
 ## Dismissal behavior (baked in — §7)
 
