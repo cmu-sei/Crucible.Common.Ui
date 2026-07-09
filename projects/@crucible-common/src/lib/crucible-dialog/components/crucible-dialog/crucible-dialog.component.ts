@@ -36,6 +36,9 @@ import { CrucibleDialogTitleDirective } from '../../directives/crucible-dialog-t
   selector: 'crucible-dialog',
   templateUrl: './crucible-dialog.component.html',
   styleUrls: ['./crucible-dialog.component.scss'],
+  host: {
+    '[attr.title]': 'null',
+  },
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -49,9 +52,9 @@ export class CrucibleDialogComponent {
   /**
    * Dialog title rendered as <h2 mat-dialog-title>; provides the accessible name.
    * Optional only when a `[crucibleDialogTitle]` header is projected instead (e.g.
-   * a title with an icon button). One of `title` or a projected title must be set.
+   * a title with an icon button). One of `dialogTitle` or a projected title must be set.
    */
-  title = input<string>('');
+  dialogTitle = input<string>('');
   /** In-flight flag. Disables the primary, shows a spinner, swaps to loadingLabel, guards close. */
   loading = input(false, { transform: booleanAttribute });
   /** Server/validation error; rendered as role=alert inside content when non-empty. */
@@ -90,7 +93,7 @@ export class CrucibleDialogComponent {
   @ContentChild(CrucibleDialogActionsDirective)
   projectedActions?: CrucibleDialogActionsDirective;
 
-  /** Auto-detected custom title; presence renders the projected header instead of the `title` string. */
+  /** Auto-detected custom title; presence renders the projected header instead of the `dialogTitle` string. */
   @ContentChild(CrucibleDialogTitleDirective)
   projectedTitle?: CrucibleDialogTitleDirective;
 
