@@ -55,11 +55,6 @@ export class CrucibleDialogComponent {
    * a title with an icon button). One of `dialogTitle` or a projected title must be set.
    */
   dialogTitle = input<string>('');
-  /**
-   * @deprecated Use `dialogTitle`. The `title` input name overlaps with the native
-   * HTML title attribute and can create unwanted browser tooltips with static usage.
-   */
-  title = input<string>('');
   /** In-flight flag. Disables the primary, shows a spinner, swaps to loadingLabel, guards close. */
   loading = input(false, { transform: booleanAttribute });
   /** Server/validation error; rendered as role=alert inside content when non-empty. */
@@ -131,11 +126,6 @@ export class CrucibleDialogComponent {
   /** Effective disabled state of the primary button. */
   get primaryDisabled(): boolean {
     return this.submitDisabled() || this.loading();
-  }
-
-  /** Preferred dialog title, falling back to the deprecated native-name alias. */
-  get resolvedTitle(): string {
-    return this.dialogTitle() || this.title();
   }
 
   /** True when the default Cancel/Submit pair should render. */

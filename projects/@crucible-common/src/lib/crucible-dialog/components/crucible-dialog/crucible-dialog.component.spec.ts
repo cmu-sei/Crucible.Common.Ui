@@ -139,8 +139,8 @@ class ProjectedTitleHostComponent {
 }
 
 @Component({
-    // Deprecated compatibility path: static title="..." should still feed the
-    // dialog title but must not leave a native host title tooltip behind.
+    // Guard against reintroducing a native host title tooltip. The plain `title`
+    // attribute is intentionally not a component input; use `dialogTitle`.
     template: `
     <crucible-dialog title="Legacy Static Title" [hideDefaultActions]="true">
       <p crucibleDialogContent>Body</p>
@@ -148,7 +148,7 @@ class ProjectedTitleHostComponent {
   `,
     imports: [...CRUCIBLE_DIALOG_IMPORTS],
 })
-class LegacyStaticTitleHostComponent {
+class NativeTitleAttributeHostComponent {
 }
 
 describe('CrucibleDialogComponent', () => {
@@ -168,7 +168,7 @@ describe('CrucibleDialogComponent', () => {
                 ContentHostComponent,
                 ProjectedActionsHostComponent,
                 ProjectedTitleHostComponent,
-                LegacyStaticTitleHostComponent,
+                NativeTitleAttributeHostComponent,
             ],
             providers: [{ provide: MatDialogRef, useValue: dialogRef }],
         }).compileComponents();
@@ -408,17 +408,17 @@ describe('CrucibleDialogComponent', () => {
         });
     });
 
-    describe('deprecated title input compatibility', () => {
-        let fixture: ComponentFixture<LegacyStaticTitleHostComponent>;
+    describe('native title attribute guard', () => {
+        let fixture: ComponentFixture<NativeTitleAttributeHostComponent>;
 
         beforeEach(async () => {
-            fixture = TestBed.createComponent(LegacyStaticTitleHostComponent);
+            fixture = TestBed.createComponent(NativeTitleAttributeHostComponent);
             await fixture.whenStable();
         });
 
-        it('renders a static title attribute as the dialog title', () => {
+        it('does not render a native title attribute as the dialog title', () => {
             const h2: HTMLElement = fixture.nativeElement.querySelector('h2[mat-dialog-title]');
-            expect(h2.textContent?.trim()).toBe('Legacy Static Title');
+            expect(h2.textContent?.trim()).toBe('');
         });
 
         it('removes the native host title attribute to prevent browser tooltips', () => {

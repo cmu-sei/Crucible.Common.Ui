@@ -6,7 +6,7 @@
     <!-- Custom header (e.g. title text + an icon button). Projected once. -->
     <ng-content select="[crucibleDialogTitle]"></ng-content>
   } @else {
-    {{ resolvedTitle }}
+    {{ dialogTitle() }}
   }
 </h2>
 
