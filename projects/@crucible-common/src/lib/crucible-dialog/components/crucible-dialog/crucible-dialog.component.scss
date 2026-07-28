@@ -11,3 +11,19 @@
   color: var(--mat-sys-error);
   margin: 0;
 }
+
+// §7b: lays the primary's loading label and its in-flight spinner out as one
+// centered row (the spinner is display:block and would otherwise break onto its
+// own line inside Material's inline .mdc-button__label span — see the template).
+//
+// Justification against Principle 2 (why isn't the Material default enough?):
+// Material 21.2.x has no in-button progress affordance — `MatButton.showProgress`
+// does not exist in this version — so the spinner is a plain child and no default
+// governs its relationship to the label. The shell must own this: a consuming app
+// cannot correct it without ::ng-deep into this library's internals. It asserts
+// layout only; size, color, font and padding still come from the app's M3 theme.
+.crucible-dialog-primary-loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}

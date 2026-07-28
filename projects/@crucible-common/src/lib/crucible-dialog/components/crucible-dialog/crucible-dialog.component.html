@@ -64,13 +64,25 @@
         [disabled]="primaryDisabled"
         (click)="onSubmitClick()"
       >
-        {{ loading() ? loadingLabel() : submitLabel() }}
         @if (loading()) {
-          <mat-progress-spinner
-            mode="indeterminate"
-            diameter="18"
-            aria-hidden="true"
-          ></mat-progress-spinner>
+          <!-- Label text and spinner are wrapped in an element THIS component owns
+               so they can be laid out on one line (see the stylesheet). Material
+               drops a button's default-slot children into its own
+               <span class="mdc-button__label"> — an inline box — so a bare
+               display:block spinner sibling breaks onto its own line. Styling that
+               span directly is not an option: it is Material's element and carries
+               no `_ngcontent-*` attribute, so an emulated-encapsulation rule for
+               .mdc-button__label compiles to a selector that never matches. (§7b) -->
+          <span class="crucible-dialog-primary-loading">
+            {{ loadingLabel() }}
+            <mat-progress-spinner
+              mode="indeterminate"
+              diameter="18"
+              aria-hidden="true"
+            ></mat-progress-spinner>
+          </span>
+        } @else {
+          {{ submitLabel() }}
         }
       </button>
     } @else {
