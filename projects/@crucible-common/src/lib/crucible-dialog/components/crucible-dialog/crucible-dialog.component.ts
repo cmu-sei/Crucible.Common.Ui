@@ -145,6 +145,11 @@ export class CrucibleDialogComponent {
 
   onCancel(): void {
     this.cancel.emit();
+    // Close with no result so afterClosed() emits undefined — matching Escape and
+    // dialogRef.close(). A declarative bare `mat-dialog-close` would emit '' instead,
+    // which slips past consumer guards that only reject undefined. Optional-chained
+    // so the button is inert (emits (cancel) only) when rendered outside a MatDialog.
+    this.dialogRef?.close();
   }
 
   onSubmitClick(): void {
