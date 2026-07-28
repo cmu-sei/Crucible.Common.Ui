@@ -1,6 +1,8 @@
 name: Build NPM Package as Release
 
 on:
+  release:
+    types: [published]
   workflow_dispatch:
     inputs:
       version:
@@ -10,6 +12,9 @@ on:
         description: 'npm dist-tag (required for prerelease versions, e.g. next, rc)'
         required: false
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,34 +23,74 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
         with:
-          ref: ${{ github.ref }}
+          # Release runs build the tagged commit; manual runs build the
+          # branch or ref the workflow was dispatched against.
+          ref: ${{ github.event.release.tag_name || github.ref }}
           fetch-depth: 0
 
-      - name: Get Branch Name
-        id: get_branch_name
+      - name: Resolve Version
+        id: release
+        env:
+          TAG_NAME: ${{ github.event.release.tag_name }}
+          PRERELEASE: ${{ github.event.release.prerelease }}
+          TARGET_BRANCH: ${{ github.event.release.target_commitish }}
+          INPUT_VERSION: ${{ github.event.inputs.version }}
+          INPUT_TAG: ${{ github.event.inputs.tag }}
+          REF_NAME: ${{ github.ref_name }}
         run: |
-          FULLNAME=${{ github.ref }}
-          BRANCHNAMEORIGIN=${FULLNAME#*/}
-          BRANCHNAME=${BRANCHNAMEORIGIN#*/}
-          echo "branch=$BRANCHNAME" >> $GITHUB_OUTPUT
+          if [ -n "$TAG_NAME" ]; then
+            # Release: version comes from the tag that was just cut.
+            VERSION=${TAG_NAME#v}
+
+            # Prereleases publish under a dist-tag derived from the semver
+            # suffix (0.8.0-rc.1 -> rc) so they never move "latest".
+            DIST_TAG=""
+            if [ "$PRERELEASE" = "true" ]; then
+              SUFFIX=${VERSION#*-}
+              if [ "$SUFFIX" = "$VERSION" ]; then
+                DIST_TAG="next"
+              else
+                DIST_TAG=${SUFFIX%%.*}
+              fi
+            fi
+            BRANCH=$TARGET_BRANCH
+          else
+            # Manual dispatch: version and dist-tag are supplied as inputs.
+            VERSION=${INPUT_VERSION#v}
+            DIST_TAG=$INPUT_TAG
+            BRANCH=$REF_NAME
+          fi
+
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "dist_tag=$DIST_TAG" >> $GITHUB_OUTPUT
+          echo "branch=$BRANCH" >> $GITHUB_OUTPUT
+          echo "Publishing $VERSION${DIST_TAG:+ under dist-tag $DIST_TAG}"
 
       - name: Version Package
         run: |
-          npm version --allow-same-version --no-git-tag-version ${{ github.event.inputs.version }}
+          npm version --allow-same-version --no-git-tag-version ${{ steps.release.outputs.version }}
           cd projects/@crucible-common
-          npm version --allow-same-version --no-git-tag-version ${{ github.event.inputs.version }}
+          npm version --allow-same-version --no-git-tag-version ${{ steps.release.outputs.version }}
 
       - name: Add & Commit
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+          BRANCH: ${{ steps.release.outputs.branch }}
         run: |
           git config user.name "Github Actions"
           git config user.email "actions@github.com"
           git add package.json projects/@crucible-common/package.json package-lock.json
           if git diff --cached --quiet; then
-            echo "Already at version ${{ github.event.inputs.version }}; nothing to commit."
-          else
-            git commit -m "Update version number to ${{ github.event.inputs.version }}"
-            git push origin ${{ steps.get_branch_name.outputs.branch }}
+            echo "Already at version $VERSION; nothing to commit."
+            exit 0
           fi
+          if ! git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
+            echo "::warning::Target '$BRANCH' is not a branch; skipping version commit."
+            exit 0
+          fi
+          git commit -m "Update version number to $VERSION"
+          git push origin HEAD:"$BRANCH" \
+            || echo "::warning::Could not fast-forward $BRANCH with the version commit; continuing with publish."
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v6
@@ -59,9 +104,10 @@ jobs:
           npm install
           npm run pack
           TAG_ARG=""
-          if [ -n "$INPUT_TAG" ]; then TAG_ARG="--tag $INPUT_TAG"; fi
-          npm publish dist/@crucible-common/cmusei-crucible-common-${{ github.event.inputs.version }}.tgz --access public $TAG_ARG
+          if [ -n "$DIST_TAG" ]; then TAG_ARG="--tag $DIST_TAG"; fi
+          npm publish dist/@crucible-common/cmusei-crucible-common-${VERSION}.tgz --access public $TAG_ARG
         env:
           NPM_TOKEN: ${{ secrets.NPM_APIKEY }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_APIKEY }}
-          INPUT_TAG: ${{ github.event.inputs.tag }}
+          VERSION: ${{ steps.release.outputs.version }}
+          DIST_TAG: ${{ steps.release.outputs.dist_tag }}
