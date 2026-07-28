@@ -40,18 +40,17 @@
 <ng-template #actionsTpl>
   <mat-dialog-actions align="end">
     @if (showDefaultActions) {
-      <!-- Cancel ALWAYS closes the dialog declaratively via [mat-dialog-close],
-           just like the confirm dialog — a host that omits a (cancel) handler
+      <!-- Cancel ALWAYS closes the dialog — a host that omits a (cancel) handler
            still gets a working dismiss button (and Cancel stays the deliberate
-           way out even while Escape is suppressed). (cancel) remains for hosts
-           that need to react (reset/confirm-discard/logging) on dismissal. The
-           [mat-dialog-close] is inert when rendered outside a MatDialog. -->
-      <button
-        matButton="outlined"
-        type="button"
-        mat-dialog-close
-        (click)="onCancel()"
-      >
+           way out even while Escape is suppressed). It closes through the injected
+           MatDialogRef in onCancel() rather than a declarative [mat-dialog-close]:
+           a bare `mat-dialog-close` attribute closes with '' (empty string), not
+           undefined, so consumers guarding on `result !== undefined` would treat a
+           cancel as a real result. Closing via the ref emits undefined, matching
+           Escape and dialogRef.close(). (cancel) remains for hosts that need to
+           react (reset/confirm-discard/logging) on dismissal, and onCancel()'s
+           optional-chained close() is inert when rendered outside a MatDialog. -->
+      <button matButton="outlined" type="button" (click)="onCancel()">
         {{ cancelLabel() }}
       </button>
       <!-- Unconditional cdkFocusInitial: Material's focus trap skips a disabled

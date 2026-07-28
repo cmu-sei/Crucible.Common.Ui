@@ -13,12 +13,17 @@ import { CRUCIBLE_DIALOG_IMPORTS } from '../../index';
 class MatDialogRefStub {
     disableClose = false;
     closeCount = 0;
+    /** Every result passed to close(), in order. Capturing the argument (not just
+        the count) is what distinguishes `undefined` from `''` — the exact bug that
+        a bare `mat-dialog-close` attribute reintroduces. */
+    closeResults: unknown[] = [];
     private readonly keydown$ = new Subject<KeyboardEvent>();
     keydownEvents() {
         return this.keydown$.asObservable();
     }
-    close(): void {
+    close(result?: unknown): void {
         this.closeCount++;
+        this.closeResults.push(result);
     }
     /** Test helper: simulate a keydown reaching the dialog overlay. */
     emitKeydown(key: string): void {
@@ -267,18 +272,29 @@ describe('CrucibleDialogComponent', () => {
             expect(host.submitted).toBe(1);
         });
 
-        it('emits cancel when the secondary is clicked', () => {
+        it('emits cancel exactly once when the secondary is clicked', () => {
             const secondary: HTMLButtonElement = fixture.nativeElement.querySelector('button[type="button"]');
             secondary.click();
             expect(host.cancelled).toBe(1);
         });
 
-        it('closes the dialog when the default Cancel is clicked (declarative mat-dialog-close)', () => {
-            // Cancel self-closes via [mat-dialog-close] so a host that omits a (cancel)
-            // handler still gets a working dismiss button.
+        it('closes the dialog with undefined (not "") when the default Cancel is clicked', () => {
+            // Cancel closes through the injected MatDialogRef so a host that omits a
+            // (cancel) handler still gets a working dismiss button. It must close with
+            // NO result: a bare `mat-dialog-close` attribute would emit '' instead of
+            // undefined, and consumers guarding only on `!== undefined` would then treat
+            // the empty string as a real result and continue into side effects.
             const secondary: HTMLButtonElement = fixture.nativeElement.querySelector('button[type="button"]');
             secondary.click();
             expect(dialogRef.closeCount).toBe(1);
+            expect(dialogRef.closeResults).toEqual([undefined]);
+        });
+
+        it('Escape closes the dialog with undefined (not "")', () => {
+            // Escape and Cancel are both result-free dismissals: they must emit the same
+            // value so consumers can treat undefined as the single "cancelled" signal.
+            dialogRef.emitKeydown('Escape');
+            expect(dialogRef.closeResults).toEqual([undefined]);
         });
 
         it('disables backdrop dismissal by default (disableClose true on the ref)', () => {
