@@ -284,6 +284,48 @@ In addition, an optional inactivity moniter has been incorporated to the ComnAut
   "inactivityRedirectUrl": "http://my-special-site.com",
 ```
 
+## Release process
+
+Releases are published to npm as [`@cmusei/crucible-common`](https://www.npmjs.com/package/@cmusei/crucible-common)
+by the **Build NPM Package as Release** workflow
+(`.github/workflows/main.yml`). CI owns the version number.
+
+### Do not bump the version in a PR
+
+**Pull requests should not change the `version` field in `package.json` or
+`projects/@crucible-common/package.json`.** Leave both at whatever value they
+already hold and let the release workflow set them.
+
+The version in the repository therefore reflects the *last published release*,
+not the changes queued on `main`. A PR whose diff touches only source, specs,
+and docs is what a normal contribution looks like — a version bump in the diff
+is a review comment.
+
+### Publishing a release
+
+1. Merge everything intended for the release into `main`.
+2. Go to **Actions → Build NPM Package as Release → Run workflow**, targeting
+   the branch you are releasing from (normally `main`).
+3. Fill in the inputs:
+   - **version** (required) — the full semver version to publish, e.g. `0.8.0`
+     or `0.8.0-rc.1`. No leading `v`.
+   - **tag** (optional) — the npm [dist-tag](https://docs.npmjs.com/cli/commands/npm-dist-tag).
+     Leave it blank for a normal release, which publishes as `latest`. **Set it
+     for any prerelease** (e.g. `next`, `rc`) so the prerelease does not become
+     the default version that `npm install` resolves.
+4. Run the workflow.
+
+The workflow then:
+
+- writes the supplied version into both `package.json` files
+  (`npm version --allow-same-version --no-git-tag-version`);
+- commits `Update version number to <version>` and pushes it to the branch the
+  workflow ran against — this step is idempotent and no-ops when the version is
+  already correct;
+- runs `npm install` and `npm run pack` to build the library; and
+- publishes `dist/@crucible-common/cmusei-crucible-common-<version>.tgz` to npm
+  with `--access public`, adding `--tag <tag>` when a dist-tag was supplied.
+
 ## Reporting bugs and requesting features
 
 Think you found a bug? Please report all Crucible bugs - including bugs for the individual Crucible apps - in the [cmu-sei/crucible issue tracker](https://github.com/cmu-sei/crucible/issues).
