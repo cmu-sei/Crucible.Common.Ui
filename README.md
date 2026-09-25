@@ -8,7 +8,7 @@ Crucible Common modules are a set of angular modules that are common between Cru
 
 - [Settings Module](projects/@crucible-common/src/lib/comn-settings/README.md) — loads runtime app settings from a JSON file and exposes them via a service.
 - [Auth Module](projects/@crucible-common/src/lib/comn-auth/README.md) — OpenID Connect authentication, with optional access-token-expiration and inactivity monitoring (see [below](#access-token-expiration-and-inactivity-monitoring)).
-- **Theme Module (`comn-theme`)** — shared dynamic Material 3 color theming driven by a single primary hex color (see [Color Theming](#color-theming) below).
+- [Theme Module (`crucible-theme`)](projects/@crucible-common/src/lib/crucible-theme/README.md) — applies the top-bar and Material `primary` colors for light and dark mode per the Crucible colors design spec (see [Color Theming](#color-theming) below).
 - **Header Bar Module (`comn-header-bar`)** — displays classification levels and maintenance messages read from the common settings.
 - [Dialog Module (`crucible-dialog`)](projects/@crucible-common/src/lib/crucible-dialog/README.md) — shared, app-agnostic modal building blocks (confirm dialogs, reactive-form modals, content/custom-footer dialogs) with consistent structure and dismissal behavior.
 
@@ -221,53 +221,7 @@ You can then place breakpoints in the library typescript files and they will be 
 
 ## Color Theming
 
-Crucible apps use a shared dynamic theming system provided by this library. A single **primary hex color** drives the entire Material 3 color scheme at runtime -- no SCSS rebuild is needed to change the theme.
-
-### How it works
-
-1. **`ComnDynamicThemeService`** generates a full Material 3 palette (primary, secondary, tertiary, error, background, outline, etc.) from one hex color using `@material/material-color-utilities` (`SchemeTonalSpot`).
-2. It writes 44+ CSS custom properties (e.g. `--mat-sys-primary`, `--mat-sys-background`) as inline styles on `:root` (light) and via a `<style>` element for `body.darkMode` (dark).
-3. All surface tokens (`--mat-sys-surface`, `--mat-sys-surface-container-*`) are aliased to `--mat-sys-background` so Crucible apps display a flat background instead of Material 3's layered surface system.
-4. A shared `<style id="crucible-component-overrides">` element is injected once with global rules for mat-menu panels, mat-option, datepicker, form-field transparency, and icon-button colors.
-
-### Where to set the theme color
-
-The primary color is resolved in this order (first match wins):
-
-| Priority | Location | Example |
-|----------|----------|---------|
-| 1 | **`settings.json`** | `"AppPrimaryThemeColor": "#008740"` |
-| 2 | **`provideCrucibleTheme()`** `defaultThemeColor` | `defaultThemeColor: '#008740'` |
-| 3 | Library default | `#4c7aa2` |
-
-- **`src/assets/config/settings.json`** -- The runtime configuration file deployed with the app. This is the primary place to change the theme color for a deployment. Set the `AppPrimaryThemeColor` field to any hex color.
-- **`app.module.ts`** -- The `defaultThemeColor` passed to `provideCrucibleTheme()` acts as a compile-time fallback when `settings.json` does not contain `AppPrimaryThemeColor`.
-- **`src/styles/_theme-colors.scss`** -- Contains a pre-generated SCSS palette used as a baseline when the Angular Material theme is compiled. This palette should match the default primary color so the initial CSS paint is consistent before the runtime service takes over.
-
-### Integrating in an app
-
-```typescript
-// app.module.ts
-...provideCrucibleTheme({
-  defaultThemeColor: '#008740',
-  faviconSvgPath: 'assets/svg-icons/crucible-icon-app.svg',
-}),
-```
-
-This registers:
-- `ComnDynamicThemeService` -- generates and injects CSS variables
-- `ComnFaviconService` -- recolors the SVG favicon to match the theme
-- An `APP_INITIALIZER` that applies the theme before the app renders
-
-### Regenerating the SCSS palette
-
-If you change the default primary color, regenerate the SCSS palette so the compile-time baseline matches:
-
-```bash
-npx ng generate @angular/material:theme-color --primaryColor=#008740
-```
-
-Copy the generated palette into `src/styles/_theme-colors.scss`.
+The `crucible-theme` module applies each app's top-bar and Material `primary` colors for light and dark mode from six `settings.json` keys, following the Crucible colors design specification (`crucible-development/design-specs/angular/colors.md`). Colors are used exactly as configured; nothing is derived at runtime. See [crucible-theme/README.md](projects/%40crucible-common/src/lib/crucible-theme/README.md) for the settings contract and integration steps.
 
 ## Access token expiration and inactivity monitoring
 
