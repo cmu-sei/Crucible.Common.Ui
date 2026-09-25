@@ -9,8 +9,8 @@
 - Added the `crucible-theme` module, implementing the Crucible colors design
   specification: `provideCrucibleTheme({ brand })` and
   `CrucibleThemeService.applyTheme(theme)` resolve the six top-bar / light-mode /
-  dark-mode color settings and apply them as `--app-topbar-background`,
-  `--app-topbar-text`, `--mat-sys-primary` and `--mat-sys-on-primary`, and
+  dark-mode color settings and apply them as `--crucible-topbar-background`,
+  `--crucible-topbar-text`, `--mat-sys-primary` and `--mat-sys-on-primary`, and
   recolor the SVG favicon. See crucible-theme/README.md.
 
 ## 0.6.1

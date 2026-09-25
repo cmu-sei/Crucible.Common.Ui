@@ -20,8 +20,8 @@ import { CrucibleThemeService } from './crucible-theme.service';
 
 const BRAND = { color: '#006B6D', text: '#FFFFFF' };
 const PROPERTIES = [
-  '--app-topbar-background',
-  '--app-topbar-text',
+  '--crucible-topbar-background',
+  '--crucible-topbar-text',
   '--mat-sys-primary',
   '--mat-sys-on-primary',
 ];
@@ -84,8 +84,8 @@ describe('CrucibleThemeService', () => {
     service.applyTheme(Theme.LIGHT);
 
     for (const el of [document.documentElement, document.body]) {
-      expect(prop('--app-topbar-background', el)).toBe('#111111');
-      expect(prop('--app-topbar-text', el)).toBe('#222222');
+      expect(prop('--crucible-topbar-background', el)).toBe('#111111');
+      expect(prop('--crucible-topbar-text', el)).toBe('#222222');
       expect(prop('--mat-sys-primary', el)).toBe('#333333');
       expect(prop('--mat-sys-on-primary', el)).toBe('#444444');
     }
@@ -97,8 +97,8 @@ describe('CrucibleThemeService', () => {
     service.applyTheme(Theme.DARK);
 
     for (const el of [document.documentElement, document.body]) {
-      expect(prop('--app-topbar-background', el)).toBe('#111111');
-      expect(prop('--app-topbar-text', el)).toBe('#222222');
+      expect(prop('--crucible-topbar-background', el)).toBe('#111111');
+      expect(prop('--crucible-topbar-text', el)).toBe('#222222');
       expect(prop('--mat-sys-primary', el)).toBe('#555555');
       expect(prop('--mat-sys-on-primary', el)).toBe('#666666');
     }
@@ -120,8 +120,8 @@ describe('CrucibleThemeService', () => {
 
     service.applyTheme(Theme.DARK);
 
-    expect(prop('--app-topbar-background')).toBe(BRAND.color);
-    expect(prop('--app-topbar-text')).toBe(BRAND.text);
+    expect(prop('--crucible-topbar-background')).toBe(BRAND.color);
+    expect(prop('--crucible-topbar-text')).toBe(BRAND.text);
     expect(prop('--mat-sys-primary')).toBe(BRAND.color);
     expect(prop('--mat-sys-on-primary')).toBe(BRAND.text);
     expect(updateFavicon).toHaveBeenCalledWith(BRAND.color);
@@ -133,7 +133,7 @@ describe('CrucibleThemeService', () => {
 
     service.applyTheme(Theme.LIGHT);
 
-    expect(prop('--app-topbar-background')).toBe('#abcdef');
+    expect(prop('--crucible-topbar-background')).toBe('#abcdef');
     expect(updateFavicon).toHaveBeenCalledWith('#abcdef');
   });
 });

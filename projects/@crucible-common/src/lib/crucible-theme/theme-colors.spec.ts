@@ -208,8 +208,8 @@ describe('applyThemeColors', () => {
   });
 
   it('uses the expected property names', () => {
-    expect(CRUCIBLE_TOPBAR_BACKGROUND_PROPERTY).toBe('--app-topbar-background');
-    expect(CRUCIBLE_TOPBAR_TEXT_PROPERTY).toBe('--app-topbar-text');
+    expect(CRUCIBLE_TOPBAR_BACKGROUND_PROPERTY).toBe('--crucible-topbar-background');
+    expect(CRUCIBLE_TOPBAR_TEXT_PROPERTY).toBe('--crucible-topbar-text');
   });
 
   it('sets all four properties on documentElement and body', () => {
@@ -222,8 +222,8 @@ describe('applyThemeColors', () => {
     applyThemeColors(colors, document);
 
     for (const el of [document.documentElement, document.body]) {
-      expect(el.style.getPropertyValue('--app-topbar-background')).toBe('#111111');
-      expect(el.style.getPropertyValue('--app-topbar-text')).toBe('#222222');
+      expect(el.style.getPropertyValue('--crucible-topbar-background')).toBe('#111111');
+      expect(el.style.getPropertyValue('--crucible-topbar-text')).toBe('#222222');
       expect(el.style.getPropertyValue('--mat-sys-primary')).toBe('#333333');
       expect(el.style.getPropertyValue('--mat-sys-on-primary')).toBe('#444444');
     }
@@ -240,7 +240,7 @@ describe('applyThemeColors', () => {
     );
     for (const el of [document.documentElement, document.body]) {
       expect(el.style.getPropertyValue('--mat-sys-primary')).toBe('#cccccc');
-      expect(el.style.getPropertyValue('--app-topbar-background')).toBe('#aaaaaa');
+      expect(el.style.getPropertyValue('--crucible-topbar-background')).toBe('#aaaaaa');
     }
   });
 });

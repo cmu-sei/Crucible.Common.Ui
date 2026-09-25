@@ -30,10 +30,10 @@ import {
 } from './models/crucible-theme.config';
 
 /** CSS custom property for the top-bar background. */
-export const CRUCIBLE_TOPBAR_BACKGROUND_PROPERTY = '--app-topbar-background';
+export const CRUCIBLE_TOPBAR_BACKGROUND_PROPERTY = '--crucible-topbar-background';
 
 /** CSS custom property for text and icons on the top bar. */
-export const CRUCIBLE_TOPBAR_TEXT_PROPERTY = '--app-topbar-text';
+export const CRUCIBLE_TOPBAR_TEXT_PROPERTY = '--crucible-topbar-text';
 
 /**
  * Resolve the colors for one theme. Each value is resolved independently: the

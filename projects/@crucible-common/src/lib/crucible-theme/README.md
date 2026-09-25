@@ -36,12 +36,12 @@ and the `primary` keys never affect the top bar.
 
 | Property | Value |
 |---|---|
-| `--app-topbar-background` | Resolved top-bar background |
-| `--app-topbar-text` | Resolved top-bar text |
+| `--crucible-topbar-background` | Resolved top-bar background |
+| `--crucible-topbar-text` | Resolved top-bar text |
 | `--mat-sys-primary` | Resolved `primary` for the current mode |
 | `--mat-sys-on-primary` | Resolved `on-primary` for the current mode |
 
-Style the top bar with `var(--app-topbar-background)` / `var(--app-topbar-text)`,
+Style the top bar with `var(--crucible-topbar-background)` / `var(--crucible-topbar-text)`,
 not `--mat-sys-primary`. In dark mode `primary` is a lighter shade meant for
 content on dark surfaces, not the brand color. Components must use these tokens
 rather than hard-coding a brand hex value or reading the settings directly.

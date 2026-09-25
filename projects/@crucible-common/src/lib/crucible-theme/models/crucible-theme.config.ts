@@ -35,9 +35,9 @@ export interface CrucibleBrandColors {
 
 /** The resolved colors, one per CSS custom property the theme sets. */
 export interface CrucibleResolvedThemeColors {
-  /** `--app-topbar-background` */
+  /** `--crucible-topbar-background` */
   topBarBackground: string;
-  /** `--app-topbar-text` */
+  /** `--crucible-topbar-text` */
   topBarText: string;
   /** `--mat-sys-primary` */
   primary: string;
