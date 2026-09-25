@@ -30,10 +30,13 @@ The purpose of this component is to display classification levels and maintenanc
 
 #### Theme Module
 
-The Theme module (`comn-theme`) provides a shared dynamic Material 3 color
-theme. A single primary hex color drives the entire color scheme at runtime —
-no SCSS rebuild is needed. Register it in an app with `provideCrucibleTheme()`.
-See the root README for configuration details.
+The Theme module (`crucible-theme`) applies an app's top-bar and Material
+`primary` colors for light and dark mode from its settings, as defined by the
+Crucible colors design specification, and recolors the SVG favicon. Register it
+with `provideCrucibleTheme({ brand })` and call `CrucibleThemeService.applyTheme()`
+when the user's theme changes.
+
+Find out more on the [Github Page](https://github.com/cmu-sei/Crucible.Common.Ui/tree/main/projects/%40crucible-common/src/lib/crucible-theme).
 
 #### Dialog Module
 

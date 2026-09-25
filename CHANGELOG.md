@@ -1,3 +1,18 @@
+## Unreleased
+
+- **BREAKING CHANGE** - Removed the `comn-theme` module (`provideCrucibleTheme` with
+  `defaultThemeColor`, `ComnDynamicThemeService`, `ComnFaviconService`,
+  `crucibleThemeInitializer`). It generated a Material 3 palette at runtime from
+  `AppPrimaryThemeColor`, which the Crucible colors design specification forbids,
+  and no app used it. `@material/material-color-utilities` is no longer a peer
+  dependency.
+- Added the `crucible-theme` module, implementing the Crucible colors design
+  specification: `provideCrucibleTheme({ brand })` and
+  `CrucibleThemeService.applyTheme(theme)` resolve the six top-bar / light-mode /
+  dark-mode color settings and apply them as `--app-topbar-background`,
+  `--app-topbar-text`, `--mat-sys-primary` and `--mat-sys-on-primary`, and
+  recolor the SVG favicon. See crucible-theme/README.md.
+
 ## 0.6.1
 
 - Added the crucible-dialog module: shared, app-agnostic modal building blocks

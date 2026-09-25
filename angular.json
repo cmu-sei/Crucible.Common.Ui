@@ -25,8 +25,7 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "tsConfig": "projects/@crucible-common/tsconfig.spec.json",
-            "buildTarget": "crucible-common:build",
-            "runnerConfig": true
+            "buildTarget": "crucible-common:build"
           }
         },
         "lint": {
@@ -124,8 +123,7 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "tsConfig": "projects/cwd-common-app/tsconfig.spec.json",
-            "buildTarget": "cwd-common-app:build",
-            "runnerConfig": true
+            "buildTarget": "cwd-common-app:build"
           }
         },
         "lint": {
