@@ -10,6 +10,6 @@
  */
 export * from './lib/comn-settings';
 export * from './lib/comn-auth';
-export * from './lib/comn-theme';
 export * from './lib/comn-header-bar';
 export * from './lib/crucible-dialog';
+export * from './lib/crucible-theme';
