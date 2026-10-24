@@ -28,6 +28,11 @@
   "fesm5": "fesm5/crucible-common.js",
   "fesm2015": "fesm2015/crucible-common.js",
   "typings": "crucible-common.d.ts",
+  "exports": {
+    "./fonts": {
+      "sass": "./styles/_fonts.scss"
+    }
+  },
   "devDependencies": {
     "typescript": "^5.9.3"
   }

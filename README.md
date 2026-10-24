@@ -10,6 +10,7 @@ Crucible Common modules are a set of angular modules that are common between Cru
 - [Auth Module](projects/@crucible-common/src/lib/comn-auth/README.md) — OpenID Connect authentication, with optional access-token-expiration and inactivity monitoring (see [below](#access-token-expiration-and-inactivity-monitoring)).
 - [Theme Module (`crucible-theme`)](projects/@crucible-common/src/lib/crucible-theme/README.md) — applies the top-bar and Material `primary` colors for light and dark mode per the Crucible colors design spec (see [Color Theming](#color-theming) below).
 - **Header Bar Module (`comn-header-bar`)** — displays classification levels and maintenance messages read from the common settings.
+- **Fonts (`@cmusei/crucible-common/fonts`)** — Open Sans and the Sass partial that declares it (see [Fonts](#fonts) below).
 - [Dialog Module (`crucible-dialog`)](projects/@crucible-common/src/lib/crucible-dialog/README.md) — shared, app-agnostic modal building blocks (confirm dialogs, reactive-form modals, content/custom-footer dialogs) with consistent structure and dismissal behavior.
 
 ### **Running the sample application.**
@@ -222,6 +223,31 @@ You can then place breakpoints in the library typescript files and they will be 
 ## Color Theming
 
 The `crucible-theme` module applies each app's top-bar and Material `primary` colors for light and dark mode from six `settings.json` keys, following the Crucible colors design specification (`crucible-development/design-specs/angular/colors.md`). Colors are used exactly as configured; nothing is derived at runtime. See [crucible-theme/README.md](projects/%40crucible-common/src/lib/crucible-theme/README.md) for the settings contract and integration steps.
+
+## Fonts
+
+The package ships Open Sans (regular, italic and bold, as woff2 and woff) and a
+Sass partial that declares the `'Open Sans'` family. Load it once from the
+app's global stylesheet (e.g. `src/styles/styles.scss`):
+
+```scss
+@use '@cmusei/crucible-common/fonts';
+```
+
+The partial is exposed through the `sass` condition of the package `exports`,
+so no `includePaths`/`stylePreprocessorOptions` entry is needed. Its `url()`s
+are relative to the partial; the Angular application builder (`@angular/build`)
+rebases them and copies the font files into the build output (`media/`), so the
+app needs no `assets` entry and no font files of its own. Apps then reference
+the family as usual, e.g. `typography: '"Open Sans", sans-serif'` in the
+Material theme.
+
+`comn-header-bar` sets `font-family: 'Open Sans', sans-serif` itself, so the
+classification banner uses Open Sans in any app that loads the partial,
+whatever font the surrounding page uses.
+
+Open Sans is licensed under the Apache License, Version 2.0; the license text
+ships next to the fonts in `styles/fonts/LICENSE-OpenSans.txt`.
 
 ## Access token expiration and inactivity monitoring
 
