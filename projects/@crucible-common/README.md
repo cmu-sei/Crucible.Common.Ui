@@ -48,3 +48,13 @@ and a `<crucible-dialog>` wrapper for reactive-form, template-driven, and
 content-only modals.
 
 Find out more on the [Github Page](https://github.com/cmu-sei/Crucible.Common.Ui/tree/main/projects/%40crucible-common/src/lib/crucible-dialog).
+
+#### Landing Background
+
+The Landing Background module (`crucible-landing-background`) provides the
+standalone `[crucibleLandingBackground]` directive. It shows the image from the
+`AppLandingBackgroundImage` setting behind the host element, with a near-black
+tint in dark mode, and can be turned off per page, e.g.
+`[crucibleLandingBackground]="!exhibitId"`.
+
+Find out more on the [Github Page](https://github.com/cmu-sei/Crucible.Common.Ui/tree/main/projects/%40crucible-common/src/lib/crucible-landing-background).

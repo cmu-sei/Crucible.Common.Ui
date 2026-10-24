@@ -11,6 +11,7 @@ Crucible Common modules are a set of angular modules that are common between Cru
 - [Theme Module (`crucible-theme`)](projects/@crucible-common/src/lib/crucible-theme/README.md) — applies the top-bar and Material `primary` colors for light and dark mode per the Crucible colors design spec (see [Color Theming](#color-theming) below).
 - **Header Bar Module (`comn-header-bar`)** — displays classification levels and maintenance messages read from the common settings.
 - [Dialog Module (`crucible-dialog`)](projects/@crucible-common/src/lib/crucible-dialog/README.md) — shared, app-agnostic modal building blocks (confirm dialogs, reactive-form modals, content/custom-footer dialogs) with consistent structure and dismissal behavior.
+- [Landing Background (`crucible-landing-background`)](projects/@crucible-common/src/lib/crucible-landing-background/README.md) — the `[crucibleLandingBackground]` directive, which shows the `AppLandingBackgroundImage` setting behind an app's landing page, tinted in dark mode.
 
 ### **Running the sample application.**
 

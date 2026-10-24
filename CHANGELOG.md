@@ -14,6 +14,12 @@
   recolor the SVG favicon. See crucible-theme/README.md.
 - Added `CrucibleThemeService.isDarkMode`, a read-only signal that follows the
   theme applied by `applyTheme()`.
+- Added the crucible-landing-background module: the standalone
+  `[crucibleLandingBackground]` directive shows the `AppLandingBackgroundImage`
+  setting behind an app's landing page, with a near-black tint in dark mode,
+  and sets the `crucible-landing-background` class and
+  `--crucible-landing-background` property on its host while the image shows.
+  See crucible-landing-background/README.md.
 
 ## 0.6.1
 
