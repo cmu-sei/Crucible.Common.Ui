@@ -1,7 +1,7 @@
 // Copyright 2026 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { DOCUMENT, inject, Injectable } from '@angular/core';
+import { DOCUMENT, inject, Injectable, signal } from '@angular/core';
 import { Theme } from '../../comn-auth/state/comn-auth.model';
 import { ComnSettingsService } from '../../comn-settings/services/comn-settings.service';
 import { CRUCIBLE_THEME_CONFIG } from '../models/crucible-theme.config';
@@ -14,7 +14,7 @@ import { CrucibleFaviconService } from './crucible-favicon.service';
  * and recolors the favicon to the top-bar color.
  *
  * Call `applyTheme()` whenever the user's theme changes. Register with
- * `provideCrucibleTheme()`.
+ * `provideCrucibleTheme()`. Read `isDarkMode` to follow the applied theme.
  */
 @Injectable()
 export class CrucibleThemeService {
@@ -22,10 +22,20 @@ export class CrucibleThemeService {
   private readonly config = inject(CRUCIBLE_THEME_CONFIG);
   private readonly settingsService = inject(ComnSettingsService);
   private readonly faviconService = inject(CrucibleFaviconService);
+  private readonly darkMode = signal(
+    this.document.body.classList.contains('darkMode')
+  );
+
+  /**
+   * Whether the dark theme is applied. Starts from the `darkMode` class on
+   * `body` and follows each `applyTheme()` call.
+   */
+  readonly isDarkMode = this.darkMode.asReadonly();
 
   applyTheme(theme: Theme): void {
     const isDark = theme === Theme.DARK;
     this.document.body.classList.toggle('darkMode', isDark);
+    this.darkMode.set(isDark);
 
     const colors = resolveThemeColors(
       this.settingsService.settings,

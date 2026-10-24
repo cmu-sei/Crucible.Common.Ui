@@ -12,6 +12,8 @@
   dark-mode color settings and apply them as `--crucible-topbar-background`,
   `--crucible-topbar-text`, `--mat-sys-primary` and `--mat-sys-on-primary`, and
   recolor the SVG favicon. See crucible-theme/README.md.
+- Added `CrucibleThemeService.isDarkMode`, a read-only signal that follows the
+  theme applied by `applyTheme()`.
 
 ## 0.6.1
 
