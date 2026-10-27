@@ -67,6 +67,7 @@ describe('CrucibleLandingBackgroundDirective', () => {
     expect(style('background-size')).toBe('cover');
     // jsdom expands the one-value shorthand to both axes.
     expect(style('background-position')).toMatch(/^center( center)?$/);
+    expect(style('background-attachment')).toBe('fixed');
     expect(style('background-color')).toBe('');
   });
 

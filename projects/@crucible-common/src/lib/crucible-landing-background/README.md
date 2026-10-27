@@ -47,12 +47,16 @@ While the image shows, the directive sets on its host:
 | `background-image` | the image | a near-black tint over the image |
 | `background-color` | not set | `#101215` |
 | `background-size` / `background-position` | `cover` / `center` | `cover` / `center` |
+| `background-attachment` | `fixed` | `fixed` |
 | class `crucible-landing-background` | set | set |
 | `--crucible-landing-background` | the image's `url(...)` | the image's `url(...)` |
 
 Dark mode follows `CrucibleThemeService.isDarkMode`, so the tint changes with
 the theme the app applies through `applyTheme()`. Without
 `provideCrucibleTheme()` the image is always shown untinted.
+
+The image is pinned to the window (`background-attachment: fixed`), so it sits
+in the same place in every app, whatever the height of its top bar or page.
 
 When the setting is empty or the input is `false`, nothing is set and the host
 keeps the background from the app's own styles. The background is set inline,

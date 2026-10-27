@@ -35,6 +35,9 @@ import {
     '[style.background-color]': 'backgroundColor()',
     '[style.background-size]': 'image() ? "cover" : null',
     '[style.background-position]': 'image() ? "center" : null',
+    // Pinned to the window, so the image sits in the same place in every app
+    // whatever the height of its top bar or page.
+    '[style.background-attachment]': 'image() ? "fixed" : null',
   },
 })
 export class CrucibleLandingBackgroundDirective {
