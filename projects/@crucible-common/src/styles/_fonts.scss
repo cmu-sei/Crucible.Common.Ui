@@ -7,39 +7,16 @@
 //
 //   @use '@cmusei/crucible-common/fonts';
 //
-// The URLs are relative to this file. The Angular application builder rebases
-// them when the partial is loaded from node_modules and emits the font files
-// into the build output, so the app needs no asset configuration.
+// The faces come from @fontsource/open-sans, a dependency of this package.
+// Sass inlines each weight's CSS, and the Angular application builder rebases
+// its url()s and emits the font files into the build output, so the app needs
+// no asset configuration. Each weight is split into unicode-range subsets, so
+// browsers only download the subsets a page uses.
 //
-// Open Sans 1.10, Digitized data copyright (c) 2010-2011, Google Corporation.
-// Licensed under the Apache License, Version 2.0; see fonts/LICENSE-OpenSans.txt.
+// Open Sans is licensed under the SIL Open Font License 1.1; the license ships
+// in the @fontsource/open-sans package.
 
-@font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src:
-    url('./fonts/opensans-regular.woff2') format('woff2'),
-    url('./fonts/opensans-regular.woff') format('woff');
-}
-
-@font-face {
-  font-family: 'Open Sans';
-  font-style: italic;
-  font-weight: 400;
-  font-display: swap;
-  src:
-    url('./fonts/opensans-italic.woff2') format('woff2'),
-    url('./fonts/opensans-italic.woff') format('woff');
-}
-
-@font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 600 700;
-  font-display: swap;
-  src:
-    url('./fonts/opensans-bold.woff2') format('woff2'),
-    url('./fonts/opensans-bold.woff') format('woff');
-}
+// Each weight's file name isn't a valid Sass namespace, so name them.
+@use '@fontsource/open-sans/400' as open-sans-regular;
+@use '@fontsource/open-sans/400-italic' as open-sans-italic;
+@use '@fontsource/open-sans/700' as open-sans-bold;

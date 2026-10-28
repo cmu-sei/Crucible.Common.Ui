@@ -12,10 +12,12 @@
   dark-mode color settings and apply them as `--crucible-topbar-background`,
   `--crucible-topbar-text`, `--mat-sys-primary` and `--mat-sys-on-primary`, and
   recolor the SVG favicon. See crucible-theme/README.md.
-- Added the Open Sans font to the package. `@use '@cmusei/crucible-common/fonts';`
-  in an app's global stylesheet declares the `'Open Sans'` family (regular,
-  italic, bold); the Angular application builder emits the font files into the
-  app's build output, so apps no longer need their own copies.
+- Added the Open Sans font through a new dependency on `@fontsource/open-sans`
+  (SIL Open Font License 1.1). `@use '@cmusei/crucible-common/fonts';` in an
+  app's global stylesheet declares the `'Open Sans'` family (regular, italic,
+  bold); the Angular application builder emits the font files into the app's
+  build output, so apps no longer need their own copies. This is the current
+  Open Sans release, not the 1.10 files apps have carried until now.
 - `comn-header-bar` now sets `font-family: 'Open Sans', sans-serif` itself
   instead of inheriting the app's font.
 

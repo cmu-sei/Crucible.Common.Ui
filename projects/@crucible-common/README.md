@@ -30,16 +30,17 @@ The purpose of this component is to display classification levels and maintenanc
 
 #### Fonts
 
-The package ships Open Sans and a Sass partial that declares the `'Open Sans'`
-family. Load it once from the app's global stylesheet; the Angular application
-builder copies the font files into the build output:
+The package depends on `@fontsource/open-sans` and ships a Sass partial that
+declares the `'Open Sans'` family from it. Load it once from the app's global
+stylesheet; the Angular application builder copies the font files into the
+build output:
 
 ```scss
 @use '@cmusei/crucible-common/fonts';
 ```
 
-Open Sans is licensed under the Apache License, Version 2.0 (see
-`styles/fonts/LICENSE-OpenSans.txt`).
+Open Sans is licensed under the SIL Open Font License 1.1; the license ships in
+the `@fontsource/open-sans` package.
 
 #### Theme Module
 

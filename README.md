@@ -226,19 +226,21 @@ The `crucible-theme` module applies each app's top-bar and Material `primary` co
 
 ## Fonts
 
-The package ships Open Sans (regular, italic and bold, as woff2 and woff) and a
-Sass partial that declares the `'Open Sans'` family. Load it once from the
-app's global stylesheet (e.g. `src/styles/styles.scss`):
+The package depends on [`@fontsource/open-sans`](https://www.npmjs.com/package/@fontsource/open-sans)
+and ships a Sass partial that declares the `'Open Sans'` family (regular,
+italic and bold) from it. Load it once from the app's global stylesheet (e.g.
+`src/styles/styles.scss`):
 
 ```scss
 @use '@cmusei/crucible-common/fonts';
 ```
 
 The partial is exposed through the `sass` condition of the package `exports`,
-so no `includePaths`/`stylePreprocessorOptions` entry is needed. Its `url()`s
-are relative to the partial; the Angular application builder (`@angular/build`)
-rebases them and copies the font files into the build output (`media/`), so the
-app needs no `assets` entry and no font files of its own. Apps then reference
+so no `includePaths`/`stylePreprocessorOptions` entry is needed. The Angular
+application builder (`@angular/build`) rebases the fontsource `url()`s and
+copies the font files into the build output (`media/`), so the app needs no
+`assets` entry and no font files of its own. Each weight is split into
+unicode-range subsets, and browsers only download the subsets a page uses. Apps then reference
 the family as usual, e.g. `typography: '"Open Sans", sans-serif'` in the
 Material theme.
 
@@ -246,8 +248,10 @@ Material theme.
 classification banner uses Open Sans in any app that loads the partial,
 whatever font the surrounding page uses.
 
-Open Sans is licensed under the Apache License, Version 2.0; the license text
-ships next to the fonts in `styles/fonts/LICENSE-OpenSans.txt`.
+Open Sans is licensed under the SIL Open Font License 1.1; the license ships in
+the `@fontsource/open-sans` package. This is the current Open Sans release, not
+the Open Sans 1.10 files Crucible apps have carried until now; the classification
+banner still renders 46px tall with it.
 
 ## Access token expiration and inactivity monitoring
 
