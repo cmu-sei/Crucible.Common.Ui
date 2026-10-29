@@ -1,0 +1,11 @@
+<!-- Copyright 2021 Carnegie Mellon University. All Rights Reserved. -->
+<!-- Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information. -->
+
+@if (banner(); as b) {
+<div>
+    <div class="message-bar" [style.background-color]="b.backgroundColor">
+        <div [style.color]="b.classificationTextColor" [style.font-size.px]="b.classificationTextFontSize">{{ b.classificationText }}</div>
+        <div [style.color]="b.messageTextColor" [style.font-size.px]="b.messageTextFontSize">{{ b.messageText }}</div>
+    </div>
+</div>
+}

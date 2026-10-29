@@ -21,6 +21,9 @@
     "paths": {
       "@cmusei/crucible-common": [
         "./projects/@crucible-common/src/public-api"
+      ],
+      "@cmusei/crucible-common/header-bar": [
+        "./projects/@crucible-common/header-bar/src/public-api"
       ]
     },
     "useDefineForClassFields": false
