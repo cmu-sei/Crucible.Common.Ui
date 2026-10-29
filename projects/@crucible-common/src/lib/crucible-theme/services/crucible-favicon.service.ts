@@ -2,7 +2,8 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { HttpBackend, HttpClient } from '@angular/common/http';
-import { DOCUMENT, inject, Injectable } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { inject, Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, map, shareReplay } from 'rxjs/operators';
 import { CRUCIBLE_THEME_CONFIG } from '../models/crucible-theme.config';

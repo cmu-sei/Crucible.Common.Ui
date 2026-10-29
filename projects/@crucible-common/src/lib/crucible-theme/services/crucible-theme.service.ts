@@ -1,7 +1,8 @@
 // Copyright 2026 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { DOCUMENT, inject, Injectable } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { inject, Injectable } from '@angular/core';
 import { Theme } from '../../comn-auth/state/comn-auth.model';
 import { ComnSettingsService } from '../../comn-settings/services/comn-settings.service';
 import { CRUCIBLE_THEME_CONFIG } from '../models/crucible-theme.config';

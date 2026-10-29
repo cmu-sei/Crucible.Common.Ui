@@ -9,7 +9,7 @@ Crucible Common modules are a set of angular modules that are common between Cru
 - [Settings Module](projects/@crucible-common/src/lib/comn-settings/README.md) — loads runtime app settings from a JSON file and exposes them via a service.
 - [Auth Module](projects/@crucible-common/src/lib/comn-auth/README.md) — OpenID Connect authentication, with optional access-token-expiration and inactivity monitoring (see [below](#access-token-expiration-and-inactivity-monitoring)).
 - [Theme Module (`crucible-theme`)](projects/@crucible-common/src/lib/crucible-theme/README.md) — applies the top-bar and Material `primary` colors for light and dark mode per the Crucible colors design spec (see [Color Theming](#color-theming) below).
-- **Header Bar Module (`comn-header-bar`)** — displays classification levels and maintenance messages read from the common settings.
+- **Header Bar (`comn-header-bar`)** — displays classification levels and maintenance messages (see [Header Bar](#header-bar) below).
 - **Fonts (`@cmusei/crucible-common/fonts`)** — Open Sans and the Sass partial that declares it (see [Fonts](#fonts) below).
 - [Dialog Module (`crucible-dialog`)](projects/@crucible-common/src/lib/crucible-dialog/README.md) — shared, app-agnostic modal building blocks (confirm dialogs, reactive-form modals, content/custom-footer dialogs) with consistent structure and dismissal behavior.
 
@@ -223,6 +223,33 @@ You can then place breakpoints in the library typescript files and they will be 
 ## Color Theming
 
 The `crucible-theme` module applies each app's top-bar and Material `primary` colors for light and dark mode from six `settings.json` keys, following the Crucible colors design specification (`crucible-development/design-specs/angular/colors.md`). Colors are used exactly as configured; nothing is derived at runtime. See [crucible-theme/README.md](projects/%40crucible-common/src/lib/crucible-theme/README.md) for the settings contract and integration steps.
+
+## Header Bar
+
+`comn-header-bar` is the classification banner. There are two ways to use it.
+
+**With the settings service.** Import `ComnHeaderBarModule` from `@cmusei/crucible-common` and add
+`<comn-header-bar />`. The banner reads `HeaderBarSettings` from `ComnSettingsService`.
+
+**On its own.** Import `ComnHeaderBarComponent` (standalone) from `@cmusei/crucible-common/header-bar`
+and pass the settings in, from whatever settings service the app has:
+
+```html
+<comn-header-bar [settings]="settings.HeaderBarSettings" />
+```
+
+This entry point needs only `@angular/core` and `@angular/common`, so an app that uses nothing else
+from the library doesn't need Material, CDK, Akita or `oidc-client-ts`. The banner is hidden when the
+settings are missing, `enabled` is false, both texts are empty, or the page is shown in a frame (the
+framing page shows its own banner).
+
+## Dependencies
+
+`@angular/core`, `@angular/common`, `@angular/forms` and `rxjs` are peer dependencies. The auth, dialog
+and theme modules also need `@angular/material`, `@angular/cdk`, `@datorama/akita` and
+`oidc-client-ts`, which apps that use those modules install themselves. They aren't listed as peers,
+because npm checks the newest version of every listed peer, even an optional one it doesn't install,
+and fails the install for an app on an older Angular, such as one that only uses the header bar.
 
 ## Fonts
 
