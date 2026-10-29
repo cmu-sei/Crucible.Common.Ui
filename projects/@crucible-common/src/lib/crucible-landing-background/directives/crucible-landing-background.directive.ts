@@ -1,13 +1,14 @@
 // Copyright 2026 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { booleanAttribute, computed, Directive, inject, input } from '@angular/core';
+import { booleanAttribute, computed, Directive, inject, input, signal } from '@angular/core';
 import { ComnSettingsService } from '../../comn-settings/services/comn-settings.service';
 import { CrucibleThemeService } from '../../crucible-theme/services/crucible-theme.service';
 import { landingBackgroundImage } from '../landing-background';
 import {
   CRUCIBLE_LANDING_BACKGROUND_DARK_COLOR,
   CRUCIBLE_LANDING_BACKGROUND_DARK_TINT,
+  CrucibleLandingBackgroundSettings,
 } from '../models/crucible-landing-background';
 
 /**
@@ -23,8 +24,9 @@ import {
  * attribute means `true`. While the image shows, the host gets the
  * `crucible-landing-background` class and the `--crucible-landing-background`
  * custom property, so the app can give content over the image a solid surface.
- * When the setting is empty or the input is `false`, the directive sets
- * nothing, so the host keeps its own background.
+ * The image shows only once it loads. When the setting is empty, the image
+ * fails to load, or the input is `false`, the directive sets nothing, so the
+ * host keeps its own background.
  */
 @Directive({
   selector: '[crucibleLandingBackground]',
@@ -42,9 +44,20 @@ import {
 })
 export class CrucibleLandingBackgroundDirective {
   private readonly themeService = inject(CrucibleThemeService, { optional: true });
-  private readonly settingImage = landingBackgroundImage(
-    inject(ComnSettingsService).settings
-  );
+  private readonly settings: CrucibleLandingBackgroundSettings | undefined =
+    inject(ComnSettingsService).settings;
+
+  /** The setting's CSS `url(...)` value, once the image has loaded. */
+  private readonly loadedImage = signal<string | null>(null);
+
+  constructor() {
+    const image = landingBackgroundImage(this.settings);
+    if (image && typeof Image !== 'undefined') {
+      const loader = new Image();
+      loader.onload = () => this.loadedImage.set(image);
+      loader.src = this.settings!.AppLandingBackgroundImage!.trim();
+    }
+  }
 
   /** Whether to show the image. Defaults to `true`. */
   readonly enabled = input(true, {
@@ -54,7 +67,7 @@ export class CrucibleLandingBackgroundDirective {
 
   /** The image's CSS `url(...)` value while it shows, otherwise `null`. */
   protected readonly image = computed(() =>
-    this.enabled() ? this.settingImage : null
+    this.enabled() ? this.loadedImage() : null
   );
 
   private readonly isDark = computed(

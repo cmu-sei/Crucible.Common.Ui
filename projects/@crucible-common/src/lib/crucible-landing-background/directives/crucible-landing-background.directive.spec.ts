@@ -15,6 +15,17 @@ import { CrucibleLandingBackgroundDirective } from './crucible-landing-backgroun
 const IMAGE = 'assets/local/landing.jpg';
 const URL_VALUE = `url("${IMAGE}")`;
 
+// The test DOM never loads images, so tests fire load or error themselves.
+class FakeImage {
+  static instances: FakeImage[] = [];
+  onload: (() => void) | null = null;
+  onerror: (() => void) | null = null;
+  src = '';
+  constructor() {
+    FakeImage.instances.push(this);
+  }
+}
+
 @Component({
   template: `
     <div id="bound" [crucibleLandingBackground]="show()"></div>
@@ -31,22 +42,36 @@ describe('CrucibleLandingBackgroundDirective', () => {
   let fixture: ComponentFixture<HostComponent>;
   let isDarkMode: WritableSignal<boolean>;
 
+  beforeEach(() => {
+    FakeImage.instances = [];
+    vi.stubGlobal('Image', FakeImage);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   async function setup(
     settings: unknown,
-    options: { withTheme?: boolean } = { withTheme: true }
+    options: { withTheme?: boolean; load?: boolean } = {}
   ): Promise<void> {
+    const { withTheme = true, load = true } = options;
     isDarkMode = signal(false);
     TestBed.configureTestingModule({
       imports: [HostComponent],
       providers: [
         { provide: ComnSettingsService, useValue: { settings } },
-        ...(options.withTheme
+        ...(withTheme
           ? [{ provide: CrucibleThemeService, useValue: { isDarkMode } }]
           : []),
       ],
     });
     fixture = TestBed.createComponent(HostComponent);
     await fixture.whenStable();
+    if (load) {
+      FakeImage.instances.forEach((image) => image.onload?.());
+      await fixture.whenStable();
+    }
   }
 
   function el(id = 'bound'): HTMLElement {
@@ -119,6 +144,33 @@ describe('CrucibleLandingBackgroundDirective', () => {
     ['absent settings', undefined],
   ])('sets nothing when the setting is %s, in either mode', async (_label, settings) => {
     await setup(settings);
+    isDarkMode.set(true);
+    await fixture.whenStable();
+
+    for (const id of ['bound', 'bare']) {
+      expect(el(id).classList.contains(CRUCIBLE_LANDING_BACKGROUND_CLASS)).toBe(false);
+      expect(el(id).getAttribute('style') ?? '').toBe('');
+    }
+  });
+
+  it('requests the setting image once per host', async () => {
+    await setup({ AppLandingBackgroundImage: ` ${IMAGE} ` }, { load: false });
+
+    expect(FakeImage.instances.map((image) => image.src)).toEqual([IMAGE, IMAGE]);
+  });
+
+  it('sets nothing until the image loads', async () => {
+    await setup({ AppLandingBackgroundImage: IMAGE }, { load: false });
+    isDarkMode.set(true);
+    await fixture.whenStable();
+
+    expect(el().classList.contains(CRUCIBLE_LANDING_BACKGROUND_CLASS)).toBe(false);
+    expect(el().getAttribute('style') ?? '').toBe('');
+  });
+
+  it('keeps the host background in either mode when the image fails to load', async () => {
+    await setup({ AppLandingBackgroundImage: 'assets/local/missing.jpg' }, { load: false });
+    FakeImage.instances.forEach((image) => image.onerror?.());
     isDarkMode.set(true);
     await fixture.whenStable();
 

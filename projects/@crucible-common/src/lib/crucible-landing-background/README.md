@@ -58,8 +58,10 @@ the theme the app applies through `applyTheme()`. Without
 The image is pinned to the window (`background-attachment: fixed`), so it sits
 in the same place in every app, whatever the height of its top bar or page.
 
-When the setting is empty or the input is `false`, nothing is set and the host
-keeps the background from the app's own styles. The background is set inline,
+The directive loads the image first and sets the background only once it
+loads. When the setting is empty, the image fails to load (for example a 404),
+or the input is `false`, nothing is set and the host keeps the background from
+the app's own styles, so a missing image never leaves a dark page. The background is set inline,
 so it takes precedence over the app's stylesheet rules for the host.
 
 ## Content over the image

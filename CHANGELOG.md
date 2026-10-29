@@ -19,7 +19,8 @@
   setting behind an app's landing page, with a near-black tint in dark mode,
   and sets the `crucible-landing-background` class and
   `--crucible-landing-background` property on its host while the image shows.
-  See crucible-landing-background/README.md.
+  The image shows only once it loads, so a missing image leaves the app's own
+  background. See crucible-landing-background/README.md.
 
 ## 0.6.1
 
