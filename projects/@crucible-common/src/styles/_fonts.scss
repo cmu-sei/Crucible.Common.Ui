@@ -1,0 +1,22 @@
+// Copyright 2021 Carnegie Mellon University. All Rights Reserved.
+// Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+
+// Declares the 'Open Sans' family used by Crucible apps and by the library's
+// own components (e.g. comn-header-bar). Load it once from the app's global
+// stylesheet:
+//
+//   @use '@cmusei/crucible-common/fonts';
+//
+// The faces come from @fontsource/open-sans, a dependency of this package.
+// Sass inlines each weight's CSS, and the Angular application builder rebases
+// its url()s and emits the font files into the build output, so the app needs
+// no asset configuration. Each weight is split into unicode-range subsets, so
+// browsers only download the subsets a page uses.
+//
+// Open Sans is licensed under the SIL Open Font License 1.1; the license ships
+// in the @fontsource/open-sans package.
+
+// Each weight's file name isn't a valid Sass namespace, so name them.
+@use '@fontsource/open-sans/400' as open-sans-regular;
+@use '@fontsource/open-sans/400-italic' as open-sans-italic;
+@use '@fontsource/open-sans/700' as open-sans-bold;

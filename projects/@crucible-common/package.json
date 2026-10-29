@@ -18,6 +18,7 @@
     "rxjs": "^7.8.1"
   },
   "dependencies": {
+    "@fontsource/open-sans": "^5.3.0",
     "tslib": "^2.4.1"
   },
   "main": "bundles/crucible-common.umd.js",
@@ -28,6 +29,11 @@
   "fesm5": "fesm5/crucible-common.js",
   "fesm2015": "fesm2015/crucible-common.js",
   "typings": "crucible-common.d.ts",
+  "exports": {
+    "./fonts": {
+      "sass": "./styles/_fonts.scss"
+    }
+  },
   "devDependencies": {
     "typescript": "^5.9.3"
   }

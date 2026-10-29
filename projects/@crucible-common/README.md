@@ -28,6 +28,20 @@ Find out more on the [Github Page](https://github.com/cmu-sei/Crucible.Common.Ui
 
 The purpose of this component is to display classification levels and maintenance messages, which are read from the common settings.
 
+#### Fonts
+
+The package depends on `@fontsource/open-sans` and ships a Sass partial that
+declares the `'Open Sans'` family from it. Load it once from the app's global
+stylesheet; the Angular application builder copies the font files into the
+build output:
+
+```scss
+@use '@cmusei/crucible-common/fonts';
+```
+
+Open Sans is licensed under the SIL Open Font License 1.1; the license ships in
+the `@fontsource/open-sans` package.
+
 #### Theme Module
 
 The Theme module (`crucible-theme`) applies an app's top-bar and Material
