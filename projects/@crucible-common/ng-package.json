@@ -4,7 +4,13 @@
   "lib": {
     "entryFile": "src/public-api.ts"
   },
+  "allowedNonPeerDependencies": ["@fontsource/open-sans"],
   "assets": [
-    "./src/lib/comn-auth/assets/auth-callback-silent.html"
+    "./src/lib/comn-auth/assets/auth-callback-silent.html",
+    {
+      "glob": "**/*",
+      "input": "src/styles",
+      "output": "styles"
+    }
   ]
 }

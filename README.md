@@ -9,7 +9,8 @@ Crucible Common modules are a set of angular modules that are common between Cru
 - [Settings Module](projects/@crucible-common/src/lib/comn-settings/README.md) — loads runtime app settings from a JSON file and exposes them via a service.
 - [Auth Module](projects/@crucible-common/src/lib/comn-auth/README.md) — OpenID Connect authentication, with optional access-token-expiration and inactivity monitoring (see [below](#access-token-expiration-and-inactivity-monitoring)).
 - [Theme Module (`crucible-theme`)](projects/@crucible-common/src/lib/crucible-theme/README.md) — applies the top-bar and Material `primary` colors for light and dark mode per the Crucible colors design spec (see [Color Theming](#color-theming) below).
-- **Header Bar Module (`comn-header-bar`)** — displays classification levels and maintenance messages read from the common settings.
+- **Header Bar (`comn-header-bar`)** — displays classification levels and maintenance messages (see [Header Bar](#header-bar) below).
+- **Fonts (`@cmusei/crucible-common/fonts`)** — Open Sans and the Sass partial that declares it (see [Fonts](#fonts) below).
 - [Dialog Module (`crucible-dialog`)](projects/@crucible-common/src/lib/crucible-dialog/README.md) — shared, app-agnostic modal building blocks (confirm dialogs, reactive-form modals, content/custom-footer dialogs) with consistent structure and dismissal behavior.
 - [Landing Background (`crucible-landing-background`)](projects/@crucible-common/src/lib/crucible-landing-background/README.md) — the `[crucibleLandingBackground]` directive, which shows the `AppLandingBackgroundImage` setting behind an app's landing page, tinted in dark mode.
 
@@ -223,6 +224,62 @@ You can then place breakpoints in the library typescript files and they will be 
 ## Color Theming
 
 The `crucible-theme` module applies each app's top-bar and Material `primary` colors for light and dark mode from six `settings.json` keys, following the Crucible colors design specification (`crucible-development/design-specs/angular/colors.md`). Colors are used exactly as configured; nothing is derived at runtime. See [crucible-theme/README.md](projects/%40crucible-common/src/lib/crucible-theme/README.md) for the settings contract and integration steps.
+
+## Header Bar
+
+`comn-header-bar` is the classification banner. There are two ways to use it.
+
+**With the settings service.** Import `ComnHeaderBarModule` from `@cmusei/crucible-common` and add
+`<comn-header-bar />`. The banner reads `HeaderBarSettings` from `ComnSettingsService`.
+
+**On its own.** Import `ComnHeaderBarComponent` (standalone) from `@cmusei/crucible-common/header-bar`
+and pass the settings in, from whatever settings service the app has:
+
+```html
+<comn-header-bar [settings]="settings.HeaderBarSettings" />
+```
+
+This entry point needs only `@angular/core` and `@angular/common`, so an app that uses nothing else
+from the library doesn't need Material, CDK, Akita or `oidc-client-ts`. The banner is hidden when the
+settings are missing, `enabled` is false, both texts are empty, or the page is shown in a frame (the
+framing page shows its own banner).
+
+## Dependencies
+
+`@angular/core`, `@angular/common`, `@angular/forms` and `rxjs` are peer dependencies. The auth, dialog
+and theme modules also need `@angular/material`, `@angular/cdk`, `@datorama/akita` and
+`oidc-client-ts`, which apps that use those modules install themselves. They aren't listed as peers,
+because npm checks the newest version of every listed peer, even an optional one it doesn't install,
+and fails the install for an app on an older Angular, such as one that only uses the header bar.
+
+## Fonts
+
+The package depends on [`@fontsource/open-sans`](https://www.npmjs.com/package/@fontsource/open-sans)
+and ships a Sass partial that declares the `'Open Sans'` family (regular,
+italic and bold) from it. Load it once from the app's global stylesheet (e.g.
+`src/styles/styles.scss`):
+
+```scss
+@use '@cmusei/crucible-common/fonts';
+```
+
+The partial is exposed through the `sass` condition of the package `exports`,
+so no `includePaths`/`stylePreprocessorOptions` entry is needed. The Angular
+application builder (`@angular/build`) rebases the fontsource `url()`s and
+copies the font files into the build output (`media/`), so the app needs no
+`assets` entry and no font files of its own. Each weight is split into
+unicode-range subsets, and browsers only download the subsets a page uses. Apps then reference
+the family as usual, e.g. `typography: '"Open Sans", sans-serif'` in the
+Material theme.
+
+`comn-header-bar` sets `font-family: 'Open Sans', sans-serif` itself, so the
+classification banner uses Open Sans in any app that loads the partial,
+whatever font the surrounding page uses.
+
+Open Sans is licensed under the SIL Open Font License 1.1; the license ships in
+the `@fontsource/open-sans` package. This is the current Open Sans release, not
+the Open Sans 1.10 files Crucible apps have carried until now; the classification
+banner still renders 46px tall with it.
 
 ## Access token expiration and inactivity monitoring
 
