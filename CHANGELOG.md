@@ -20,6 +20,15 @@
   Open Sans release, not the 1.10 files apps have carried until now.
 - `comn-header-bar` now sets `font-family: 'Open Sans', sans-serif` itself
   instead of inheriting the app's font.
+- Added `CrucibleThemeService.isDarkMode`, a read-only signal that follows the
+  theme applied by `applyTheme()`.
+- Added the crucible-landing-background module: the standalone
+  `[crucibleLandingBackground]` directive shows the `AppLandingBackgroundImage`
+  setting behind an app's landing page, with a near-black tint in dark mode,
+  and sets the `crucible-landing-background` class and
+  `--crucible-landing-background` property on its host while the image shows.
+  The image shows only once it loads, so a missing image leaves the app's own
+  background. See crucible-landing-background/README.md.
 
 ## 0.6.1
 
