@@ -16,8 +16,8 @@ jobs:
   release:
     uses: cmu-sei/Crucible-Github-Actions/.github/workflows/npm-release.yaml@npm-v1
     permissions:
-      contents: write          # commit-version pushes the bump to the branch
-      id-token: write          # npm provenance
+      contents: read           # no version commit back to main: its ruleset requires a pull request
+      id-token: write          # npm trusted publishing and provenance
     with:
       version: ${{ inputs.version }}
       dist-tag: ${{ inputs.tag }}
@@ -26,6 +26,4 @@ jobs:
         projects/@crucible-common
       build-command: npm ci && npm run pack
       publish-path: dist/@crucible-common/cmusei-crucible-common-{version}.tgz
-      commit-version: true
-    secrets:
-      NPM_TOKEN: ${{ secrets.NPM_APIKEY }}
+      auth-mode: trusted
