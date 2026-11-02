@@ -4,29 +4,23 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ComnAuthLogoutComponent } from './comn-auth-logout.component';
-import { ComnSettingsService } from '../../../comn-settings/services/comn-settings.service';
+import { ComnAuthService } from '../../services/comn-auth.service';
 
-// Component injects ComnAuthService, which builds a real oidc-client-ts
-// UserManager from settings.OIDCSettings — stub it.
-const settingsStub: Partial<ComnSettingsService> = {
-  settings: {
-    OIDCSettings: {
-      authority: 'https://example.test/auth',
-      client_id: 'test-client',
-      redirect_uri: 'https://example.test/auth-callback',
-    },
-  },
-};
+// The component calls ComnAuthService.logout() on init. A real one would start an
+// oidc-client-ts signout redirect, which fetches the authority's metadata over the
+// network; stub the service so the test never leaves the process.
+const authServiceStub = { logout: vi.fn() };
 
 describe('CwdAuthLogoutComponent', () => {
   let component: ComnAuthLogoutComponent;
   let fixture: ComponentFixture<ComnAuthLogoutComponent>;
 
   beforeEach(async () => {
+    authServiceStub.logout.mockClear();
     await TestBed.configureTestingModule({
       declarations: [ComnAuthLogoutComponent],
       providers: [
-        { provide: ComnSettingsService, useValue: settingsStub },
+        { provide: ComnAuthService, useValue: authServiceStub },
       ],
     }).compileComponents();
 
@@ -37,5 +31,9 @@ describe('CwdAuthLogoutComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('logs out on init', () => {
+    expect(authServiceStub.logout).toHaveBeenCalledTimes(1);
   });
 });

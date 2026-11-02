@@ -4,64 +4,26 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version of the Client package'
+        description: "Version of the Client package"
         required: true
       tag:
-        description: 'npm dist-tag (required for prerelease versions, e.g. next, rc)'
+        description: "npm dist-tag (required for prerelease versions, e.g. next, rc)"
         required: false
 
+permissions: {}
+
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-        with:
-          ref: ${{ github.ref }}
-          fetch-depth: 0
-
-      - name: Get Branch Name
-        id: get_branch_name
-        run: |
-          FULLNAME=${{ github.ref }}
-          BRANCHNAMEORIGIN=${FULLNAME#*/}
-          BRANCHNAME=${BRANCHNAMEORIGIN#*/}
-          echo "branch=$BRANCHNAME" >> $GITHUB_OUTPUT
-
-      - name: Version Package
-        run: |
-          npm version --allow-same-version --no-git-tag-version ${{ github.event.inputs.version }}
-          cd projects/@crucible-common
-          npm version --allow-same-version --no-git-tag-version ${{ github.event.inputs.version }}
-
-      - name: Add & Commit
-        run: |
-          git config user.name "Github Actions"
-          git config user.email "actions@github.com"
-          git add package.json projects/@crucible-common/package.json package-lock.json
-          if git diff --cached --quiet; then
-            echo "Already at version ${{ github.event.inputs.version }}; nothing to commit."
-          else
-            git commit -m "Update version number to ${{ github.event.inputs.version }}"
-            git push origin ${{ steps.get_branch_name.outputs.branch }}
-          fi
-
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v6
-        with:
-          # Set always-auth in npmrc
-          node-version: '24'
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Publish to npmjs
-        run: |
-          npm install
-          npm run pack
-          TAG_ARG=""
-          if [ -n "$INPUT_TAG" ]; then TAG_ARG="--tag $INPUT_TAG"; fi
-          npm publish dist/@crucible-common/cmusei-crucible-common-${{ github.event.inputs.version }}.tgz --access public $TAG_ARG
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_APIKEY }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_APIKEY }}
-          INPUT_TAG: ${{ github.event.inputs.tag }}
+  release:
+    uses: cmu-sei/Crucible-Github-Actions/.github/workflows/npm-release.yaml@npm-v1
+    permissions:
+      contents: read           # no version commit back to main: its ruleset requires a pull request
+      id-token: write          # npm trusted publishing and provenance
+    with:
+      version: ${{ inputs.version }}
+      dist-tag: ${{ inputs.tag }}
+      version-dirs: |
+        .
+        projects/@crucible-common
+      build-command: npm ci && npm run pack
+      publish-path: dist/@crucible-common/cmusei-crucible-common-{version}.tgz
+      auth-mode: trusted

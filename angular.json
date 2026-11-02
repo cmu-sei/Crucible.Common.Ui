@@ -26,6 +26,11 @@
           "options": {
             "tsConfig": "projects/@crucible-common/tsconfig.spec.json",
             "buildTarget": "crucible-common:build"
+          },
+          "configurations": {
+            "coverage": {
+              "coverage": true
+            }
           }
         },
         "lint": {

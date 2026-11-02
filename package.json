@@ -15,7 +15,8 @@
     "pack": "npm run build crucible-common --aot && cd dist/@crucible-common && npm pack",
     "build:clean": "rimraf dist",
     "build:link": "npm run build:clean && run-p watch:* link:crucible-common ",
-    "json-server": "json-server ./projects/cwd-common-app/src/assets/db/db.json"
+    "json-server": "json-server ./projects/cwd-common-app/src/assets/db/db.json",
+    "test:coverage": "ng test crucible-common --watch=false --configuration coverage"
   },
   "private": true,
   "dependencies": {
@@ -30,7 +31,6 @@
     "@angular/forms": ">=21.2.0",
     "@angular/material": ">=21.2.0",
     "@angular/platform-browser": ">=21.2.0",
-    "@angular/platform-browser-dynamic": ">=21.2.0",
     "@angular/router": ">=21.2.0",
     "@datorama/akita": "^8.0.0",
     "oidc-client-ts": "^2.4.0",
@@ -48,6 +48,7 @@
     "@babel/core": "^7.14.8",
     "@datorama/akita-ngdevtools": "^6.0.1",
     "@types/node": "^22.10.0",
+    "@vitest/coverage-v8": "^4.1.9",
     "babel-loader": "^8.2.2",
     "codelyzer": "^6.0.2",
     "jsdom": "^29.1.1",

@@ -1,0 +1,19 @@
+name: Build and Test
+
+# Pull requests validate proposed changes. Pushes to main verify the result after merge.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions: {}
+
+jobs:
+  build-and-test:
+    uses: cmu-sei/Crucible-Github-Actions/.github/workflows/npm-test.yaml@npm-test-v1
+    permissions:
+      contents: read
+    with:
+      node-version: "24"
+      # The release's build, so a pull request catches a broken package.
+      build-command: npm run pack
