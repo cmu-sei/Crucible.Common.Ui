@@ -28,7 +28,11 @@
   and sets the `crucible-landing-background` class and
   `--crucible-landing-background` property on its host while the image shows.
   The image shows only once it loads, so a missing image leaves the app's own
-  background. See crucible-landing-background/README.md.
+  background, and once loaded it shows at once on every later visit. The
+  setting comes from the `crucibleLandingBackgroundSettings` input, the
+  `CRUCIBLE_LANDING_BACKGROUND_SETTINGS` token, or `ComnSettingsService` when
+  the app configured it, so apps with their own settings service can use it.
+  See crucible-landing-background/README.md.
 
 ## 0.6.1
 

@@ -3,14 +3,18 @@
 
 import { Component, signal, WritableSignal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { COMN_SETTINGS_CONFIG } from '../../comn-settings/models/comn-settings';
 import { ComnSettingsService } from '../../comn-settings/services/comn-settings.service';
 import { CrucibleThemeService } from '../../crucible-theme/services/crucible-theme.service';
 import {
   CRUCIBLE_LANDING_BACKGROUND_CLASS,
   CRUCIBLE_LANDING_BACKGROUND_DARK_TINT,
   CRUCIBLE_LANDING_BACKGROUND_PROPERTY,
+  CRUCIBLE_LANDING_BACKGROUND_SETTINGS,
+  CrucibleLandingBackgroundSettings,
 } from '../models/crucible-landing-background';
 import { CrucibleLandingBackgroundDirective } from './crucible-landing-background.directive';
+import { loadedLandingBackgrounds } from './loaded-images';
 
 const IMAGE = 'assets/local/landing.jpg';
 const URL_VALUE = `url("${IMAGE}")`;
@@ -28,7 +32,7 @@ class FakeImage {
 
 @Component({
   template: `
-    <div id="bound" [crucibleLandingBackground]="show()"></div>
+    <div id="bound" class="app-home-container" [class.open]="!show()" style="color: red" [crucibleLandingBackground]="show()"></div>
     <div id="bare" crucibleLandingBackground></div>
   `,
   imports: [CrucibleLandingBackgroundDirective],
@@ -44,6 +48,7 @@ describe('CrucibleLandingBackgroundDirective', () => {
 
   beforeEach(() => {
     FakeImage.instances = [];
+    loadedLandingBackgrounds.clear();
     vi.stubGlobal('Image', FakeImage);
   });
 
@@ -53,14 +58,21 @@ describe('CrucibleLandingBackgroundDirective', () => {
 
   async function setup(
     settings: unknown,
-    options: { withTheme?: boolean; load?: boolean } = {}
+    options: { withTheme?: boolean; load?: boolean; comn?: boolean; token?: unknown } = {}
   ): Promise<void> {
-    const { withTheme = true, load = true } = options;
+    const { withTheme = true, load = true, comn = true, token } = options;
     isDarkMode = signal(false);
     TestBed.configureTestingModule({
       imports: [HostComponent],
       providers: [
-        { provide: ComnSettingsService, useValue: { settings } },
+        // As the Player-family apps do: configured, then read.
+        ...(comn
+          ? [
+              { provide: COMN_SETTINGS_CONFIG, useValue: {} },
+              { provide: ComnSettingsService, useValue: { settings } },
+            ]
+          : []),
+        ...(token !== undefined ? [{ provide: CRUCIBLE_LANDING_BACKGROUND_SETTINGS, useValue: token }] : []),
         ...(withTheme
           ? [{ provide: CrucibleThemeService, useValue: { isDarkMode } }]
           : []),
@@ -82,6 +94,20 @@ describe('CrucibleLandingBackgroundDirective', () => {
     return el(id).style.getPropertyValue(name);
   }
 
+  /** Every inline style the directive could set, ignoring the host's own. */
+  function backgroundStyles(id = 'bound'): string {
+    return [
+      CRUCIBLE_LANDING_BACKGROUND_PROPERTY,
+      'background-image',
+      'background-color',
+      'background-size',
+      'background-position',
+      'background-attachment',
+    ]
+      .map((name) => style(name, id))
+      .join('');
+  }
+
   it('shows the image, sized to cover, in light mode', async () => {
     await setup({ AppLandingBackgroundImage: IMAGE });
 
@@ -94,6 +120,20 @@ describe('CrucibleLandingBackgroundDirective', () => {
     expect(style('background-position')).toMatch(/^center( center)?$/);
     expect(style('background-attachment')).toBe('fixed');
     expect(style('background-color')).toBe('');
+  });
+
+  it("keeps the host's own classes and styles alongside its bindings", async () => {
+    await setup({ AppLandingBackgroundImage: IMAGE });
+
+    expect(el().classList.contains('app-home-container')).toBe(true);
+    expect(el().style.color).toBe('red');
+
+    fixture.componentInstance.show.set(false);
+    await fixture.whenStable();
+
+    expect(Array.from(el().classList).sort()).toEqual(['app-home-container', 'open']);
+    expect(el().style.color).toBe('red');
+    expect(style('background-image')).toBe('');
   });
 
   it('treats the bare attribute as enabled', async () => {
@@ -129,7 +169,7 @@ describe('CrucibleLandingBackgroundDirective', () => {
     await fixture.whenStable();
 
     expect(el().classList.contains(CRUCIBLE_LANDING_BACKGROUND_CLASS)).toBe(false);
-    expect(el().getAttribute('style') ?? '').toBe('');
+    expect(backgroundStyles()).toBe('');
 
     fixture.componentInstance.show.set(true);
     await fixture.whenStable();
@@ -149,11 +189,11 @@ describe('CrucibleLandingBackgroundDirective', () => {
 
     for (const id of ['bound', 'bare']) {
       expect(el(id).classList.contains(CRUCIBLE_LANDING_BACKGROUND_CLASS)).toBe(false);
-      expect(el(id).getAttribute('style') ?? '').toBe('');
+      expect(backgroundStyles(id)).toBe('');
     }
   });
 
-  it('requests the setting image once per host', async () => {
+  it('requests the trimmed setting image for each host', async () => {
     await setup({ AppLandingBackgroundImage: ` ${IMAGE} ` }, { load: false });
 
     expect(FakeImage.instances.map((image) => image.src)).toEqual([IMAGE, IMAGE]);
@@ -165,19 +205,76 @@ describe('CrucibleLandingBackgroundDirective', () => {
     await fixture.whenStable();
 
     expect(el().classList.contains(CRUCIBLE_LANDING_BACKGROUND_CLASS)).toBe(false);
-    expect(el().getAttribute('style') ?? '').toBe('');
+    expect(backgroundStyles()).toBe('');
   });
 
   it('keeps the host background in either mode when the image fails to load', async () => {
     await setup({ AppLandingBackgroundImage: 'assets/local/missing.jpg' }, { load: false });
+    expect(FakeImage.instances.every((image) => image.onerror)).toBe(true);
     FakeImage.instances.forEach((image) => image.onerror?.());
     isDarkMode.set(true);
     await fixture.whenStable();
 
     for (const id of ['bound', 'bare']) {
       expect(el(id).classList.contains(CRUCIBLE_LANDING_BACKGROUND_CLASS)).toBe(false);
-      expect(el(id).getAttribute('style') ?? '').toBe('');
+      expect(backgroundStyles(id)).toBe('');
     }
+
+    // A failed URL is not remembered as loaded: the next page tries again.
+    fixture.destroy();
+    TestBed.resetTestingModule();
+    FakeImage.instances = [];
+    await setup({ AppLandingBackgroundImage: 'assets/local/missing.jpg' }, { load: false });
+    expect(FakeImage.instances.map((image) => image.src)).toEqual([
+      'assets/local/missing.jpg',
+      'assets/local/missing.jpg',
+    ]);
+  });
+
+  it('shows an image that has loaded once at once on the next page, without loading it again', async () => {
+    await setup({ AppLandingBackgroundImage: IMAGE });
+    fixture.destroy();
+    TestBed.resetTestingModule();
+    FakeImage.instances = [];
+
+    await setup({ AppLandingBackgroundImage: IMAGE }, { load: false });
+
+    expect(FakeImage.instances).toEqual([]);
+    expect(el().classList.contains(CRUCIBLE_LANDING_BACKGROUND_CLASS)).toBe(true);
+    expect(style(CRUCIBLE_LANDING_BACKGROUND_PROPERTY, 'bare')).toBe(URL_VALUE);
+  });
+
+  it('abandons the download when the host is destroyed before it loads', async () => {
+    await setup({ AppLandingBackgroundImage: IMAGE }, { load: false });
+    const pending = [...FakeImage.instances];
+
+    fixture.destroy();
+
+    for (const image of pending) {
+      expect(image.onload).toBeNull();
+      expect(image.onerror).toBeNull();
+      expect(image.src).toBe('');
+    }
+  });
+
+  it('requests and shows the same cleaned URL', async () => {
+    await setup({ AppLandingBackgroundImage: ' assets/local/land\fing.jpg\n' });
+
+    expect(FakeImage.instances.map((image) => image.src)).toEqual([IMAGE, IMAGE]);
+    expect(style(CRUCIBLE_LANDING_BACKGROUND_PROPERTY)).toBe(URL_VALUE);
+  });
+
+  it('reads the settings token when there is no ComnSettingsService', async () => {
+    await setup(undefined, { comn: false, token: { AppLandingBackgroundImage: IMAGE } });
+
+    expect(style(CRUCIBLE_LANDING_BACKGROUND_PROPERTY)).toBe(URL_VALUE);
+  });
+
+  it('sets nothing, without an error, when no settings source is provided', async () => {
+    await setup(undefined, { comn: false });
+
+    expect(FakeImage.instances).toEqual([]);
+    expect(backgroundStyles()).toBe('');
   });
 
   it('shows the untinted image when the theme service is not provided', async () => {
@@ -186,5 +283,57 @@ describe('CrucibleLandingBackgroundDirective', () => {
     expect(style(CRUCIBLE_LANDING_BACKGROUND_PROPERTY)).toBe(URL_VALUE);
     expect(style('background-image')).not.toContain('linear-gradient');
     expect(style('background-color')).toBe('');
+  });
+});
+
+@Component({
+  template: `<div id="input" [crucibleLandingBackgroundSettings]="settings()" crucibleLandingBackground></div>`,
+  imports: [CrucibleLandingBackgroundDirective],
+})
+class InputHostComponent {
+  settings = signal<CrucibleLandingBackgroundSettings>({ AppLandingBackgroundImage: IMAGE });
+}
+
+describe('CrucibleLandingBackgroundDirective settings input', () => {
+  beforeEach(() => {
+    FakeImage.instances = [];
+    loadedLandingBackgrounds.clear();
+    vi.stubGlobal('Image', FakeImage);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('prefers the input, and loads a new image when it changes', async () => {
+    TestBed.configureTestingModule({
+      imports: [InputHostComponent],
+      providers: [
+        { provide: COMN_SETTINGS_CONFIG, useValue: {} },
+        { provide: ComnSettingsService, useValue: { settings: { AppLandingBackgroundImage: 'assets/local/comn.jpg' } } },
+      ],
+    });
+    const fixture = TestBed.createComponent(InputHostComponent);
+    await fixture.whenStable();
+    const host = () => fixture.nativeElement.querySelector('#input') as HTMLElement;
+
+    // the input wins over ComnSettingsService
+    expect(FakeImage.instances.map((image) => image.src)).toEqual([IMAGE]);
+
+    // changed while the first is still loading: that download is abandoned
+    const first = FakeImage.instances[0];
+    fixture.componentInstance.settings.set({ AppLandingBackgroundImage: 'assets/local/other.jpg' });
+    await fixture.whenStable();
+
+    expect(first.onload).toBeNull();
+    expect(first.src).toBe('');
+    expect(FakeImage.instances.map((image) => image.src)).toEqual(['', 'assets/local/other.jpg']);
+    expect(host().getAttribute('style') ?? '').toBe('');
+
+    FakeImage.instances[1].onload?.();
+    await fixture.whenStable();
+    expect(host().style.getPropertyValue(CRUCIBLE_LANDING_BACKGROUND_PROPERTY)).toBe(
+      'url("assets/local/other.jpg")'
+    );
   });
 });

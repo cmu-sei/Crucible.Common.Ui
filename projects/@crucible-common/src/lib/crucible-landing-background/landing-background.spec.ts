@@ -1,7 +1,7 @@
 // Copyright 2026 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { landingBackgroundImage } from './landing-background';
+import { cssUrl, landingBackgroundImage, landingBackgroundUrl } from './landing-background';
 
 describe('landingBackgroundImage', () => {
   it('wraps the setting in a quoted CSS url()', () => {
@@ -31,5 +31,27 @@ describe('landingBackgroundImage', () => {
     ['undefined settings', undefined],
   ])('returns null for %s', (_label, settings) => {
     expect(landingBackgroundImage(settings)).toBeNull();
+  });
+});
+
+describe('landingBackgroundUrl', () => {
+  it('trims and removes line breaks and form feeds', () => {
+    expect(
+      landingBackgroundUrl({ AppLandingBackgroundImage: ' a\r\nb\fc.jpg\n ' })
+    ).toBe('abc.jpg');
+  });
+
+  it('is the URL inside the CSS value, so the two never differ', () => {
+    const settings = { AppLandingBackgroundImage: ' x\fy.jpg ' };
+    expect(landingBackgroundImage(settings)).toBe(cssUrl(landingBackgroundUrl(settings)!));
+  });
+
+  it.each([
+    ['a blank string', { AppLandingBackgroundImage: '  ' }],
+    ['only line breaks', { AppLandingBackgroundImage: '\n\f' }],
+    ['a non-string value', { AppLandingBackgroundImage: 42 as unknown as string }],
+    ['undefined settings', undefined],
+  ])('returns null for %s', (_label, settings) => {
+    expect(landingBackgroundUrl(settings)).toBeNull();
   });
 });

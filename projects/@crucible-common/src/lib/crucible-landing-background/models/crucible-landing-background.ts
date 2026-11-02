@@ -1,6 +1,8 @@
 // Copyright 2026 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
+import { InjectionToken } from '@angular/core';
+
 /** The landing-background setting an app reads from its settings files. */
 export interface CrucibleLandingBackgroundSettings {
   /**
@@ -9,6 +11,15 @@ export interface CrucibleLandingBackgroundSettings {
    */
   AppLandingBackgroundImage?: string;
 }
+
+/**
+ * Settings for a `crucibleLandingBackground` with no settings input. Without it,
+ * the directive reads `ComnSettingsService`, so an app that has its own settings
+ * service provides this token or binds the input instead.
+ */
+export const CRUCIBLE_LANDING_BACKGROUND_SETTINGS = new InjectionToken<
+  CrucibleLandingBackgroundSettings | null | undefined
+>('CRUCIBLE_LANDING_BACKGROUND_SETTINGS');
 
 /** CSS custom property holding the image's `url(...)` value while it shows. */
 export const CRUCIBLE_LANDING_BACKGROUND_PROPERTY = '--crucible-landing-background';
