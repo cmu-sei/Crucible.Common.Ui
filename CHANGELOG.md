@@ -33,6 +33,10 @@
   `CRUCIBLE_LANDING_BACKGROUND_SETTINGS` token, or `ComnSettingsService` when
   the app configured it, so apps with their own settings service can use it.
   See crucible-landing-background/README.md.
+- Fixed `ComnSettingsService` throwing when created in an app that provides no
+  `COMN_SETTINGS_CONFIG`. Angular injects `null` for a missing `@Optional()`
+  dependency, so the default settings file locations never applied; they now
+  do.
 
 ## 0.6.1
 

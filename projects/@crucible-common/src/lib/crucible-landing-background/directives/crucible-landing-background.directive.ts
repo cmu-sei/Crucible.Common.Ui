@@ -64,8 +64,9 @@ import { loadedLandingBackgrounds } from './loaded-images';
 export class CrucibleLandingBackgroundDirective {
   private readonly themeService = inject(CrucibleThemeService, { optional: true });
   private readonly provided = inject(CRUCIBLE_LANDING_BACKGROUND_SETTINGS, { optional: true });
-  // ComnSettingsService is provided in root but throws when the app never
-  // configured it (TopoMojo, Gameboard), so only read it when it was.
+  // ComnSettingsService is provided in root, so it always injects, but an app
+  // that never configured it (TopoMojo, Gameboard) never loads its settings.
+  // Only read it when it was configured.
   private readonly comnSettings = inject(COMN_SETTINGS_CONFIG, { optional: true })
     ? inject(ComnSettingsService)
     : null;
