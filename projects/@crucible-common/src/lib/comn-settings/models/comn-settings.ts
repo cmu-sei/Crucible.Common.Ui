@@ -9,6 +9,18 @@ export interface ComnSettingsConfig {
   envUrl: string;
 }
 
+/**
+ * The settings files `ComnSettingsService` reads. Defaults to
+ * `assets/config/settings.json`, `settings.shared.json` and `settings.env.json`;
+ * pass a config to `ComnSettingsModule.forRoot()` to read others.
+ */
 export const COMN_SETTINGS_CONFIG: InjectionToken<ComnSettingsConfig> = new InjectionToken<
   ComnSettingsConfig
->('ComnSettingsConfig');
+>('ComnSettingsConfig', {
+  providedIn: 'root',
+  factory: () => ({
+    url: `assets/config/settings.json`,
+    sharedUrl: `assets/config/settings.shared.json`,
+    envUrl: `assets/config/settings.env.json`,
+  }),
+});

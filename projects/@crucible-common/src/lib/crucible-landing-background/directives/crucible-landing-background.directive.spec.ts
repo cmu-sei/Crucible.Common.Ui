@@ -1,9 +1,11 @@
 // Copyright 2026 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, signal, WritableSignal } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { Component, importProvidersFrom, signal, WritableSignal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { COMN_SETTINGS_CONFIG } from '../../comn-settings/models/comn-settings';
+import { ComnSettingsModule } from '../../comn-settings/comn-settings.module';
 import { ComnSettingsService } from '../../comn-settings/services/comn-settings.service';
 import { CrucibleThemeService } from '../../crucible-theme/services/crucible-theme.service';
 import {
@@ -65,13 +67,11 @@ describe('CrucibleLandingBackgroundDirective', () => {
     TestBed.configureTestingModule({
       imports: [HostComponent],
       providers: [
-        // As the Player-family apps do: configured, then read.
+        // comn: the app's loaded ComnSettingsService. Otherwise the real one,
+        // never loaded, as in an app with its own settings service.
         ...(comn
-          ? [
-              { provide: COMN_SETTINGS_CONFIG, useValue: {} },
-              { provide: ComnSettingsService, useValue: { settings } },
-            ]
-          : []),
+          ? [{ provide: ComnSettingsService, useValue: { settings } }]
+          : [provideHttpClient(), provideHttpClientTesting()]),
         ...(token !== undefined ? [{ provide: CRUCIBLE_LANDING_BACKGROUND_SETTINGS, useValue: token }] : []),
         ...(withTheme
           ? [{ provide: CrucibleThemeService, useValue: { isDarkMode } }]
@@ -270,7 +270,16 @@ describe('CrucibleLandingBackgroundDirective', () => {
     expect(style(CRUCIBLE_LANDING_BACKGROUND_PROPERTY)).toBe(URL_VALUE);
   });
 
-  it('sets nothing, without an error, when no settings source is provided', async () => {
+  it('prefers the settings token over ComnSettingsService', async () => {
+    await setup(
+      { AppLandingBackgroundImage: 'assets/local/comn.jpg' },
+      { token: { AppLandingBackgroundImage: IMAGE } }
+    );
+
+    expect(FakeImage.instances.map((image) => image.src)).toEqual([IMAGE, IMAGE]);
+  });
+
+  it('sets nothing, without an error, when ComnSettingsService never loaded', async () => {
     await setup(undefined, { comn: false });
 
     expect(FakeImage.instances).toEqual([]);
@@ -309,7 +318,6 @@ describe('CrucibleLandingBackgroundDirective settings input', () => {
     TestBed.configureTestingModule({
       imports: [InputHostComponent],
       providers: [
-        { provide: COMN_SETTINGS_CONFIG, useValue: {} },
         { provide: ComnSettingsService, useValue: { settings: { AppLandingBackgroundImage: 'assets/local/comn.jpg' } } },
       ],
     });
@@ -335,5 +343,51 @@ describe('CrucibleLandingBackgroundDirective settings input', () => {
     expect(host().style.getPropertyValue(CRUCIBLE_LANDING_BACKGROUND_PROPERTY)).toBe(
       'url("assets/local/other.jpg")'
     );
+  });
+
+  it('never creates ComnSettingsService when the input has a value', async () => {
+    // An app with its own settings service may have no HTTP providers, so
+    // ComnSettingsService (which needs HttpBackend) must not be created.
+    TestBed.configureTestingModule({
+      imports: [InputHostComponent],
+      providers: [
+        {
+          provide: ComnSettingsService,
+          useFactory: () => {
+            throw new Error('ComnSettingsService was created');
+          },
+        },
+      ],
+    });
+    const fixture = TestBed.createComponent(InputHostComponent);
+    await fixture.whenStable();
+
+    expect(FakeImage.instances.map((image) => image.src)).toEqual([IMAGE]);
+  });
+});
+
+describe('CrucibleLandingBackgroundDirective with ComnSettingsModule.forRoot()', () => {
+  beforeEach(() => {
+    FakeImage.instances = [];
+    loadedLandingBackgrounds.clear();
+    vi.stubGlobal('Image', FakeImage);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  // Every app calls forRoot() with no config, so the directive must not depend
+  // on COMN_SETTINGS_CONFIG having a value.
+  it('reads ComnSettingsService when forRoot() is given no config', async () => {
+    TestBed.configureTestingModule({
+      imports: [HostComponent],
+      providers: [importProvidersFrom(ComnSettingsModule.forRoot()), provideHttpClientTesting()],
+    });
+    TestBed.inject(ComnSettingsService).settings = { AppLandingBackgroundImage: IMAGE };
+    const fixture = TestBed.createComponent(HostComponent);
+    await fixture.whenStable();
+
+    expect(FakeImage.instances.map((image) => image.src)).toEqual([IMAGE, IMAGE]);
   });
 });

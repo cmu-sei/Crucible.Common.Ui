@@ -8,11 +8,10 @@ import {
   Directive,
   effect,
   inject,
+  Injector,
   input,
   signal,
 } from '@angular/core';
-import { COMN_SETTINGS_CONFIG } from '../../comn-settings/models/comn-settings';
-import { ComnSettingsService } from '../../comn-settings/services/comn-settings.service';
 import { CrucibleThemeService } from '../../crucible-theme/services/crucible-theme.service';
 import { cssUrl, landingBackgroundUrl } from '../landing-background';
 import {
@@ -44,9 +43,8 @@ import { loadedLandingBackgrounds } from './loaded-images';
  * custom property, so the app can give content over the image a solid surface.
  *
  * The setting comes from the `crucibleLandingBackgroundSettings` input, else
- * `CRUCIBLE_LANDING_BACKGROUND_SETTINGS`, else `ComnSettingsService` when the
- * app configured it with `COMN_SETTINGS_CONFIG`. With none of them, the
- * directive sets nothing.
+ * `CRUCIBLE_LANDING_BACKGROUND_SETTINGS`, which defaults to
+ * `ComnSettingsService.settings`. Without a value, the directive sets nothing.
  *
  * The image shows only once it loads; after that, every instance shows it at
  * once. When the setting is empty, the image fails to load, or the input is
@@ -63,13 +61,7 @@ import { loadedLandingBackgrounds } from './loaded-images';
 })
 export class CrucibleLandingBackgroundDirective {
   private readonly themeService = inject(CrucibleThemeService, { optional: true });
-  private readonly provided = inject(CRUCIBLE_LANDING_BACKGROUND_SETTINGS, { optional: true });
-  // ComnSettingsService is provided in root, so it always injects, but an app
-  // that never configured it (TopoMojo, Gameboard) never loads its settings.
-  // Only read it when it was configured.
-  private readonly comnSettings = inject(COMN_SETTINGS_CONFIG, { optional: true })
-    ? inject(ComnSettingsService)
-    : null;
+  private readonly injector = inject(Injector);
 
   /** Whether to show the image. Defaults to `true`. */
   readonly enabled = input(true, {
@@ -83,8 +75,12 @@ export class CrucibleLandingBackgroundDirective {
     { alias: 'crucibleLandingBackgroundSettings' }
   );
 
+  // The token is looked up only without an input value, so an app that binds the
+  // input never creates ComnSettingsService (and needs no HTTP providers).
   private readonly url = computed(() =>
-    landingBackgroundUrl(this.settings() ?? this.provided ?? this.comnSettings?.settings)
+    landingBackgroundUrl(
+      this.settings() ?? this.injector.get(CRUCIBLE_LANDING_BACKGROUND_SETTINGS)
+    )
   );
 
   /** The URL this instance has seen load; with the shared set, whether it has loaded. */

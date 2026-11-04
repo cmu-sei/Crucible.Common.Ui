@@ -43,7 +43,8 @@ export class ComnSettingsModule {
         return initializerFn();
       }),
         provideHttpClient(withInterceptorsFromDi()),
-        { provide: COMN_SETTINGS_CONFIG, useValue: config },
+        // Without a config, the token's default factory supplies the default files.
+        ...(config ? [{ provide: COMN_SETTINGS_CONFIG, useValue: config }] : []),
       ],
     };
   }

@@ -1,7 +1,8 @@
 // Copyright 2026 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { InjectionToken } from '@angular/core';
+import { inject, InjectionToken } from '@angular/core';
+import { ComnSettingsService } from '../../comn-settings/services/comn-settings.service';
 
 /** The landing-background setting an app reads from its settings files. */
 export interface CrucibleLandingBackgroundSettings {
@@ -13,13 +14,17 @@ export interface CrucibleLandingBackgroundSettings {
 }
 
 /**
- * Settings for a `crucibleLandingBackground` with no settings input. Without it,
- * the directive reads `ComnSettingsService`, so an app that has its own settings
- * service provides this token or binds the input instead.
+ * Settings for a `crucibleLandingBackground` with no settings input. Defaults
+ * to `ComnSettingsService.settings`, as read when the first directive is
+ * created; an app that has its own settings service provides this token or
+ * binds the input instead.
  */
 export const CRUCIBLE_LANDING_BACKGROUND_SETTINGS = new InjectionToken<
   CrucibleLandingBackgroundSettings | null | undefined
->('CRUCIBLE_LANDING_BACKGROUND_SETTINGS');
+>('CRUCIBLE_LANDING_BACKGROUND_SETTINGS', {
+  providedIn: 'root',
+  factory: () => inject(ComnSettingsService).settings,
+});
 
 /** CSS custom property holding the image's `url(...)` value while it shows. */
 export const CRUCIBLE_LANDING_BACKGROUND_PROPERTY = '--crucible-landing-background';

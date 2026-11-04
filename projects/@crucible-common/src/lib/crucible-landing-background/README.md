@@ -9,18 +9,16 @@ image is configured per site, so it never ships in an app's repository.
 |---|---|
 | `AppLandingBackgroundImage` | URL of the image. Empty, blank or missing shows no image. |
 
-The directive reads the setting from the first of these that is there:
+The directive reads the setting from its `crucibleLandingBackgroundSettings`
+input, else the `CRUCIBLE_LANDING_BACKGROUND_SETTINGS` injection token. The
+token defaults to `ComnSettingsService.settings`, so an app that loads its
+settings with `ComnSettingsModule.forRoot()`, as the Player-family apps do,
+needs nothing more. The key can then be set in `settings.json`,
+`settings.shared.json` (to share it across apps, like `HeaderBarSettings`) or
+`settings.env.json`.
 
-1. its `crucibleLandingBackgroundSettings` input;
-2. the `CRUCIBLE_LANDING_BACKGROUND_SETTINGS` injection token;
-3. `ComnSettingsService.settings`, when the app configured it with
-   `COMN_SETTINGS_CONFIG` (`ComnSettingsModule.forRoot()`), as the
-   Player-family apps do. The key can then be set in `settings.json`,
-   `settings.shared.json` (to share it across apps, like `HeaderBarSettings`)
-   or `settings.env.json`.
-
-With none of them, it shows nothing. An app with its own settings service,
-such as TopoMojo or Gameboard, binds the input or provides the token:
+An app with its own settings service, such as TopoMojo or Gameboard, binds the
+input or provides the token:
 
 ```html
 <div class="landing" crucibleLandingBackground

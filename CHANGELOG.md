@@ -29,14 +29,15 @@
   `--crucible-landing-background` property on its host while the image shows.
   The image shows only once it loads, so a missing image leaves the app's own
   background, and once loaded it shows at once on every later visit. The
-  setting comes from the `crucibleLandingBackgroundSettings` input, the
-  `CRUCIBLE_LANDING_BACKGROUND_SETTINGS` token, or `ComnSettingsService` when
-  the app configured it, so apps with their own settings service can use it.
+  setting comes from the `crucibleLandingBackgroundSettings` input or the
+  `CRUCIBLE_LANDING_BACKGROUND_SETTINGS` token, which defaults to
+  `ComnSettingsService.settings`, so apps with their own settings service can
+  use it too.
   See crucible-landing-background/README.md.
 - Fixed `ComnSettingsService` throwing when created in an app that provides no
-  `COMN_SETTINGS_CONFIG`. Angular injects `null` for a missing `@Optional()`
-  dependency, so the default settings file locations never applied; they now
-  do.
+  `COMN_SETTINGS_CONFIG`. The token now has a default factory with the default
+  settings files, and `ComnSettingsModule.forRoot()` provides it only when
+  given a config.
 
 ## 0.6.1
 

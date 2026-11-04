@@ -6,20 +6,13 @@ import {
   HttpClient,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { Inject, Injectable, Optional, forwardRef } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Observable, of, zip } from 'rxjs';
 import { catchError, map, take, tap } from 'rxjs/operators';
 import {
   ComnSettingsConfig,
   COMN_SETTINGS_CONFIG,
 } from '../models/comn-settings';
-
-/** The settings files read when the app provides no COMN_SETTINGS_CONFIG. */
-const DEFAULT_COMN_SETTINGS_CONFIG: ComnSettingsConfig = {
-  url: `assets/config/settings.json`,
-  sharedUrl: `assets/config/settings.shared.json`,
-  envUrl: `assets/config/settings.env.json`,
-};
 
 @Injectable({
   providedIn: 'root',
@@ -64,15 +57,9 @@ export class ComnSettingsService {
   }
 
   constructor(
-    @Optional()
-    @Inject(forwardRef(() => COMN_SETTINGS_CONFIG))
-    config: ComnSettingsConfig | null,
+    @Inject(COMN_SETTINGS_CONFIG) config: ComnSettingsConfig,
     private handler: HttpBackend,
   ) {
-    // An unprovided @Optional() dependency arrives as null, not undefined, so a
-    // default parameter value never applied and an app without
-    // COMN_SETTINGS_CONFIG threw here.
-    config ??= DEFAULT_COMN_SETTINGS_CONFIG;
     this.url = config.url;
     this.sharedUrl = config.sharedUrl;
     this.envUrl = config.envUrl;
