@@ -20,6 +20,24 @@
   Open Sans release, not the 1.10 files apps have carried until now.
 - `comn-header-bar` now sets `font-family: 'Open Sans', sans-serif` itself
   instead of inheriting the app's font.
+- Added `CrucibleThemeService.isDarkMode`, a read-only signal that follows the
+  theme applied by `applyTheme()`.
+- Added the crucible-landing-background module: the standalone
+  `[crucibleLandingBackground]` directive shows the `AppLandingBackgroundImage`
+  setting behind an app's landing page, with a near-black tint in dark mode,
+  and sets the `crucible-landing-background` class and
+  `--crucible-landing-background` property on its host while the image shows.
+  The image shows only once it loads, so a missing image leaves the app's own
+  background, and once loaded it shows at once on every later visit. The
+  setting comes from the `crucibleLandingBackgroundSettings` input or the
+  `CRUCIBLE_LANDING_BACKGROUND_SETTINGS` token, which defaults to
+  `ComnSettingsService.settings`, so apps with their own settings service can
+  use it too.
+  See crucible-landing-background/README.md.
+- Fixed `ComnSettingsService` throwing when created in an app that provides no
+  `COMN_SETTINGS_CONFIG`. The token now has a default factory with the default
+  settings files, and `ComnSettingsModule.forRoot()` provides it only when
+  given a config.
 
 ## 0.6.1
 

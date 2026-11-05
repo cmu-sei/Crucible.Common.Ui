@@ -6,7 +6,7 @@ import {
   HttpClient,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { Inject, Injectable, Optional, forwardRef } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Observable, of, zip } from 'rxjs';
 import { catchError, map, take, tap } from 'rxjs/operators';
 import {
@@ -57,13 +57,7 @@ export class ComnSettingsService {
   }
 
   constructor(
-    @Optional()
-    @Inject(forwardRef(() => COMN_SETTINGS_CONFIG))
-    config: ComnSettingsConfig = {
-      url: `assets/config/settings.json`,
-      sharedUrl: `assets/config/settings.shared.json`,
-      envUrl: `assets/config/settings.env.json`,
-    },
+    @Inject(COMN_SETTINGS_CONFIG) config: ComnSettingsConfig,
     private handler: HttpBackend,
   ) {
     this.url = config.url;

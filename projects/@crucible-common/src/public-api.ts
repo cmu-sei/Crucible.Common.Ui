@@ -13,3 +13,4 @@ export * from './lib/comn-auth';
 export * from './lib/comn-header-bar';
 export * from './lib/crucible-dialog';
 export * from './lib/crucible-theme';
+export * from './lib/crucible-landing-background';

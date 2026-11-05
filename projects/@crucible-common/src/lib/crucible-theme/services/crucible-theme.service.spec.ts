@@ -78,6 +78,23 @@ describe('CrucibleThemeService', () => {
     expect(document.body.classList.contains('darkMode')).toBe(false);
   });
 
+  it('reports the applied theme through isDarkMode', () => {
+    const service = setup(SETTINGS);
+    expect(service.isDarkMode()).toBe(false);
+
+    service.applyTheme(Theme.DARK);
+    expect(service.isDarkMode()).toBe(true);
+
+    service.applyTheme(Theme.LIGHT);
+    expect(service.isDarkMode()).toBe(false);
+  });
+
+  it('starts isDarkMode from the darkMode class already on body', () => {
+    document.body.classList.add('darkMode');
+
+    expect(setup(SETTINGS).isDarkMode()).toBe(true);
+  });
+
   it('applies the light-mode primary pair and the top-bar pair', () => {
     const service = setup(SETTINGS);
 

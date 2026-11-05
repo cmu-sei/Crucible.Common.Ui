@@ -72,6 +72,11 @@ constructor() {
 `applyTheme()` toggles the `darkMode` class on `<body>`, sets the properties
 above, and recolors the favicon.
 
+`isDarkMode` is a read-only signal that is `true` while the dark theme is
+applied. It starts from the `darkMode` class already on `<body>` and updates on
+each `applyTheme()` call, so library features that change in dark mode follow
+the theme the app applied rather than reading the `<body>` class themselves.
+
 ### Options
 
 | Option | Description |
