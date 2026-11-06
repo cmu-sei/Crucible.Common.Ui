@@ -240,14 +240,14 @@ and pass the settings in, from whatever settings service the app has:
 ```
 
 This entry point needs only `@angular/core` and `@angular/common`, so an app that uses nothing else
-from the library doesn't need Material, CDK, Akita or `oidc-client-ts`. The banner is hidden when the
+from the library doesn't need Material, CDK or `oidc-client-ts`. The banner is hidden when the
 settings are missing, `enabled` is false, both texts are empty, or the page is shown in a frame (the
 framing page shows its own banner).
 
 ## Dependencies
 
 `@angular/core`, `@angular/common`, `@angular/forms` and `rxjs` are peer dependencies. The auth, dialog
-and theme modules also need `@angular/material`, `@angular/cdk`, `@datorama/akita` and
+and theme modules also need `@angular/material`, `@angular/cdk` and
 `oidc-client-ts`, which apps that use those modules install themselves. They aren't listed as peers,
 because npm checks the newest version of every listed peer, even an optional one it doesn't install,
 and fails the install for an app on an older Angular, such as one that only uses the header bar.

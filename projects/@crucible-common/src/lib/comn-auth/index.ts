@@ -10,3 +10,4 @@ export * from './services/comn-auth.service';
 export * from './services/comn-auth-interceptor.service';
 export * from './services/comn-auth-guard.service';
 export * from './comn-auth.module';
+export * from './provide-comn-auth-theme-storage';

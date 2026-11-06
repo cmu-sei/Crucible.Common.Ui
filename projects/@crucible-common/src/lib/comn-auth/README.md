@@ -41,6 +41,20 @@ export const settings: ComnSettingsConfig = {
 })
 ```
 
+##### Auth state
+
+`ComnAuthQuery` exposes the signed-in user and the user's theme as signals (`user`, `isLoggedIn`, `userTheme`) and as observables of the same values (`user$`, `isLoggedIn$`, `userTheme$`). The observables come from `toObservable`: they replay the current value to a new subscriber, and they emit changes when Angular next runs effects (normally the next change detection), not synchronously on each update. `ComnAuthService.setUserTheme(theme)` changes the theme.
+
+The theme resets to light on every load unless the app gives a localStorage key to keep it under, in its root providers (`bootstrapApplication` or the root NgModule):
+
+```typescript
+import { provideComnAuthThemeStorage } from '@cmusei/crucible-common';
+
+providers: [provideComnAuthThemeStorage('player-ui.theme')];
+```
+
+Use a key unique to the app: apps served from the same origin share localStorage.
+
 ##### Silent Callback
 
 The auth-callback-silent component is implemented as a static html page, to avoid loading the entirety of the Angular app in the background iframe to refresh authentication. To use this in a consuming application, you must add the following to the list of assets to include in the build in your Angular.json file:
