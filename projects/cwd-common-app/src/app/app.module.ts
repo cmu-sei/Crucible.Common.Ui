@@ -1,7 +1,6 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { environment } from './../environments/environment.prod';
 import {
   ComnSettingsModule,
   ComnAuthModule,
@@ -13,8 +12,6 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
-import { akitaDevtools } from '@datorama/akita';
 import { PostsComponent } from './posts/posts.component';
 
 const settings: ComnSettingsConfig = {
@@ -23,13 +20,11 @@ const settings: ComnSettingsConfig = {
   envUrl: 'assets/config/settings.env.json',
 };
 
-akitaDevtools();
 @NgModule({
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    environment.production ? [] : AkitaNgDevtools,
     ComnSettingsModule.forRoot(settings),
     ComnAuthModule.forRoot(),
     // AppComponent and PostsComponent are standalone; import rather than declare.

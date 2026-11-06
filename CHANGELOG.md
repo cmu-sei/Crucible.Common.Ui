@@ -1,5 +1,17 @@
 ## Unreleased
 
+- **BREAKING CHANGE** - The auth state no longer uses Akita, and
+  `@datorama/akita` is no longer needed. `ComnAuthStore` and `ComnAuthQuery`
+  hold the state in Angular signals: `ComnAuthQuery` keeps `user$`,
+  `isLoggedIn$` and `userTheme$` and adds the signals `user`, `isLoggedIn` and
+  `userTheme`. Akita's `Query` and `Store` methods (`getValue()`, `select()`,
+  `update()`) are gone; read `authQuery.userTheme()` instead of
+  `authQuery.getValue().ui.theme`. The `$` observables now emit when Angular
+  next runs effects instead of synchronously on each update.
+- **BREAKING CHANGE** - An app's Akita `persistState({ include: ['auth.ui'] })`
+  no longer keeps the user's theme. Add `provideComnAuthThemeStorage(key)` to
+  the root providers instead (see comn-auth/README.md). A theme saved by Akita
+  is not read, so each user's theme resets to light once.
 - **BREAKING CHANGE** - Removed the `comn-theme` module (`provideCrucibleTheme` with
   `defaultThemeColor`, `ComnDynamicThemeService`, `ComnFaviconService`,
   `crucibleThemeInitializer`). It generated a Material 3 palette at runtime from
