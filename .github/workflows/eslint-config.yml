@@ -1,0 +1,24 @@
+name: ESLint Config
+
+# Tests @cmusei/eslint-config-crucible. A separate workflow from Build and Test, because the shared
+# npm-test workflow's concurrency group is per calling workflow and ref: two calls in one workflow
+# would cancel each other.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions: {}
+
+jobs:
+  eslint-config:
+    uses: cmu-sei/Crucible-Github-Actions/.github/workflows/npm-test.yaml@npm-test-v1
+    permissions:
+      contents: read
+    with:
+      node-version: "24"
+      # The package has no lockfile; it is a library, so apps resolve its ranges.
+      install-command: cd projects/eslint-config-crucible && npm install --no-audit --no-fund
+      test-command: cd projects/eslint-config-crucible && npm test
+      build-command: cd projects/eslint-config-crucible && npm pack --dry-run
+      coverage-path: ""

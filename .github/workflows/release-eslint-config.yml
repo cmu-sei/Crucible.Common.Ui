@@ -1,0 +1,27 @@
+name: Release @cmusei/eslint-config-crucible
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version of @cmusei/eslint-config-crucible"
+        required: true
+      tag:
+        description: "npm dist-tag (required for prerelease versions, e.g. next, rc)"
+        required: false
+
+permissions: {}
+
+jobs:
+  release:
+    uses: cmu-sei/Crucible-Github-Actions/.github/workflows/npm-release.yaml@npm-v1
+    permissions:
+      contents: read           # no version commit back to main: its ruleset requires a pull request
+      id-token: write          # npm trusted publishing and provenance
+    with:
+      version: ${{ inputs.version }}
+      dist-tag: ${{ inputs.tag }}
+      version-dirs: projects/eslint-config-crucible
+      build-command: cd projects/eslint-config-crucible && npm pack
+      publish-path: projects/eslint-config-crucible/cmusei-eslint-config-crucible-{version}.tgz
+      auth-mode: trusted
