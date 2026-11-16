@@ -2,6 +2,12 @@
   "name": "@cmusei/eslint-config-crucible",
   "version": "0.1.0",
   "description": "The shared ESLint flat config for Crucible Angular apps",
+  "keywords": [
+    "eslint",
+    "eslintconfig",
+    "eslint-config",
+    "angular"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
