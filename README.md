@@ -13,6 +13,7 @@ Crucible Common modules are a set of angular modules that are common between Cru
 - **Fonts (`@cmusei/crucible-common/fonts`)** — Open Sans and the Sass partial that declares it (see [Fonts](#fonts) below).
 - [Dialog Module (`crucible-dialog`)](projects/@crucible-common/src/lib/crucible-dialog/README.md) — shared, app-agnostic modal building blocks (confirm dialogs, reactive-form modals, content/custom-footer dialogs) with consistent structure and dismissal behavior.
 - [Landing Background (`crucible-landing-background`)](projects/@crucible-common/src/lib/crucible-landing-background/README.md) — the `[crucibleLandingBackground]` directive, which shows the `AppLandingBackgroundImage` setting behind an app's landing page, tinted in dark mode.
+- [ESLint config (`@cmusei/eslint-config-crucible`)](projects/eslint-config-crucible/README.md) — a separate npm package: the shared ESLint flat config for the Crucible Angular apps.
 
 ### **Running the sample application.**
 

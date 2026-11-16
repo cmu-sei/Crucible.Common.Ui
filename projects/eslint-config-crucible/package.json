@@ -1,0 +1,45 @@
+{
+  "name": "@cmusei/eslint-config-crucible",
+  "version": "0.1.0",
+  "description": "The shared ESLint flat config for Crucible Angular apps",
+  "keywords": [
+    "eslint",
+    "eslintconfig",
+    "eslint-config",
+    "angular"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cmu-sei/Crucible.Common.Ui.git",
+    "directory": "projects/eslint-config-crucible"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./index.mjs"
+  },
+  "files": [
+    "index.mjs",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test index.test.mjs"
+  },
+  "dependencies": {
+    "@eslint/js": "^10.0.1",
+    "angular-eslint": "~21.4.0",
+    "confusing-browser-globals": "^1.0.11",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-rxjs-x": "^1.0.6",
+    "typescript-eslint": "^8.72.2"
+  },
+  "peerDependencies": {
+    "eslint": "^10.0.1",
+    "typescript": ">=5.9.0 <6.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^10.15.0",
+    "typescript": "5.9.3",
+    "rxjs": "^7.8.2"
+  }
+}
