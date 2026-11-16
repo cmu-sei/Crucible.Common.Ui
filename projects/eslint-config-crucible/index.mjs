@@ -101,6 +101,10 @@ export function crucible({ prefix = 'app', ignores = [], strictNullChecks = fals
         '@angular-eslint/template/prefer-control-flow': 'error',
         '@angular-eslint/template/prefer-self-closing-tags': 'error',
         '@angular-eslint/template/prefer-class-binding': 'error',
+        // Accessibility rules that templateAccessibility leaves out: a positive tabindex breaks the
+        // keyboard focus order, and nested <p> or <a> tags are invalid HTML.
+        '@angular-eslint/template/no-positive-tabindex': 'error',
+        '@angular-eslint/template/no-nested-tags': 'error',
         '@angular-eslint/template/eqeqeq': ['error', { allowNullOrUndefined: true }],
       },
     },

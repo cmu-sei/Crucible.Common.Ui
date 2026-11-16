@@ -6,7 +6,7 @@ It combines:
 
 - `@eslint/js` recommended rules
 - `typescript-eslint` `recommendedTypeChecked` and `stylisticTypeChecked`, plus `no-deprecated`
-- `angular-eslint` TypeScript, template and template accessibility rules
+- `angular-eslint` TypeScript, template and template accessibility rules, plus `no-positive-tabindex` and `no-nested-tags`
 - rules that keep the Angular migrations in place: standalone components, `inject()`, signal inputs and queries, `output()`, built-in control flow, self-closing tags, `[class]` and `[style]` bindings, no NgModules and no `bootstrapModule()`
 - the `eslint-plugin-rxjs-x` rules that find subscriptions that never end, including operators after `takeUntil()` or `takeUntilDestroyed()`
 - `no-restricted-globals` for browser globals such as `event`, `name` and `location`

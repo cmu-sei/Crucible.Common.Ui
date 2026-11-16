@@ -46,6 +46,8 @@ test('templates get the control flow, class binding and accessibility rules', as
     '@angular-eslint/template/prefer-self-closing-tags',
     '@angular-eslint/template/prefer-class-binding',
     '@angular-eslint/template/click-events-have-key-events',
+    '@angular-eslint/template/no-positive-tabindex',
+    '@angular-eslint/template/no-nested-tags',
   ]) {
     assert.equal(severity(rules[rule]), 2, rule);
   }
@@ -98,4 +100,10 @@ test('NgModule is not allowed by any import name', async () => {
   assert.ok(aliased.includes('no-restricted-imports'));
   const namespaced = await ruleIds("import * as ng from '@angular/core';\n@ng.NgModule({})\nexport class AppModule {}\n");
   assert.ok(namespaced.includes('no-restricted-syntax'));
+});
+
+test('a positive tabindex is an error, 0 and -1 are not', async () => {
+  const ids = async (html) => (await untyped(html, 'src/app/x.component.html'))[0].messages.map((m) => m.ruleId);
+  assert.ok((await ids('<input tabindex="1" />\n')).includes('@angular-eslint/template/no-positive-tabindex'));
+  assert.ok(!(await ids('<input tabindex="0" />\n<div tabindex="-1"></div>\n')).includes('@angular-eslint/template/no-positive-tabindex'));
 });
