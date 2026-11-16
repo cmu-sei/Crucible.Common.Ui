@@ -11,7 +11,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cmu-sei/Crucible.Common.Ui.git",
+    "url": "git+https://github.com/cmu-sei/Crucible.Common.Ui.git",
     "directory": "projects/eslint-config-crucible"
   },
   "type": "module",
