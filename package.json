@@ -47,7 +47,7 @@
     "@angular/cli": "^21.2.30",
     "@angular/compiler-cli": "^21.2.26",
     "@angular/language-service": "^21.2.26",
-    "@babel/core": "^7.14.8",
+    "@babel/core": "^8.0.7",
     "@cmusei/eslint-config-crucible": "^0.1.1",
     "@datorama/akita-ngdevtools": "^6.0.1",
     "@types/node": "^22.20.5",
