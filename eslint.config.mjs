@@ -1,12 +1,31 @@
 import { crucible } from '@cmusei/eslint-config-crucible';
 
+const selectorPrefix = (prefix) => ({
+  '@angular-eslint/component-selector': [
+    'error',
+    { type: 'element', prefix, style: 'kebab-case' },
+  ],
+  '@angular-eslint/directive-selector': [
+    'error',
+    { type: 'attribute', prefix, style: 'camelCase' },
+  ],
+});
+
 export default [
   ...crucible({
-    // The library's selectors start with crucible or comn; the demo app's with app.
-    prefix: ['crucible', 'comn', 'app'],
-    // The shared config's test fixtures break its rules on purpose.
-    ignores: ['projects/eslint-config-crucible/test/fixtures/**'],
+    ignores: [
+      // The shared config's test fixtures break its rules on purpose.
+      'projects/eslint-config-crucible/test/fixtures/**',
+      // Protractor e2e harness; Protractor is not installed and nothing runs it.
+      'projects/cwd-common-app/e2e/**',
+    ],
   }),
+  // The library's selectors start with crucible or comn; the demo app's with app.
+  {
+    files: ['projects/@crucible-common/**/*.ts'],
+    rules: selectorPrefix(['crucible', 'comn']),
+  },
+  { files: ['projects/cwd-common-app/**/*.ts'], rules: selectorPrefix('app') },
   {
     // The specs use Vitest's globals, which only each project's tsconfig.spec.json declares;
     // the project service would pick the root tsconfig.json and leave describe/it/expect untyped.

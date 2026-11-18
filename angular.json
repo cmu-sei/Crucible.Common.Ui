@@ -7,7 +7,7 @@
       "projectType": "library",
       "root": "projects/@crucible-common",
       "sourceRoot": "projects/@crucible-common/src",
-      "prefix": "lib",
+      "prefix": "crucible",
       "architect": {
         "build": {
           "builder": "@angular/build:ng-packagr",

@@ -337,25 +337,6 @@
       "count": 6
     }
   },
-  "projects/cwd-common-app/e2e/src/app.e2e-spec.ts": {
-    "@typescript-eslint/no-floating-promises": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unnecessary-type-assertion": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unsafe-call": {
-      "count": 9
-    },
-    "@typescript-eslint/no-unsafe-member-access": {
-      "count": 3
-    }
-  },
-  "projects/cwd-common-app/e2e/src/app.po.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "projects/cwd-common-app/src/app/app-routing.module.ts": {
     "@typescript-eslint/no-unused-vars": {
       "count": 1

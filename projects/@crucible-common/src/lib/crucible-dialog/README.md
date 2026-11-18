@@ -79,6 +79,7 @@ this.crucibleDialog.confirm({
 
 ## Reactive form modal
 
+<!-- prettier-ignore -->
 ```html
 <crucible-dialog
   dialogTitle="Edit Directory"
@@ -94,9 +95,7 @@ this.crucibleDialog.confirm({
        its FormGroup in the DECLARING template's injection context — without this
        you get a runtime "Cannot read properties of null (reading 'addControl')". -->
   <div crucibleDialogContent [formGroup]="form">
-    <mat-form-field
-      ><input matInput formControlName="name" cdkFocusInitial
-    /></mat-form-field>
+    <mat-form-field><input matInput formControlName="name" cdkFocusInitial /></mat-form-field>
   </div>
 </crucible-dialog>
 ```
