@@ -18,7 +18,7 @@ import { CrucibleThemeService } from './services/crucible-theme.service';
  * ```
  */
 export function provideCrucibleTheme(
-  config: CrucibleThemeConfig
+  config: CrucibleThemeConfig,
 ): EnvironmentProviders {
   return makeEnvironmentProviders([
     { provide: CRUCIBLE_THEME_CONFIG, useValue: config },

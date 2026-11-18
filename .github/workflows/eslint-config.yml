@@ -16,9 +16,9 @@ jobs:
     permissions:
       contents: read
     with:
-      node-version: "24"
+      node-version: '24'
       # The package has no lockfile; it is a library, so apps resolve its ranges.
       install-command: cd projects/eslint-config-crucible && npm install --no-audit --no-fund
       test-command: cd projects/eslint-config-crucible && npm test
       build-command: cd projects/eslint-config-crucible && npm pack --dry-run
-      coverage-path: ""
+      coverage-path: ''

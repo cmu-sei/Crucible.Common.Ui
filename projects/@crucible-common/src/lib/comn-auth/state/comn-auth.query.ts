@@ -9,7 +9,7 @@ import { Injectable } from '@angular/core';
 @Injectable({ providedIn: 'root' })
 export class ComnAuthQuery extends Query<ComnAuthState> {
   isLoggedIn$ = this.select(
-    (state) => !!state.user && !!state.user.access_token
+    (state) => !!state.user && !!state.user.access_token,
   );
   user$ = this.select((state) => state.user);
   userTheme$ = this.select((state) => state.ui.theme);

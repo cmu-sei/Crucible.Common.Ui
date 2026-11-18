@@ -9,7 +9,7 @@ import { CrucibleLandingBackgroundSettings } from './models/crucible-landing-bac
  * the URL both requested and shown, so the two never differ.
  */
 export function landingBackgroundUrl(
-  settings: CrucibleLandingBackgroundSettings | null | undefined
+  settings: CrucibleLandingBackgroundSettings | null | undefined,
 ): string | null {
   const url = settings?.AppLandingBackgroundImage;
   if (typeof url !== 'string') {
@@ -27,7 +27,7 @@ export function landingBackgroundUrl(
  * quotes escaped, so any setting value yields one valid CSS `url()`.
  */
 export function landingBackgroundImage(
-  settings: CrucibleLandingBackgroundSettings | null | undefined
+  settings: CrucibleLandingBackgroundSettings | null | undefined,
 ): string | null {
   const url = landingBackgroundUrl(settings);
   return url === null ? null : cssUrl(url);

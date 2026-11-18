@@ -54,7 +54,7 @@ export class ComnAuthService {
     private settingsService: ComnSettingsService,
     private store: ComnAuthStore,
     private authQuery: ComnAuthQuery,
-    public ngZone: NgZone
+    public ngZone: NgZone,
   ) {
     Log.setLogger(console);
 
@@ -67,7 +67,7 @@ export class ComnAuthService {
         new WebStorageStateStore({ store: window.localStorage });
     }
     this.userManager = new UserManager(
-      this.settingsService.settings.OIDCSettings
+      this.settingsService.settings.OIDCSettings,
     );
 
     this.userManager.events.addUserLoaded((user) => {
@@ -152,12 +152,12 @@ export class ComnAuthService {
     this.ngZone.runOutsideAngular(() => {
       this.activityObserveable$ = this.mergedEventObservable$.pipe(
         switchMap((ev) =>
-          interval(1000).pipe(take(this.inactivityTimeSeconds))
+          interval(1000).pipe(take(this.inactivityTimeSeconds)),
         ),
         skipWhile((x) => {
           this.timeLapsedSinceInactivity = x;
           return x != this.inactivityTimeSeconds - 1;
-        })
+        }),
       );
       this.subscribeObservable();
       this.kickstartObservable$.next(true);

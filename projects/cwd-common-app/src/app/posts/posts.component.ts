@@ -8,16 +8,16 @@ import { HttpClient } from '@angular/common/http';
 import { ComnSettingsService } from 'projects/@crucible-common/src/public-api';
 
 @Component({
-    selector: 'app-posts',
-    templateUrl: './posts.component.html',
-    styleUrls: ['./posts.component.scss'],
-    imports: [CommonModule],
+  selector: 'app-posts',
+  templateUrl: './posts.component.html',
+  styleUrls: ['./posts.component.scss'],
+  imports: [CommonModule],
 })
 export class PostsComponent implements OnInit {
   posts$: Observable<any> = of([]);
   constructor(
     private http: HttpClient,
-    private settings: ComnSettingsService
+    private settings: ComnSettingsService,
   ) {}
 
   ngOnInit() {

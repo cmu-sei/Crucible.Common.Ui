@@ -14,13 +14,12 @@ export interface ComnSettingsConfig {
  * `assets/config/settings.json`, `settings.shared.json` and `settings.env.json`;
  * pass a config to `ComnSettingsModule.forRoot()` to read others.
  */
-export const COMN_SETTINGS_CONFIG: InjectionToken<ComnSettingsConfig> = new InjectionToken<
-  ComnSettingsConfig
->('ComnSettingsConfig', {
-  providedIn: 'root',
-  factory: () => ({
-    url: `assets/config/settings.json`,
-    sharedUrl: `assets/config/settings.shared.json`,
-    envUrl: `assets/config/settings.env.json`,
-  }),
-});
+export const COMN_SETTINGS_CONFIG: InjectionToken<ComnSettingsConfig> =
+  new InjectionToken<ComnSettingsConfig>('ComnSettingsConfig', {
+    providedIn: 'root',
+    factory: () => ({
+      url: `assets/config/settings.json`,
+      sharedUrl: `assets/config/settings.shared.json`,
+      envUrl: `assets/config/settings.env.json`,
+    }),
+  });

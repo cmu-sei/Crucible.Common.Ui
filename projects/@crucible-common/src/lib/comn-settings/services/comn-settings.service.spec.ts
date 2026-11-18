@@ -41,7 +41,10 @@ describe('ComnSettingsService', () => {
 describe('ComnSettingsService without COMN_SETTINGS_CONFIG', () => {
   beforeEach(() =>
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+      ],
     }),
   );
 
@@ -69,16 +72,27 @@ describe('ComnSettingsService with COMN_SETTINGS_CONFIG', () => {
 
     const service = TestBed.inject(ComnSettingsService);
 
-    expect([service.url, service.sharedUrl, service.envUrl]).toEqual(['a.json', 'b.json', 'c.json']);
+    expect([service.url, service.sharedUrl, service.envUrl]).toEqual([
+      'a.json',
+      'b.json',
+      'c.json',
+    ]);
   });
 });
 
 describe('ComnSettingsModule.forRoot()', () => {
-  const files = (service: ComnSettingsService) => [service.url, service.sharedUrl, service.envUrl];
+  const files = (service: ComnSettingsService) => [
+    service.url,
+    service.sharedUrl,
+    service.envUrl,
+  ];
 
   it('reads the default settings files when given no config', () => {
     TestBed.configureTestingModule({
-      providers: [importProvidersFrom(ComnSettingsModule.forRoot()), provideHttpClientTesting()],
+      providers: [
+        importProvidersFrom(ComnSettingsModule.forRoot()),
+        provideHttpClientTesting(),
+      ],
     });
 
     expect(files(TestBed.inject(ComnSettingsService))).toEqual([
@@ -92,12 +106,20 @@ describe('ComnSettingsModule.forRoot()', () => {
     TestBed.configureTestingModule({
       providers: [
         importProvidersFrom(
-          ComnSettingsModule.forRoot({ url: 'a.json', sharedUrl: 'b.json', envUrl: 'c.json' })
+          ComnSettingsModule.forRoot({
+            url: 'a.json',
+            sharedUrl: 'b.json',
+            envUrl: 'c.json',
+          }),
         ),
         provideHttpClientTesting(),
       ],
     });
 
-    expect(files(TestBed.inject(ComnSettingsService))).toEqual(['a.json', 'b.json', 'c.json']);
+    expect(files(TestBed.inject(ComnSettingsService))).toEqual([
+      'a.json',
+      'b.json',
+      'c.json',
+    ]);
   });
 });

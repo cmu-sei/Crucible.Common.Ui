@@ -49,7 +49,7 @@ export class ComnAuthModule {
   constructor(@Optional() @SkipSelf() parentModule: ComnAuthModule) {
     if (parentModule) {
       throw new Error(
-        `ComnAuthModule is already loaded, Import into AppModule only`
+        `ComnAuthModule is already loaded, Import into AppModule only`,
       );
     }
   }

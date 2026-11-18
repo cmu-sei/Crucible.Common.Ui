@@ -2,7 +2,11 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot } from '@angular/router';
+import {
+  ActivatedRouteSnapshot,
+  CanActivate,
+  RouterStateSnapshot,
+} from '@angular/router';
 import { ComnAuthService } from './comn-auth.service';
 
 @Injectable({
@@ -29,7 +33,7 @@ export class ComnAuthGuardService implements CanActivate {
         },
         (error) => {
           return false;
-        }
+        },
       )
       .catch((error) => {
         return new Promise<boolean>((resolve, reject) => {

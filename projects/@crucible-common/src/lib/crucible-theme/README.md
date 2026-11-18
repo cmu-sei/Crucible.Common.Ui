@@ -18,14 +18,14 @@ in the app's base `settings.json` with the spec's defaults (§2 and §3b), so
 they stay in effect underneath any `settings.shared.json` / `settings.env.json`
 overlay.
 
-| Setting | Applies to | Fallback when missing |
-|---|---|---|
-| `AppTopBarHexColor` | Top-bar background, both modes | `brand.color` |
-| `AppTopBarHexTextColor` | Top-bar text and icons, both modes | `brand.text` |
-| `AppLightModePrimaryHexColor` | `--mat-sys-primary`, light mode | `brand.color` |
-| `AppLightModePrimaryHexTextColor` | `--mat-sys-on-primary`, light mode | `brand.text` |
-| `AppDarkModePrimaryHexColor` | `--mat-sys-primary`, dark mode | `AppLightModePrimaryHexColor` |
-| `AppDarkModePrimaryHexTextColor` | `--mat-sys-on-primary`, dark mode | `AppLightModePrimaryHexTextColor` |
+| Setting                           | Applies to                         | Fallback when missing             |
+| --------------------------------- | ---------------------------------- | --------------------------------- |
+| `AppTopBarHexColor`               | Top-bar background, both modes     | `brand.color`                     |
+| `AppTopBarHexTextColor`           | Top-bar text and icons, both modes | `brand.text`                      |
+| `AppLightModePrimaryHexColor`     | `--mat-sys-primary`, light mode    | `brand.color`                     |
+| `AppLightModePrimaryHexTextColor` | `--mat-sys-on-primary`, light mode | `brand.text`                      |
+| `AppDarkModePrimaryHexColor`      | `--mat-sys-primary`, dark mode     | `AppLightModePrimaryHexColor`     |
+| `AppDarkModePrimaryHexTextColor`  | `--mat-sys-on-primary`, dark mode  | `AppLightModePrimaryHexTextColor` |
 
 Each value is resolved independently. The top-bar keys never affect `primary`,
 and the `primary` keys never affect the top bar.
@@ -34,12 +34,12 @@ and the `primary` keys never affect the top bar.
 
 `applyTheme()` sets these on both `<html>` and `<body>`:
 
-| Property | Value |
-|---|---|
-| `--crucible-topbar-background` | Resolved top-bar background |
-| `--crucible-topbar-text` | Resolved top-bar text |
-| `--mat-sys-primary` | Resolved `primary` for the current mode |
-| `--mat-sys-on-primary` | Resolved `on-primary` for the current mode |
+| Property                       | Value                                      |
+| ------------------------------ | ------------------------------------------ |
+| `--crucible-topbar-background` | Resolved top-bar background                |
+| `--crucible-topbar-text`       | Resolved top-bar text                      |
+| `--mat-sys-primary`            | Resolved `primary` for the current mode    |
+| `--mat-sys-on-primary`         | Resolved `on-primary` for the current mode |
 
 Style the top bar with `var(--crucible-topbar-background)` / `var(--crucible-topbar-text)`,
 not `--mat-sys-primary`. In dark mode `primary` is a lighter shade meant for
@@ -79,11 +79,11 @@ the theme the app applied rather than reading the `<body>` class themselves.
 
 ### Options
 
-| Option | Description |
-|---|---|
-| `brand` | Required. The app's brand color and text-on-brand color. |
-| `faviconSvgPath` | SVG to recolor as the favicon. Defaults to the `href` of the page's `<link rel="icon">` when it is an SVG (`type="image/svg+xml"` or a `.svg` href). If neither is an SVG, the favicon is left unchanged. |
-| `faviconFillClass` | CSS class in the SVG whose rule is replaced with the fill color. Defaults to `cls-1`. |
+| Option             | Description                                                                                                                                                                                               |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `brand`            | Required. The app's brand color and text-on-brand color.                                                                                                                                                  |
+| `faviconSvgPath`   | SVG to recolor as the favicon. Defaults to the `href` of the page's `<link rel="icon">` when it is an SVG (`type="image/svg+xml"` or a `.svg` href). If neither is an SVG, the favicon is left unchanged. |
+| `faviconFillClass` | CSS class in the SVG whose rule is replaced with the fill color. Defaults to `cls-1`.                                                                                                                     |
 
 The favicon SVG is fetched once, bypassing HTTP interceptors, and each recolor
 writes a `data:` URI built from the original artwork.

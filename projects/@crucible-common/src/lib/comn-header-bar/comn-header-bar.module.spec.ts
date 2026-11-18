@@ -94,9 +94,14 @@ describe('comn-header-bar', () => {
       ['missing', undefined],
       ['null', null],
       ['disabled', { ...banner, enabled: false }],
-      ['without text', { ...banner, classification_text: '', message_text: '' }],
+      [
+        'without text',
+        { ...banner, classification_text: '', message_text: '' },
+      ],
     ])('is hidden when settings are %s', async (_, settings) => {
-      const fixture = await render(settings as ComnHeaderBarSettings | null | undefined);
+      const fixture = await render(
+        settings as ComnHeaderBarSettings | null | undefined,
+      );
 
       expect(rendered(fixture.nativeElement)).toBeNull();
     });
@@ -108,7 +113,9 @@ describe('comn-header-bar', () => {
       fixture.componentInstance.settings.set(banner);
       fixture.detectChanges();
 
-      expect(rendered(fixture.nativeElement)?.classification).toBe('UNCLASSIFIED');
+      expect(rendered(fixture.nativeElement)?.classification).toBe(
+        'UNCLASSIFIED',
+      );
     });
 
     it('prefers the input over provided settings', async () => {
@@ -117,7 +124,9 @@ describe('comn-header-bar', () => {
       });
       const fixture = await render(banner);
 
-      expect(rendered(fixture.nativeElement)?.classification).toBe('UNCLASSIFIED');
+      expect(rendered(fixture.nativeElement)?.classification).toBe(
+        'UNCLASSIFIED',
+      );
     });
 
     it('is hidden in a frame, where the parent page shows the banner', async () => {
@@ -147,8 +156,12 @@ describe('comn-header-bar', () => {
     it('reads HeaderBarSettings from ComnSettingsService', async () => {
       const fixture = await render({ HeaderBarSettings: banner });
 
-      expect(rendered(fixture.nativeElement)?.classification).toBe('UNCLASSIFIED');
-      expect(rendered(fixture.nativeElement)?.message).toBe('Maintenance tonight');
+      expect(rendered(fixture.nativeElement)?.classification).toBe(
+        'UNCLASSIFIED',
+      );
+      expect(rendered(fixture.nativeElement)?.message).toBe(
+        'Maintenance tonight',
+      );
     });
 
     it('is hidden when the settings have no HeaderBarSettings', async () => {

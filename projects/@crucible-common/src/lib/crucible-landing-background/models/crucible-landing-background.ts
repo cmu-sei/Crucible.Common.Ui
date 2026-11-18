@@ -27,7 +27,8 @@ export const CRUCIBLE_LANDING_BACKGROUND_SETTINGS = new InjectionToken<
 });
 
 /** CSS custom property holding the image's `url(...)` value while it shows. */
-export const CRUCIBLE_LANDING_BACKGROUND_PROPERTY = '--crucible-landing-background';
+export const CRUCIBLE_LANDING_BACKGROUND_PROPERTY =
+  '--crucible-landing-background';
 
 /** Class on the host while the image shows, for styling content over it. */
 export const CRUCIBLE_LANDING_BACKGROUND_CLASS = 'crucible-landing-background';

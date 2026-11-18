@@ -60,7 +60,9 @@ import { loadedLandingBackgrounds } from './loaded-images';
   },
 })
 export class CrucibleLandingBackgroundDirective {
-  private readonly themeService = inject(CrucibleThemeService, { optional: true });
+  private readonly themeService = inject(CrucibleThemeService, {
+    optional: true,
+  });
   private readonly injector = inject(Injector);
 
   /** Whether to show the image. Defaults to `true`. */
@@ -70,17 +72,17 @@ export class CrucibleLandingBackgroundDirective {
   });
 
   /** Settings to read the image from, for an app with its own settings service. */
-  readonly settings = input<CrucibleLandingBackgroundSettings | null | undefined>(
-    undefined,
-    { alias: 'crucibleLandingBackgroundSettings' }
-  );
+  readonly settings = input<
+    CrucibleLandingBackgroundSettings | null | undefined
+  >(undefined, { alias: 'crucibleLandingBackgroundSettings' });
 
   // The token is looked up only without an input value, so an app that binds the
   // input never creates ComnSettingsService (and needs no HTTP providers).
   private readonly url = computed(() =>
     landingBackgroundUrl(
-      this.settings() ?? this.injector.get(CRUCIBLE_LANDING_BACKGROUND_SETTINGS)
-    )
+      this.settings() ??
+        this.injector.get(CRUCIBLE_LANDING_BACKGROUND_SETTINGS),
+    ),
   );
 
   /** The URL this instance has seen load; with the shared set, whether it has loaded. */
@@ -89,11 +91,15 @@ export class CrucibleLandingBackgroundDirective {
   /** The image's CSS `url(...)` value while it shows, otherwise `null`. */
   protected readonly image = computed(() => {
     const url = this.url();
-    const loaded = url !== null && (this.loadedUrl() === url || loadedLandingBackgrounds.has(url));
+    const loaded =
+      url !== null &&
+      (this.loadedUrl() === url || loadedLandingBackgrounds.has(url));
     return this.enabled() && loaded ? cssUrl(url) : null;
   });
 
-  private readonly isDark = computed(() => this.themeService?.isDarkMode() ?? false);
+  private readonly isDark = computed(
+    () => this.themeService?.isDarkMode() ?? false,
+  );
 
   protected readonly hostClass = computed(() => ({
     [CRUCIBLE_LANDING_BACKGROUND_CLASS]: this.image() !== null,
@@ -107,7 +113,9 @@ export class CrucibleLandingBackgroundDirective {
     const dark = this.isDark();
     return {
       [CRUCIBLE_LANDING_BACKGROUND_PROPERTY]: image,
-      'background-image': dark ? `${CRUCIBLE_LANDING_BACKGROUND_DARK_TINT}, ${image}` : image,
+      'background-image': dark
+        ? `${CRUCIBLE_LANDING_BACKGROUND_DARK_TINT}, ${image}`
+        : image,
       'background-color': dark ? CRUCIBLE_LANDING_BACKGROUND_DARK_COLOR : null,
       'background-size': 'cover',
       'background-position': 'center',
@@ -130,7 +138,11 @@ export class CrucibleLandingBackgroundDirective {
     effect(() => {
       const url = this.url();
       stop();
-      if (url === null || loadedLandingBackgrounds.has(url) || typeof Image === 'undefined') {
+      if (
+        url === null ||
+        loadedLandingBackgrounds.has(url) ||
+        typeof Image === 'undefined'
+      ) {
         return;
       }
       const image = new Image();

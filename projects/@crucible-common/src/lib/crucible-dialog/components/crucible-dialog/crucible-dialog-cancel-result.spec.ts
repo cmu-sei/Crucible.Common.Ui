@@ -41,7 +41,9 @@ class PlainCancelDialogComponent {
   imports: [...CRUCIBLE_DIALOG_IMPORTS],
 })
 class PayloadOnCancelDialogComponent {
-  constructor(private dialogRef: MatDialogRef<PayloadOnCancelDialogComponent>) {}
+  constructor(
+    private dialogRef: MatDialogRef<PayloadOnCancelDialogComponent>,
+  ) {}
   onCancel(): void {
     this.dialogRef.close({ wasCancelled: true });
   }

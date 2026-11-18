@@ -38,10 +38,10 @@ export default crucible({ prefix: 'app' });
 
 ### Options
 
-| Option | Default | Use |
-|---|---|---|
-| `prefix` | `'app'` | The component and directive selector prefix, or an array of prefixes. |
-| `ignores` | `[]` | More paths to ignore, added to the defaults. |
+| Option             | Default | Use                                                                                                                                                            |
+| ------------------ | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `prefix`           | `'app'` | The component and directive selector prefix, or an array of prefixes.                                                                                          |
+| `ignores`          | `[]`    | More paths to ignore, added to the defaults.                                                                                                                   |
 | `strictNullChecks` | `false` | Set to `true` when the app's tsconfig turns on `strictNullChecks` (or `strict`). It turns on `prefer-nullish-coalescing`, which gives wrong advice without it. |
 
 To change a rule for one app, add a block after the shared config:
@@ -49,7 +49,10 @@ To change a rule for one app, add a block after the shared config:
 ```js
 export default [
   ...crucible({ prefix: 'app' }),
-  { files: ['src/app/legacy/**/*.ts'], rules: { '@typescript-eslint/no-explicit-any': 'off' } },
+  {
+    files: ['src/app/legacy/**/*.ts'],
+    rules: { '@typescript-eslint/no-explicit-any': 'off' },
+  },
 ];
 ```
 

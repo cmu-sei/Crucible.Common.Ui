@@ -1,0 +1,412 @@
+{
+  "projects/@crucible-common/src/lib/comn-auth/comn-auth.module.ts": {
+    "no-restricted-imports": {
+      "count": 2
+    },
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
+  "projects/@crucible-common/src/lib/comn-auth/components/comn-auth-callback/comn-auth-callback.component.ts": {
+    "@angular-eslint/prefer-inject": {
+      "count": 3
+    },
+    "@angular-eslint/prefer-standalone": {
+      "count": 1
+    },
+    "@typescript-eslint/no-base-to-string": {
+      "count": 1
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 2
+    },
+    "@typescript-eslint/no-misused-promises": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/restrict-plus-operands": {
+      "count": 1
+    }
+  },
+  "projects/@crucible-common/src/lib/comn-auth/components/comn-auth-logout/comn-auth-logout.component.ts": {
+    "@angular-eslint/prefer-inject": {
+      "count": 1
+    },
+    "@angular-eslint/prefer-standalone": {
+      "count": 1
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 1
+    }
+  },
+  "projects/@crucible-common/src/lib/comn-auth/services/comn-auth-guard.service.ts": {
+    "@angular-eslint/prefer-inject": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 3
+    }
+  },
+  "projects/@crucible-common/src/lib/comn-auth/services/comn-auth-interceptor.service.ts": {
+    "@angular-eslint/prefer-inject": {
+      "count": 1
+    },
+    "@typescript-eslint/array-type": {
+      "count": 1
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    }
+  },
+  "projects/@crucible-common/src/lib/comn-auth/services/comn-auth.service.ts": {
+    "@angular-eslint/prefer-inject": {
+      "count": 4
+    },
+    "@typescript-eslint/array-type": {
+      "count": 1
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 4
+    },
+    "@typescript-eslint/no-floating-promises": {
+      "count": 3
+    },
+    "@typescript-eslint/no-inferrable-types": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 10
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 5
+    },
+    "@typescript-eslint/prefer-optional-chain": {
+      "count": 1
+    },
+    "prefer-const": {
+      "count": 1
+    }
+  },
+  "projects/@crucible-common/src/lib/comn-auth/state/comn-auth.query.ts": {
+    "@angular-eslint/prefer-inject": {
+      "count": 1
+    }
+  },
+  "projects/@crucible-common/src/lib/comn-header-bar/comn-header-bar.module.spec.ts": {
+    "@angular-eslint/template/prefer-self-closing-tags": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 10
+    }
+  },
+  "projects/@crucible-common/src/lib/comn-header-bar/comn-header-bar.module.ts": {
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    },
+    "no-restricted-imports": {
+      "count": 1
+    },
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
+  "projects/@crucible-common/src/lib/comn-settings/comn-settings.module.ts": {
+    "no-restricted-imports": {
+      "count": 2
+    },
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
+  "projects/@crucible-common/src/lib/comn-settings/services/comn-settings.service.ts": {
+    "@angular-eslint/prefer-inject": {
+      "count": 2
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 6
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 12
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 4
+    }
+  },
+  "projects/@crucible-common/src/lib/crucible-dialog/components/crucible-confirm-dialog/crucible-confirm-dialog.component.spec.ts": {
+    "@typescript-eslint/no-deprecated": {
+      "count": 1
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 8
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 17
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 20
+    }
+  },
+  "projects/@crucible-common/src/lib/crucible-dialog/components/crucible-confirm-dialog/crucible-confirm-dialog.component.ts": {
+    "@angular-eslint/prefer-inject": {
+      "count": 1
+    }
+  },
+  "projects/@crucible-common/src/lib/crucible-dialog/components/crucible-dialog/crucible-dialog-cancel-result.spec.ts": {
+    "@angular-eslint/prefer-inject": {
+      "count": 1
+    },
+    "@typescript-eslint/no-deprecated": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    },
+    "@typescript-eslint/require-await": {
+      "count": 1
+    }
+  },
+  "projects/@crucible-common/src/lib/crucible-dialog/components/crucible-dialog/crucible-dialog-loading-layout.spec.ts": {
+    "@angular-eslint/prefer-signals": {
+      "count": 1
+    },
+    "@typescript-eslint/no-deprecated": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 6
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    },
+    "@typescript-eslint/require-await": {
+      "count": 1
+    }
+  },
+  "projects/@crucible-common/src/lib/crucible-dialog/components/crucible-dialog/crucible-dialog.component.html": {
+    "@angular-eslint/template/prefer-self-closing-tags": {
+      "count": 8
+    }
+  },
+  "projects/@crucible-common/src/lib/crucible-dialog/components/crucible-dialog/crucible-dialog.component.spec.ts": {
+    "@angular-eslint/prefer-signals": {
+      "count": 7
+    },
+    "@typescript-eslint/no-deprecated": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 22
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 23
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 23
+    }
+  },
+  "projects/@crucible-common/src/lib/crucible-dialog/components/crucible-dialog/crucible-dialog.component.ts": {
+    "@angular-eslint/no-output-native": {
+      "count": 2
+    },
+    "@angular-eslint/prefer-inject": {
+      "count": 1
+    },
+    "@angular-eslint/prefer-signals": {
+      "count": 12
+    },
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "projects/@crucible-common/src/lib/crucible-dialog/services/crucible-dialog.service.spec.ts": {
+    "@typescript-eslint/no-deprecated": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 10
+    }
+  },
+  "projects/@crucible-common/src/lib/crucible-dialog/services/crucible-dialog.service.ts": {
+    "@angular-eslint/prefer-inject": {
+      "count": 1
+    }
+  },
+  "projects/@crucible-common/src/lib/crucible-landing-background/directives/crucible-landing-background.directive.spec.ts": {
+    "@angular-eslint/prefer-signals": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-call": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    }
+  },
+  "projects/@crucible-common/src/lib/crucible-landing-background/landing-background.spec.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "projects/@crucible-common/src/lib/crucible-landing-background/models/crucible-landing-background.ts": {
+    "@typescript-eslint/no-unsafe-return": {
+      "count": 1
+    }
+  },
+  "projects/@crucible-common/src/lib/crucible-theme/services/crucible-favicon.service.spec.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 1
+    }
+  },
+  "projects/@crucible-common/src/lib/crucible-theme/services/crucible-favicon.service.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 2
+    },
+    "rxjs-x/no-sharereplay": {
+      "count": 1
+    }
+  },
+  "projects/@crucible-common/src/lib/crucible-theme/services/crucible-theme.service.spec.ts": {
+    "@typescript-eslint/no-unnecessary-type-assertion": {
+      "count": 3
+    }
+  },
+  "projects/@crucible-common/src/lib/crucible-theme/services/crucible-theme.service.ts": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    }
+  },
+  "projects/@crucible-common/src/lib/crucible-theme/theme-colors.spec.ts": {
+    "@typescript-eslint/no-unsafe-argument": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 6
+    }
+  },
+  "projects/cwd-common-app/src/app/app-routing.module.ts": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    },
+    "no-restricted-imports": {
+      "count": 1
+    },
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
+  "projects/cwd-common-app/src/app/app.component.html": {
+    "@angular-eslint/template/prefer-self-closing-tags": {
+      "count": 1
+    }
+  },
+  "projects/cwd-common-app/src/app/app.component.spec.ts": {
+    "@typescript-eslint/no-unsafe-assignment": {
+      "count": 1
+    }
+  },
+  "projects/cwd-common-app/src/app/app.component.ts": {
+    "@angular-eslint/no-empty-lifecycle-method": {
+      "count": 1
+    },
+    "@typescript-eslint/no-empty-function": {
+      "count": 2
+    }
+  },
+  "projects/cwd-common-app/src/app/app.module.ts": {
+    "@typescript-eslint/no-deprecated": {
+      "count": 1
+    },
+    "no-restricted-imports": {
+      "count": 1
+    },
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
+  "projects/cwd-common-app/src/app/dialog-demo/demo-form-dialog.component.ts": {
+    "@typescript-eslint/unbound-method": {
+      "count": 1
+    },
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "projects/cwd-common-app/src/app/dialog-demo/dialog-demo.component.ts": {
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "projects/cwd-common-app/src/app/posts/posts.component.ts": {
+    "@angular-eslint/prefer-inject": {
+      "count": 2
+    },
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unsafe-member-access": {
+      "count": 1
+    },
+    "no-restricted-imports": {
+      "count": 1
+    }
+  },
+  "projects/cwd-common-app/src/main.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  }
+}

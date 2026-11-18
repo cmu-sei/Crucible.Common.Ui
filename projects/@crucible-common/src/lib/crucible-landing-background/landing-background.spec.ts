@@ -1,24 +1,32 @@
 // Copyright 2026 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { cssUrl, landingBackgroundImage, landingBackgroundUrl } from './landing-background';
+import {
+  cssUrl,
+  landingBackgroundImage,
+  landingBackgroundUrl,
+} from './landing-background';
 
 describe('landingBackgroundImage', () => {
   it('wraps the setting in a quoted CSS url()', () => {
     expect(
-      landingBackgroundImage({ AppLandingBackgroundImage: 'assets/local/landing.jpg' })
+      landingBackgroundImage({
+        AppLandingBackgroundImage: 'assets/local/landing.jpg',
+      }),
     ).toBe('url("assets/local/landing.jpg")');
   });
 
   it('trims surrounding whitespace', () => {
     expect(
-      landingBackgroundImage({ AppLandingBackgroundImage: '  https://example.com/a.jpg \n' })
+      landingBackgroundImage({
+        AppLandingBackgroundImage: '  https://example.com/a.jpg \n',
+      }),
     ).toBe('url("https://example.com/a.jpg")');
   });
 
   it('escapes quotes and backslashes and drops line breaks', () => {
     expect(
-      landingBackgroundImage({ AppLandingBackgroundImage: 'a"b\\c\nd' })
+      landingBackgroundImage({ AppLandingBackgroundImage: 'a"b\\c\nd' }),
     ).toBe('url("a\\"b\\\\cd")');
   });
 
@@ -26,7 +34,10 @@ describe('landingBackgroundImage', () => {
     ['an empty string', { AppLandingBackgroundImage: '' }],
     ['a blank string', { AppLandingBackgroundImage: '   ' }],
     ['a missing key', {}],
-    ['a non-string value', { AppLandingBackgroundImage: 42 as unknown as string }],
+    [
+      'a non-string value',
+      { AppLandingBackgroundImage: 42 as unknown as string },
+    ],
     ['null settings', null],
     ['undefined settings', undefined],
   ])('returns null for %s', (_label, settings) => {
@@ -37,19 +48,24 @@ describe('landingBackgroundImage', () => {
 describe('landingBackgroundUrl', () => {
   it('trims and removes line breaks and form feeds', () => {
     expect(
-      landingBackgroundUrl({ AppLandingBackgroundImage: ' a\r\nb\fc.jpg\n ' })
+      landingBackgroundUrl({ AppLandingBackgroundImage: ' a\r\nb\fc.jpg\n ' }),
     ).toBe('abc.jpg');
   });
 
   it('is the URL inside the CSS value, so the two never differ', () => {
     const settings = { AppLandingBackgroundImage: ' x\fy.jpg ' };
-    expect(landingBackgroundImage(settings)).toBe(cssUrl(landingBackgroundUrl(settings)!));
+    expect(landingBackgroundImage(settings)).toBe(
+      cssUrl(landingBackgroundUrl(settings)!),
+    );
   });
 
   it.each([
     ['a blank string', { AppLandingBackgroundImage: '  ' }],
     ['only line breaks', { AppLandingBackgroundImage: '\n\f' }],
-    ['a non-string value', { AppLandingBackgroundImage: 42 as unknown as string }],
+    [
+      'a non-string value',
+      { AppLandingBackgroundImage: 42 as unknown as string },
+    ],
     ['undefined settings', undefined],
   ])('returns null for %s', (_label, settings) => {
     expect(landingBackgroundUrl(settings)).toBeNull();
