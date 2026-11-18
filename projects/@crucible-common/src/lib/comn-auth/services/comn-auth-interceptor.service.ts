@@ -1,7 +1,12 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import {
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { filter, switchMap, take } from 'rxjs/operators';
@@ -20,7 +25,7 @@ export class ComnAuthInterceptorService implements HttpInterceptor {
 
   intercept(
     request: HttpRequest<any>,
-    next: HttpHandler
+    next: HttpHandler,
   ): Observable<HttpEvent<any>> {
     if (this.isExcluded(request.url)) {
       return next.handle(request) as any;
@@ -34,9 +39,9 @@ export class ComnAuthInterceptorService implements HttpInterceptor {
             setHeaders: {
               Authorization: `${user.token_type} ${user.access_token}`,
             },
-          })
+          }),
         );
-      })
+      }),
     );
   }
 

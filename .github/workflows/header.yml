@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
-      contents: write          # the action commits and pushes missing headers
+      contents: write # the action commits and pushes missing headers
     steps:
       - name: Check Headers
         uses: cmu-sei/Crucible-Github-Actions/actions/header@header-v1

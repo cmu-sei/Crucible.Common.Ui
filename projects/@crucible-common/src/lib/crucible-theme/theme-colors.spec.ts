@@ -62,7 +62,7 @@ describe('resolveThemeColors', () => {
     const colors = resolveThemeColors(
       { AppTopBarHexColor: '#111111', AppTopBarHexTextColor: '#222222' },
       true,
-      BRAND
+      BRAND,
     );
     expect(colors.primary).toBe(BRAND.color);
     expect(colors.onPrimary).toBe(BRAND.text);
@@ -81,7 +81,7 @@ describe('resolveThemeColors', () => {
     const colors = resolveThemeColors(
       { AppDarkModePrimaryHexColor: '#555555' },
       false,
-      BRAND
+      BRAND,
     );
     expect(colors.primary).toBe(BRAND.color);
     expect(colors.onPrimary).toBe(BRAND.text);
@@ -108,16 +108,19 @@ describe('resolveThemeColors', () => {
     }
   });
 
-  it.each([null, undefined])('uses brand for everything when settings are %s', (settings) => {
-    for (const isDark of [false, true]) {
-      expect(resolveThemeColors(settings, isDark, BRAND)).toEqual({
-        topBarBackground: BRAND.color,
-        topBarText: BRAND.text,
-        primary: BRAND.color,
-        onPrimary: BRAND.text,
-      });
-    }
-  });
+  it.each([null, undefined])(
+    'uses brand for everything when settings are %s',
+    (settings) => {
+      for (const isDark of [false, true]) {
+        expect(resolveThemeColors(settings, isDark, BRAND)).toEqual({
+          topBarBackground: BRAND.color,
+          topBarText: BRAND.text,
+          primary: BRAND.color,
+          onPrimary: BRAND.text,
+        });
+      }
+    },
+  );
 
   it('uses brand for everything when settings are empty', () => {
     expect(resolveThemeColors({}, true, BRAND)).toEqual({
@@ -145,10 +148,13 @@ describe('resolveThemeColors', () => {
     });
     expect(
       resolveThemeColors(
-        { AppLightModePrimaryHexColor: '', AppLightModePrimaryHexTextColor: '' },
+        {
+          AppLightModePrimaryHexColor: '',
+          AppLightModePrimaryHexTextColor: '',
+        },
         false,
-        BRAND
-      )
+        BRAND,
+      ),
     ).toEqual({
       topBarBackground: BRAND.color,
       topBarText: BRAND.text,
@@ -185,7 +191,7 @@ describe('resolveThemeColors', () => {
     const colors = resolveThemeColors(
       { AppLightModePrimaryHexColor: '#123456' },
       true,
-      BRAND
+      BRAND,
     );
     expect(colors.primary).toBe('#123456');
   });
@@ -208,7 +214,9 @@ describe('applyThemeColors', () => {
   });
 
   it('uses the expected property names', () => {
-    expect(CRUCIBLE_TOPBAR_BACKGROUND_PROPERTY).toBe('--crucible-topbar-background');
+    expect(CRUCIBLE_TOPBAR_BACKGROUND_PROPERTY).toBe(
+      '--crucible-topbar-background',
+    );
     expect(CRUCIBLE_TOPBAR_TEXT_PROPERTY).toBe('--crucible-topbar-text');
   });
 
@@ -222,8 +230,12 @@ describe('applyThemeColors', () => {
     applyThemeColors(colors, document);
 
     for (const el of [document.documentElement, document.body]) {
-      expect(el.style.getPropertyValue('--crucible-topbar-background')).toBe('#111111');
-      expect(el.style.getPropertyValue('--crucible-topbar-text')).toBe('#222222');
+      expect(el.style.getPropertyValue('--crucible-topbar-background')).toBe(
+        '#111111',
+      );
+      expect(el.style.getPropertyValue('--crucible-topbar-text')).toBe(
+        '#222222',
+      );
       expect(el.style.getPropertyValue('--mat-sys-primary')).toBe('#333333');
       expect(el.style.getPropertyValue('--mat-sys-on-primary')).toBe('#444444');
     }
@@ -231,16 +243,28 @@ describe('applyThemeColors', () => {
 
   it('overwrites previously applied values', () => {
     applyThemeColors(
-      { topBarBackground: '#1', topBarText: '#2', primary: '#3', onPrimary: '#4' },
-      document
+      {
+        topBarBackground: '#1',
+        topBarText: '#2',
+        primary: '#3',
+        onPrimary: '#4',
+      },
+      document,
     );
     applyThemeColors(
-      { topBarBackground: '#aaaaaa', topBarText: '#bbbbbb', primary: '#cccccc', onPrimary: '#dddddd' },
-      document
+      {
+        topBarBackground: '#aaaaaa',
+        topBarText: '#bbbbbb',
+        primary: '#cccccc',
+        onPrimary: '#dddddd',
+      },
+      document,
     );
     for (const el of [document.documentElement, document.body]) {
       expect(el.style.getPropertyValue('--mat-sys-primary')).toBe('#cccccc');
-      expect(el.style.getPropertyValue('--crucible-topbar-background')).toBe('#aaaaaa');
+      expect(el.style.getPropertyValue('--crucible-topbar-background')).toBe(
+        '#aaaaaa',
+      );
     }
   });
 });

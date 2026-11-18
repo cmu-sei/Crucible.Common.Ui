@@ -7,17 +7,17 @@ import { ComnAuthService } from '../../services/comn-auth.service';
 import { take } from 'rxjs';
 
 @Component({
-    selector: 'comn-auth-callback',
-    templateUrl: './comn-auth-callback.component.html',
-    styleUrls: ['./comn-auth-callback.component.scss'],
-    standalone: false
+  selector: 'comn-auth-callback',
+  templateUrl: './comn-auth-callback.component.html',
+  styleUrls: ['./comn-auth-callback.component.scss'],
+  standalone: false,
 })
 export class ComnAuthCallbackComponent implements OnInit {
   errorMessage: string;
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private authService: ComnAuthService
+    private authService: ComnAuthService,
   ) {}
 
   ngOnInit() {
@@ -42,7 +42,7 @@ export class ComnAuthCallbackComponent implements OnInit {
         if (this.authService.isAuthenticated()) {
           this.router.navigateByUrl('/', { replaceUrl: true });
         }
-      }
+      },
     );
   }
 }

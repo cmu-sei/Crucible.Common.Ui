@@ -19,7 +19,9 @@ const SVG = `
 const DATA_PREFIX = 'data:image/svg+xml,';
 
 function iconLinks(): HTMLLinkElement[] {
-  return Array.from(document.querySelectorAll<HTMLLinkElement>('link[rel~="icon"]'));
+  return Array.from(
+    document.querySelectorAll<HTMLLinkElement>('link[rel~="icon"]'),
+  );
 }
 
 function addIconLink(href: string, type?: string): HTMLLinkElement {
@@ -43,7 +45,9 @@ function faviconSvg(): string {
 describe('CrucibleFaviconService', () => {
   let httpMock: HttpTestingController;
 
-  function setup(config: Partial<CrucibleThemeConfig> = {}): CrucibleFaviconService {
+  function setup(
+    config: Partial<CrucibleThemeConfig> = {},
+  ): CrucibleFaviconService {
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(),
@@ -74,7 +78,7 @@ describe('CrucibleFaviconService', () => {
     // provideHttpClientTesting() replaces HttpBackend, so the service's own
     // HttpClient(HttpBackend) talks to the testing backend.
     expect(TestBed.inject(HttpBackend)).toBe(
-      TestBed.inject(HttpTestingController) as unknown as HttpBackend
+      TestBed.inject(HttpTestingController) as unknown as HttpBackend,
     );
   });
 
@@ -111,7 +115,7 @@ describe('CrucibleFaviconService', () => {
       httpMock.expectOne(href).flush(SVG);
 
       expect(faviconSvg()).toContain('.cls-1{fill:#123456;}');
-    }
+    },
   );
 
   it('makes no request and leaves the link alone for a .ico favicon', () => {
@@ -153,13 +157,16 @@ describe('CrucibleFaviconService', () => {
     httpMock.expectOne('logo.svg').flush(SVG);
 
     expect(faviconSvg()).toBe(
-      SVG.trim().replace('.cls-1{fill:#000000;}', '.cls-1{fill:#abcdef;}')
+      SVG.trim().replace('.cls-1{fill:#000000;}', '.cls-1{fill:#abcdef;}'),
     );
     expect(faviconSvg()).toContain('.cls-2{fill:#ffffff;}');
   });
 
   it('replaces the rule for a custom faviconFillClass', () => {
-    const service = setup({ faviconSvgPath: 'logo.svg', faviconFillClass: 'cls-2' });
+    const service = setup({
+      faviconSvgPath: 'logo.svg',
+      faviconFillClass: 'cls-2',
+    });
 
     service.updateFavicon('#abcdef');
     httpMock.expectOne('logo.svg').flush(SVG);
@@ -170,12 +177,17 @@ describe('CrucibleFaviconService', () => {
   });
 
   it('matches a faviconFillClass containing regex characters literally', () => {
-    const service = setup({ faviconSvgPath: 'logo.svg', faviconFillClass: 'a.b' });
+    const service = setup({
+      faviconSvgPath: 'logo.svg',
+      faviconFillClass: 'a.b',
+    });
 
     service.updateFavicon('#abcdef');
     httpMock
       .expectOne('logo.svg')
-      .flush('<svg><style>.aXb{fill:#000000;}.a.b{fill:#000000;}</style></svg>');
+      .flush(
+        '<svg><style>.aXb{fill:#000000;}.a.b{fill:#000000;}</style></svg>',
+      );
 
     const svg = faviconSvg();
     expect(svg).toContain('.aXb{fill:#000000;}');

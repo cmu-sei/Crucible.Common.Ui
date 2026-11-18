@@ -10,7 +10,7 @@ describe('ComnAuthInterceptorService', () => {
 
   it('should be created', () => {
     const service: ComnAuthInterceptorService = TestBed.inject(
-      ComnAuthInterceptorService
+      ComnAuthInterceptorService,
     );
     expect(service).toBeTruthy();
   });

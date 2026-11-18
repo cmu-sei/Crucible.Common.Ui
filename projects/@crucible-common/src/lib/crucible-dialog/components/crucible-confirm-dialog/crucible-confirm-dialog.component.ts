@@ -25,7 +25,10 @@ export class CrucibleConfirmDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: Required<
-      Pick<CrucibleConfirmOptions, 'title' | 'message' | 'confirmText' | 'cancelText'>
+      Pick<
+        CrucibleConfirmOptions,
+        'title' | 'message' | 'confirmText' | 'cancelText'
+      >
     > &
       CrucibleConfirmOptions,
   ) {}

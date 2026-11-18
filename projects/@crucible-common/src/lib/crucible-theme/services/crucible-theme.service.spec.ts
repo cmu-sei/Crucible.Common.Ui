@@ -43,7 +43,9 @@ function cleanDom(): void {
 describe('CrucibleThemeService', () => {
   let updateFavicon: ReturnType<typeof vi.fn>;
 
-  function setup(settings: CrucibleThemeColorSettings | null | undefined): CrucibleThemeService {
+  function setup(
+    settings: CrucibleThemeColorSettings | null | undefined,
+  ): CrucibleThemeService {
     updateFavicon = vi.fn();
     TestBed.configureTestingModule({
       providers: [
@@ -132,21 +134,26 @@ describe('CrucibleThemeService', () => {
     expect(updateFavicon).toHaveBeenNthCalledWith(2, '#111111');
   });
 
-  it.each([{}, null, undefined])('falls back to the configured brand when settings are %s', (settings) => {
-    const service = setup(settings as CrucibleThemeColorSettings);
+  it.each([{}, null, undefined])(
+    'falls back to the configured brand when settings are %s',
+    (settings) => {
+      const service = setup(settings as CrucibleThemeColorSettings);
 
-    service.applyTheme(Theme.DARK);
+      service.applyTheme(Theme.DARK);
 
-    expect(prop('--crucible-topbar-background')).toBe(BRAND.color);
-    expect(prop('--crucible-topbar-text')).toBe(BRAND.text);
-    expect(prop('--mat-sys-primary')).toBe(BRAND.color);
-    expect(prop('--mat-sys-on-primary')).toBe(BRAND.text);
-    expect(updateFavicon).toHaveBeenCalledWith(BRAND.color);
-  });
+      expect(prop('--crucible-topbar-background')).toBe(BRAND.color);
+      expect(prop('--crucible-topbar-text')).toBe(BRAND.text);
+      expect(prop('--mat-sys-primary')).toBe(BRAND.color);
+      expect(prop('--mat-sys-on-primary')).toBe(BRAND.text);
+      expect(updateFavicon).toHaveBeenCalledWith(BRAND.color);
+    },
+  );
 
   it('reads settings at apply time, not construction time', () => {
     const service = setup({});
-    TestBed.inject(ComnSettingsService).settings = { AppTopBarHexColor: '#abcdef' };
+    TestBed.inject(ComnSettingsService).settings = {
+      AppTopBarHexColor: '#abcdef',
+    };
 
     service.applyTheme(Theme.LIGHT);
 
@@ -183,8 +190,12 @@ describe('provideCrucibleTheme', () => {
   });
 
   it('makes both services injectable', () => {
-    expect(TestBed.inject(CrucibleThemeService)).toBeInstanceOf(CrucibleThemeService);
-    expect(TestBed.inject(CrucibleFaviconService)).toBeInstanceOf(CrucibleFaviconService);
+    expect(TestBed.inject(CrucibleThemeService)).toBeInstanceOf(
+      CrucibleThemeService,
+    );
+    expect(TestBed.inject(CrucibleFaviconService)).toBeInstanceOf(
+      CrucibleFaviconService,
+    );
   });
 
   it('wires the theme service to the real favicon service', () => {

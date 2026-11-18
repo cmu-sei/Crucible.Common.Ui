@@ -24,7 +24,7 @@ export class CrucibleThemeService {
   private readonly settingsService = inject(ComnSettingsService);
   private readonly faviconService = inject(CrucibleFaviconService);
   private readonly darkMode = signal(
-    this.document.body.classList.contains('darkMode')
+    this.document.body.classList.contains('darkMode'),
   );
 
   /**
@@ -41,7 +41,7 @@ export class CrucibleThemeService {
     const colors = resolveThemeColors(
       this.settingsService.settings,
       isDark,
-      this.config.brand
+      this.config.brand,
     );
     applyThemeColors(colors, this.document);
     this.faviconService.updateFavicon(colors.topBarBackground);

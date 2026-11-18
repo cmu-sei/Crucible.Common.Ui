@@ -59,9 +59,7 @@
               "projects/cwd-common-app/src/favicon.ico",
               "projects/cwd-common-app/src/assets"
             ],
-            "styles": [
-              "projects/cwd-common-app/src/styles.scss"
-            ],
+            "styles": ["projects/cwd-common-app/src/styles.scss"],
             "scripts": [],
             "preserveSymlinks": true,
             "browser": "projects/cwd-common-app/src/main.ts"

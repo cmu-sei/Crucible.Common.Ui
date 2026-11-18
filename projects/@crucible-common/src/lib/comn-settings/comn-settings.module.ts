@@ -2,8 +2,19 @@
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
 import { CommonModule } from '@angular/common';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { InjectionToken, ModuleWithProviders, NgModule, Optional, SkipSelf, inject, provideAppInitializer } from '@angular/core';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
+import {
+  InjectionToken,
+  ModuleWithProviders,
+  NgModule,
+  Optional,
+  SkipSelf,
+  inject,
+  provideAppInitializer,
+} from '@angular/core';
 
 import {
   ComnSettingsConfig,
@@ -20,31 +31,37 @@ export function get_settings(settings: ComnSettingsService) {
 
 export const COMN_SETTINGS_TOKEN = new InjectionToken('ComnSettings');
 
-@NgModule({ declarations: [],
-    exports: [], imports: [CommonModule], providers: [] })
+@NgModule({
+  declarations: [],
+  exports: [],
+  imports: [CommonModule],
+  providers: [],
+})
 export class ComnSettingsModule {
   constructor(@Optional() @SkipSelf() parentModule: ComnSettingsModule) {
     if (parentModule) {
       throw new Error(
-        `CwdSettingsModule is already loaded. Import into AppModule only`
+        `CwdSettingsModule is already loaded. Import into AppModule only`,
       );
     }
   }
 
   static forRoot(
-    config?: ComnSettingsConfig
+    config?: ComnSettingsConfig,
   ): ModuleWithProviders<ComnSettingsModule> {
     return {
       ngModule: ComnSettingsModule,
       providers: [
         ComnSettingsService,
         provideAppInitializer(() => {
-        const initializerFn = (get_settings)(inject(ComnSettingsService));
-        return initializerFn();
-      }),
+          const initializerFn = get_settings(inject(ComnSettingsService));
+          return initializerFn();
+        }),
         provideHttpClient(withInterceptorsFromDi()),
         // Without a config, the token's default factory supplies the default files.
-        ...(config ? [{ provide: COMN_SETTINGS_CONFIG, useValue: config }] : []),
+        ...(config
+          ? [{ provide: COMN_SETTINGS_CONFIG, useValue: config }]
+          : []),
       ],
     };
   }

@@ -5,8 +5,8 @@ image is configured per site, so it never ships in an app's repository.
 
 ## Setting
 
-| Setting | Description |
-|---|---|
+| Setting                     | Description                                               |
+| --------------------------- | --------------------------------------------------------- |
 | `AppLandingBackgroundImage` | URL of the image. Empty, blank or missing shows no image. |
 
 The directive reads the setting from its `crucibleLandingBackgroundSettings`
@@ -21,8 +21,11 @@ An app with its own settings service, such as TopoMojo or Gameboard, binds the
 input or provides the token:
 
 ```html
-<div class="landing" crucibleLandingBackground
-     [crucibleLandingBackgroundSettings]="{ AppLandingBackgroundImage: settings.landingImage }">
+<div
+  class="landing"
+  crucibleLandingBackground
+  [crucibleLandingBackgroundSettings]="{ AppLandingBackgroundImage: settings.landingImage }"
+></div>
 ```
 
 ```ts
@@ -53,9 +56,12 @@ import { CrucibleLandingBackgroundDirective } from '@cmusei/crucible-common';
 ```html
 <!-- Always on the landing page -->
 <div class="app-container" crucibleLandingBackground>
-
-<!-- Only while no item is open -->
-<div class="app-home-container" [crucibleLandingBackground]="!exhibitId">
+  <!-- Only while no item is open -->
+  <div
+    class="app-home-container"
+    [crucibleLandingBackground]="!exhibitId"
+  ></div>
+</div>
 ```
 
 Bind `false` to hide the image. The bare attribute means `true`.
@@ -64,14 +70,14 @@ Bind `false` to hide the image. The bare attribute means `true`.
 
 While the image shows, the directive sets on its host:
 
-| Host binding | Light mode | Dark mode |
-|---|---|---|
-| `background-image` | the image | a near-black tint over the image |
-| `background-color` | not set | `#101215` |
-| `background-size` / `background-position` | `cover` / `center` | `cover` / `center` |
-| `background-attachment` | `fixed` | `fixed` |
-| class `crucible-landing-background` | set | set |
-| `--crucible-landing-background` | the image's `url(...)` | the image's `url(...)` |
+| Host binding                              | Light mode             | Dark mode                        |
+| ----------------------------------------- | ---------------------- | -------------------------------- |
+| `background-image`                        | the image              | a near-black tint over the image |
+| `background-color`                        | not set                | `#101215`                        |
+| `background-size` / `background-position` | `cover` / `center`     | `cover` / `center`               |
+| `background-attachment`                   | `fixed`                | `fixed`                          |
+| class `crucible-landing-background`       | set                    | set                              |
+| `--crucible-landing-background`           | the image's `url(...)` | the image's `url(...)`           |
 
 Dark mode follows `CrucibleThemeService.isDarkMode`, so the tint changes with
 the theme the app applies through `applyTheme()`. Without

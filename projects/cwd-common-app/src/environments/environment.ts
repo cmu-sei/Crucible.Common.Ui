@@ -8,7 +8,7 @@ Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
 };
 
 /*

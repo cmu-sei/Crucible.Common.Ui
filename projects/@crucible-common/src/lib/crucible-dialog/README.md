@@ -31,12 +31,12 @@ component yourself.
 
 ## Picking a shape
 
-| Your modal | Use |
-|---|---|
-| Yes/No or delete confirm (title + message + 2 buttons) | `CrucibleDialogService.confirm(...)` |
-| Form (reactive `FormGroup`) with Save/Cancel | `<crucible-dialog [form]="form" (submit)="save()">` |
-| Template-driven (`[(ngModel)]`) form | `<crucible-dialog>` no-form mode + `(submit)` |
-| Content/info only, or custom footer | `<crucible-dialog [hideDefaultActions]="true">` + projected actions |
+| Your modal                                             | Use                                                                 |
+| ------------------------------------------------------ | ------------------------------------------------------------------- |
+| Yes/No or delete confirm (title + message + 2 buttons) | `CrucibleDialogService.confirm(...)`                                |
+| Form (reactive `FormGroup`) with Save/Cancel           | `<crucible-dialog [form]="form" (submit)="save()">`                 |
+| Template-driven (`[(ngModel)]`) form                   | `<crucible-dialog>` no-form mode + `(submit)`                       |
+| Content/info only, or custom footer                    | `<crucible-dialog [hideDefaultActions]="true">` + projected actions |
 
 The component never opens itself: the host calls
 `MatDialog.open(MyDialogComponent, …)` and `MyDialogComponent`'s template uses
@@ -46,9 +46,15 @@ The component never opens itself: the host calls
 
 ```ts
 this.crucibleDialog
-  .confirm({ title: 'Delete Project?', message: 'Delete Demo Project?', confirmText: 'Delete' })
+  .confirm({
+    title: 'Delete Project?',
+    message: 'Delete Demo Project?',
+    confirmText: 'Delete',
+  })
   .afterClosed()
-  .subscribe((confirmed) => { if (confirmed) this.delete(); });
+  .subscribe((confirmed) => {
+    if (confirmed) this.delete();
+  });
 ```
 
 `afterClosed()` emits `true` (confirmed) or `false`/`undefined` (cancel/escape).
@@ -63,7 +69,12 @@ button, leaving one:
 
 ```ts
 // OK-only info dialog (no cancel button):
-this.crucibleDialog.confirm({ title: 'Cannot Delete', message: '…', confirmText: 'OK', cancelText: '' });
+this.crucibleDialog.confirm({
+  title: 'Cannot Delete',
+  message: '…',
+  confirmText: 'OK',
+  cancelText: '',
+});
 ```
 
 ## Reactive form modal
@@ -76,13 +87,16 @@ this.crucibleDialog.confirm({ title: 'Cannot Delete', message: '…', confirmTex
   [submitDisabled]="!form.valid || !form.dirty"
   [guardUnsavedWork]="true"
   (submit)="save()"
-  (cancel)="cancel()">
+  (cancel)="cancel()"
+>
   <!-- IMPORTANT: re-declare [formGroup] on the projected container. The wrapper
        hosts the <form>, but content is *projected*, so formControlName resolves
        its FormGroup in the DECLARING template's injection context — without this
        you get a runtime "Cannot read properties of null (reading 'addControl')". -->
   <div crucibleDialogContent [formGroup]="form">
-    <mat-form-field><input matInput formControlName="name" cdkFocusInitial /></mat-form-field>
+    <mat-form-field
+      ><input matInput formControlName="name" cdkFocusInitial
+    /></mat-form-field>
   </div>
 </crucible-dialog>
 ```
@@ -139,7 +153,7 @@ there is always a deliberate way out. You get this for free; do **not** re-set
 
 The default **Cancel button closes the dialog on its own** (via `[mat-dialog-close]`),
 so a host that doesn't need to react to dismissal can omit `(cancel)` entirely and
-still get a working button. Bind `(cancel)` only when you need to *do* something on
+still get a working button. Bind `(cancel)` only when you need to _do_ something on
 dismissal (reset the form, confirm discarding changes, logging); it fires alongside
 the close. (A fully custom footer via `[crucibleDialogActions]` owns its own close
 wiring — see above.)

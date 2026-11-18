@@ -38,7 +38,7 @@ export class CrucibleFaviconService {
       const escaped = fillClass.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       const colored = svg.replace(
         new RegExp(`\\.${escaped}\\{[^}]*\\}`),
-        `.${fillClass}{fill:${hexColor};}`
+        `.${fillClass}{fill:${hexColor};}`,
       );
       this.iconLink(true)!.href =
         `data:image/svg+xml,${encodeURIComponent(colored)}`;
@@ -53,9 +53,12 @@ export class CrucibleFaviconService {
           ? this.http.get(path, { responseType: 'text' }).pipe(
               map((svg) => svg.trim()),
               catchError((err) => {
-                console.error('CrucibleFaviconService: failed to load SVG', err);
+                console.error(
+                  'CrucibleFaviconService: failed to load SVG',
+                  err,
+                );
                 return of(null);
-              })
+              }),
             )
           : of(null)
       ).pipe(shareReplay(1));
@@ -73,13 +76,13 @@ export class CrucibleFaviconService {
     if (!href) {
       return null;
     }
-    const isSvg =
-      link!.type === 'image/svg+xml' || /\.svg(\?|#|$)/i.test(href);
+    const isSvg = link!.type === 'image/svg+xml' || /\.svg(\?|#|$)/i.test(href);
     return isSvg ? href : null;
   }
 
   private iconLink(create: boolean): HTMLLinkElement | null {
-    let link = this.document.querySelector<HTMLLinkElement>('link[rel~="icon"]');
+    let link =
+      this.document.querySelector<HTMLLinkElement>('link[rel~="icon"]');
     if (!link && create) {
       link = this.document.createElement('link');
       link.rel = 'icon';

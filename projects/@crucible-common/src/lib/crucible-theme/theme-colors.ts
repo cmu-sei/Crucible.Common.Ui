@@ -30,7 +30,8 @@ import {
 } from './models/crucible-theme.config';
 
 /** CSS custom property for the top-bar background. */
-export const CRUCIBLE_TOPBAR_BACKGROUND_PROPERTY = '--crucible-topbar-background';
+export const CRUCIBLE_TOPBAR_BACKGROUND_PROPERTY =
+  '--crucible-topbar-background';
 
 /** CSS custom property for text and icons on the top bar. */
 export const CRUCIBLE_TOPBAR_TEXT_PROPERTY = '--crucible-topbar-text';
@@ -44,7 +45,7 @@ export const CRUCIBLE_TOPBAR_TEXT_PROPERTY = '--crucible-topbar-text';
 export function resolveThemeColors(
   settings: CrucibleThemeColorSettings | null | undefined,
   isDark: boolean,
-  brand: CrucibleBrandColors
+  brand: CrucibleBrandColors,
 ): CrucibleResolvedThemeColors {
   const lightPrimary = settings?.AppLightModePrimaryHexColor || brand.color;
   const lightOnPrimary =
@@ -71,7 +72,7 @@ export function resolveThemeColors(
  */
 export function applyThemeColors(
   colors: CrucibleResolvedThemeColors,
-  doc: Document
+  doc: Document,
 ): void {
   const properties: [string, string][] = [
     [CRUCIBLE_TOPBAR_BACKGROUND_PROPERTY, colors.topBarBackground],

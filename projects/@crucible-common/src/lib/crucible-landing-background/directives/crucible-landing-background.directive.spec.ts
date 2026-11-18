@@ -3,7 +3,12 @@
 
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, importProvidersFrom, signal, WritableSignal } from '@angular/core';
+import {
+  Component,
+  importProvidersFrom,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComnSettingsModule } from '../../comn-settings/comn-settings.module';
 import { ComnSettingsService } from '../../comn-settings/services/comn-settings.service';
@@ -34,7 +39,13 @@ class FakeImage {
 
 @Component({
   template: `
-    <div id="bound" class="app-home-container" [class.open]="!show()" style="color: red" [crucibleLandingBackground]="show()"></div>
+    <div
+      id="bound"
+      class="app-home-container"
+      [class.open]="!show()"
+      style="color: red"
+      [crucibleLandingBackground]="show()"
+    ></div>
     <div id="bare" crucibleLandingBackground></div>
   `,
   imports: [CrucibleLandingBackgroundDirective],
@@ -60,7 +71,12 @@ describe('CrucibleLandingBackgroundDirective', () => {
 
   async function setup(
     settings: unknown,
-    options: { withTheme?: boolean; load?: boolean; comn?: boolean; token?: unknown } = {}
+    options: {
+      withTheme?: boolean;
+      load?: boolean;
+      comn?: boolean;
+      token?: unknown;
+    } = {},
   ): Promise<void> {
     const { withTheme = true, load = true, comn = true, token } = options;
     isDarkMode = signal(false);
@@ -72,7 +88,9 @@ describe('CrucibleLandingBackgroundDirective', () => {
         ...(comn
           ? [{ provide: ComnSettingsService, useValue: { settings } }]
           : [provideHttpClient(), provideHttpClientTesting()]),
-        ...(token !== undefined ? [{ provide: CRUCIBLE_LANDING_BACKGROUND_SETTINGS, useValue: token }] : []),
+        ...(token !== undefined
+          ? [{ provide: CRUCIBLE_LANDING_BACKGROUND_SETTINGS, useValue: token }]
+          : []),
         ...(withTheme
           ? [{ provide: CrucibleThemeService, useValue: { isDarkMode } }]
           : []),
@@ -111,7 +129,9 @@ describe('CrucibleLandingBackgroundDirective', () => {
   it('shows the image, sized to cover, in light mode', async () => {
     await setup({ AppLandingBackgroundImage: IMAGE });
 
-    expect(el().classList.contains(CRUCIBLE_LANDING_BACKGROUND_CLASS)).toBe(true);
+    expect(el().classList.contains(CRUCIBLE_LANDING_BACKGROUND_CLASS)).toBe(
+      true,
+    );
     expect(style(CRUCIBLE_LANDING_BACKGROUND_PROPERTY)).toBe(URL_VALUE);
     expect(style('background-image')).toContain(IMAGE);
     expect(style('background-image')).not.toContain('linear-gradient');
@@ -131,7 +151,10 @@ describe('CrucibleLandingBackgroundDirective', () => {
     fixture.componentInstance.show.set(false);
     await fixture.whenStable();
 
-    expect(Array.from(el().classList).sort()).toEqual(['app-home-container', 'open']);
+    expect(Array.from(el().classList).sort()).toEqual([
+      'app-home-container',
+      'open',
+    ]);
     expect(el().style.color).toBe('red');
     expect(style('background-image')).toBe('');
   });
@@ -139,7 +162,9 @@ describe('CrucibleLandingBackgroundDirective', () => {
   it('treats the bare attribute as enabled', async () => {
     await setup({ AppLandingBackgroundImage: IMAGE });
 
-    expect(el('bare').classList.contains(CRUCIBLE_LANDING_BACKGROUND_CLASS)).toBe(true);
+    expect(
+      el('bare').classList.contains(CRUCIBLE_LANDING_BACKGROUND_CLASS),
+    ).toBe(true);
     expect(style(CRUCIBLE_LANDING_BACKGROUND_PROPERTY, 'bare')).toBe(URL_VALUE);
   });
 
@@ -150,7 +175,7 @@ describe('CrucibleLandingBackgroundDirective', () => {
     await fixture.whenStable();
 
     expect(el().style.backgroundImage).toBe(
-      `${CRUCIBLE_LANDING_BACKGROUND_DARK_TINT}, ${URL_VALUE}`
+      `${CRUCIBLE_LANDING_BACKGROUND_DARK_TINT}, ${URL_VALUE}`,
     );
     // #101215, as the browser serializes it.
     expect(el().style.backgroundColor).toBe('rgb(16, 18, 21)');
@@ -168,13 +193,17 @@ describe('CrucibleLandingBackgroundDirective', () => {
     fixture.componentInstance.show.set(false);
     await fixture.whenStable();
 
-    expect(el().classList.contains(CRUCIBLE_LANDING_BACKGROUND_CLASS)).toBe(false);
+    expect(el().classList.contains(CRUCIBLE_LANDING_BACKGROUND_CLASS)).toBe(
+      false,
+    );
     expect(backgroundStyles()).toBe('');
 
     fixture.componentInstance.show.set(true);
     await fixture.whenStable();
 
-    expect(el().classList.contains(CRUCIBLE_LANDING_BACKGROUND_CLASS)).toBe(true);
+    expect(el().classList.contains(CRUCIBLE_LANDING_BACKGROUND_CLASS)).toBe(
+      true,
+    );
     expect(style(CRUCIBLE_LANDING_BACKGROUND_PROPERTY)).toBe(URL_VALUE);
   });
 
@@ -182,21 +211,29 @@ describe('CrucibleLandingBackgroundDirective', () => {
     ['empty', { AppLandingBackgroundImage: '' }],
     ['missing', {}],
     ['absent settings', undefined],
-  ])('sets nothing when the setting is %s, in either mode', async (_label, settings) => {
-    await setup(settings);
-    isDarkMode.set(true);
-    await fixture.whenStable();
+  ])(
+    'sets nothing when the setting is %s, in either mode',
+    async (_label, settings) => {
+      await setup(settings);
+      isDarkMode.set(true);
+      await fixture.whenStable();
 
-    for (const id of ['bound', 'bare']) {
-      expect(el(id).classList.contains(CRUCIBLE_LANDING_BACKGROUND_CLASS)).toBe(false);
-      expect(backgroundStyles(id)).toBe('');
-    }
-  });
+      for (const id of ['bound', 'bare']) {
+        expect(
+          el(id).classList.contains(CRUCIBLE_LANDING_BACKGROUND_CLASS),
+        ).toBe(false);
+        expect(backgroundStyles(id)).toBe('');
+      }
+    },
+  );
 
   it('requests the trimmed setting image for each host', async () => {
     await setup({ AppLandingBackgroundImage: ` ${IMAGE} ` }, { load: false });
 
-    expect(FakeImage.instances.map((image) => image.src)).toEqual([IMAGE, IMAGE]);
+    expect(FakeImage.instances.map((image) => image.src)).toEqual([
+      IMAGE,
+      IMAGE,
+    ]);
   });
 
   it('sets nothing until the image loads', async () => {
@@ -204,19 +241,26 @@ describe('CrucibleLandingBackgroundDirective', () => {
     isDarkMode.set(true);
     await fixture.whenStable();
 
-    expect(el().classList.contains(CRUCIBLE_LANDING_BACKGROUND_CLASS)).toBe(false);
+    expect(el().classList.contains(CRUCIBLE_LANDING_BACKGROUND_CLASS)).toBe(
+      false,
+    );
     expect(backgroundStyles()).toBe('');
   });
 
   it('keeps the host background in either mode when the image fails to load', async () => {
-    await setup({ AppLandingBackgroundImage: 'assets/local/missing.jpg' }, { load: false });
+    await setup(
+      { AppLandingBackgroundImage: 'assets/local/missing.jpg' },
+      { load: false },
+    );
     expect(FakeImage.instances.every((image) => image.onerror)).toBe(true);
     FakeImage.instances.forEach((image) => image.onerror?.());
     isDarkMode.set(true);
     await fixture.whenStable();
 
     for (const id of ['bound', 'bare']) {
-      expect(el(id).classList.contains(CRUCIBLE_LANDING_BACKGROUND_CLASS)).toBe(false);
+      expect(el(id).classList.contains(CRUCIBLE_LANDING_BACKGROUND_CLASS)).toBe(
+        false,
+      );
       expect(backgroundStyles(id)).toBe('');
     }
 
@@ -224,7 +268,10 @@ describe('CrucibleLandingBackgroundDirective', () => {
     fixture.destroy();
     TestBed.resetTestingModule();
     FakeImage.instances = [];
-    await setup({ AppLandingBackgroundImage: 'assets/local/missing.jpg' }, { load: false });
+    await setup(
+      { AppLandingBackgroundImage: 'assets/local/missing.jpg' },
+      { load: false },
+    );
     expect(FakeImage.instances.map((image) => image.src)).toEqual([
       'assets/local/missing.jpg',
       'assets/local/missing.jpg',
@@ -240,7 +287,9 @@ describe('CrucibleLandingBackgroundDirective', () => {
     await setup({ AppLandingBackgroundImage: IMAGE }, { load: false });
 
     expect(FakeImage.instances).toEqual([]);
-    expect(el().classList.contains(CRUCIBLE_LANDING_BACKGROUND_CLASS)).toBe(true);
+    expect(el().classList.contains(CRUCIBLE_LANDING_BACKGROUND_CLASS)).toBe(
+      true,
+    );
     expect(style(CRUCIBLE_LANDING_BACKGROUND_PROPERTY, 'bare')).toBe(URL_VALUE);
   });
 
@@ -260,12 +309,18 @@ describe('CrucibleLandingBackgroundDirective', () => {
   it('requests and shows the same cleaned URL', async () => {
     await setup({ AppLandingBackgroundImage: ' assets/local/land\fing.jpg\n' });
 
-    expect(FakeImage.instances.map((image) => image.src)).toEqual([IMAGE, IMAGE]);
+    expect(FakeImage.instances.map((image) => image.src)).toEqual([
+      IMAGE,
+      IMAGE,
+    ]);
     expect(style(CRUCIBLE_LANDING_BACKGROUND_PROPERTY)).toBe(URL_VALUE);
   });
 
   it('reads the settings token when there is no ComnSettingsService', async () => {
-    await setup(undefined, { comn: false, token: { AppLandingBackgroundImage: IMAGE } });
+    await setup(undefined, {
+      comn: false,
+      token: { AppLandingBackgroundImage: IMAGE },
+    });
 
     expect(style(CRUCIBLE_LANDING_BACKGROUND_PROPERTY)).toBe(URL_VALUE);
   });
@@ -273,10 +328,13 @@ describe('CrucibleLandingBackgroundDirective', () => {
   it('prefers the settings token over ComnSettingsService', async () => {
     await setup(
       { AppLandingBackgroundImage: 'assets/local/comn.jpg' },
-      { token: { AppLandingBackgroundImage: IMAGE } }
+      { token: { AppLandingBackgroundImage: IMAGE } },
     );
 
-    expect(FakeImage.instances.map((image) => image.src)).toEqual([IMAGE, IMAGE]);
+    expect(FakeImage.instances.map((image) => image.src)).toEqual([
+      IMAGE,
+      IMAGE,
+    ]);
   });
 
   it('sets nothing, without an error, when ComnSettingsService never loaded', async () => {
@@ -296,11 +354,17 @@ describe('CrucibleLandingBackgroundDirective', () => {
 });
 
 @Component({
-  template: `<div id="input" [crucibleLandingBackgroundSettings]="settings()" crucibleLandingBackground></div>`,
+  template: `<div
+    id="input"
+    [crucibleLandingBackgroundSettings]="settings()"
+    crucibleLandingBackground
+  ></div>`,
   imports: [CrucibleLandingBackgroundDirective],
 })
 class InputHostComponent {
-  settings = signal<CrucibleLandingBackgroundSettings>({ AppLandingBackgroundImage: IMAGE });
+  settings = signal<CrucibleLandingBackgroundSettings>({
+    AppLandingBackgroundImage: IMAGE,
+  });
 }
 
 describe('CrucibleLandingBackgroundDirective settings input', () => {
@@ -318,31 +382,42 @@ describe('CrucibleLandingBackgroundDirective settings input', () => {
     TestBed.configureTestingModule({
       imports: [InputHostComponent],
       providers: [
-        { provide: ComnSettingsService, useValue: { settings: { AppLandingBackgroundImage: 'assets/local/comn.jpg' } } },
+        {
+          provide: ComnSettingsService,
+          useValue: {
+            settings: { AppLandingBackgroundImage: 'assets/local/comn.jpg' },
+          },
+        },
       ],
     });
     const fixture = TestBed.createComponent(InputHostComponent);
     await fixture.whenStable();
-    const host = () => fixture.nativeElement.querySelector('#input') as HTMLElement;
+    const host = () =>
+      fixture.nativeElement.querySelector('#input') as HTMLElement;
 
     // the input wins over ComnSettingsService
     expect(FakeImage.instances.map((image) => image.src)).toEqual([IMAGE]);
 
     // changed while the first is still loading: that download is abandoned
     const first = FakeImage.instances[0];
-    fixture.componentInstance.settings.set({ AppLandingBackgroundImage: 'assets/local/other.jpg' });
+    fixture.componentInstance.settings.set({
+      AppLandingBackgroundImage: 'assets/local/other.jpg',
+    });
     await fixture.whenStable();
 
     expect(first.onload).toBeNull();
     expect(first.src).toBe('');
-    expect(FakeImage.instances.map((image) => image.src)).toEqual(['', 'assets/local/other.jpg']);
+    expect(FakeImage.instances.map((image) => image.src)).toEqual([
+      '',
+      'assets/local/other.jpg',
+    ]);
     expect(host().getAttribute('style') ?? '').toBe('');
 
     FakeImage.instances[1].onload?.();
     await fixture.whenStable();
-    expect(host().style.getPropertyValue(CRUCIBLE_LANDING_BACKGROUND_PROPERTY)).toBe(
-      'url("assets/local/other.jpg")'
-    );
+    expect(
+      host().style.getPropertyValue(CRUCIBLE_LANDING_BACKGROUND_PROPERTY),
+    ).toBe('url("assets/local/other.jpg")');
   });
 
   it('never creates ComnSettingsService when the input has a value', async () => {
@@ -382,12 +457,20 @@ describe('CrucibleLandingBackgroundDirective with ComnSettingsModule.forRoot()',
   it('reads ComnSettingsService when forRoot() is given no config', async () => {
     TestBed.configureTestingModule({
       imports: [HostComponent],
-      providers: [importProvidersFrom(ComnSettingsModule.forRoot()), provideHttpClientTesting()],
+      providers: [
+        importProvidersFrom(ComnSettingsModule.forRoot()),
+        provideHttpClientTesting(),
+      ],
     });
-    TestBed.inject(ComnSettingsService).settings = { AppLandingBackgroundImage: IMAGE };
+    TestBed.inject(ComnSettingsService).settings = {
+      AppLandingBackgroundImage: IMAGE,
+    };
     const fixture = TestBed.createComponent(HostComponent);
     await fixture.whenStable();
 
-    expect(FakeImage.instances.map((image) => image.src)).toEqual([IMAGE, IMAGE]);
+    expect(FakeImage.instances.map((image) => image.src)).toEqual([
+      IMAGE,
+      IMAGE,
+    ]);
   });
 });

@@ -14,7 +14,10 @@ export default [
     languageOptions: {
       parserOptions: {
         projectService: false,
-        project: ['projects/@crucible-common/tsconfig.spec.json', 'projects/cwd-common-app/tsconfig.spec.json'],
+        project: [
+          'projects/@crucible-common/tsconfig.spec.json',
+          'projects/cwd-common-app/tsconfig.spec.json',
+        ],
         tsconfigRootDir: import.meta.dirname,
       },
     },

@@ -77,7 +77,9 @@ describe('CrucibleDialogComponent loading layout', () => {
     host.loading.set(true);
     await fixture.whenStable();
 
-    const spinner: HTMLElement = primary().querySelector('mat-progress-spinner')!;
+    const spinner: HTMLElement = primary().querySelector(
+      'mat-progress-spinner',
+    )!;
     // The spinner's containing block must be a flex row owned by this component,
     // NOT Material's inline .mdc-button__label span.
     const row = spinner.parentElement!;
@@ -94,7 +96,9 @@ describe('CrucibleDialogComponent loading layout', () => {
     host.loading.set(true);
     await fixture.whenStable();
 
-    const spinner: HTMLElement = primary().querySelector('mat-progress-spinner')!;
+    const spinner: HTMLElement = primary().querySelector(
+      'mat-progress-spinner',
+    )!;
     expect(getComputedStyle(spinner.parentElement!).gap).toBe('8px');
   });
 
@@ -103,7 +107,12 @@ describe('CrucibleDialogComponent loading layout', () => {
     // be scoped to the form branch only.
     @Component({
       template: `
-        <crucible-dialog dialogTitle="Delete" submitLabel="Delete" loadingLabel="Deleting…" loading>
+        <crucible-dialog
+          dialogTitle="Delete"
+          submitLabel="Delete"
+          loadingLabel="Deleting…"
+          loading
+        >
           <p crucibleDialogContent>Body</p>
         </crucible-dialog>
       `,
@@ -118,7 +127,9 @@ describe('CrucibleDialogComponent loading layout', () => {
     const spinner: HTMLElement = contentFixture.nativeElement.querySelector(
       'mat-progress-spinner',
     )!;
-    expect(getComputedStyle(spinner.parentElement!).display).toBe('inline-flex');
+    expect(getComputedStyle(spinner.parentElement!).display).toBe(
+      'inline-flex',
+    );
     contentFixture.nativeElement.remove();
   });
 

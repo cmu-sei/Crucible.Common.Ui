@@ -4,5 +4,5 @@ Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 */
 
 export const environment = {
-  production: true
+  production: true,
 };

@@ -19,9 +19,7 @@ describe('CwdAuthLogoutComponent', () => {
     authServiceStub.logout.mockClear();
     await TestBed.configureTestingModule({
       declarations: [ComnAuthLogoutComponent],
-      providers: [
-        { provide: ComnAuthService, useValue: authServiceStub },
-      ],
+      providers: [{ provide: ComnAuthService, useValue: authServiceStub }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ComnAuthLogoutComponent);

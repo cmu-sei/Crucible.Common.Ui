@@ -16,9 +16,16 @@ import { DemoFormDialogComponent } from './demo-form-dialog.component';
   standalone: true,
   imports: [CommonModule, MatButtonModule],
   template: `
-    <div style="padding: 32px; display: flex; flex-direction: column; gap: 16px; max-width: 320px;">
+    <div
+      style="padding: 32px; display: flex; flex-direction: column; gap: 16px; max-width: 320px;"
+    >
       <h1>Crucible Dialog Playground</h1>
-      <button id="open-form" mat-flat-button color="primary" (click)="openForm()">
+      <button
+        id="open-form"
+        mat-flat-button
+        color="primary"
+        (click)="openForm()"
+      >
         Open Form Modal
       </button>
       <button id="open-confirm" mat-stroked-button (click)="openConfirm()">

@@ -61,5 +61,5 @@ export interface CrucibleThemeConfig {
 
 /** Injection token for `CrucibleThemeConfig`. */
 export const CRUCIBLE_THEME_CONFIG = new InjectionToken<CrucibleThemeConfig>(
-  'CrucibleThemeConfig'
+  'CrucibleThemeConfig',
 );

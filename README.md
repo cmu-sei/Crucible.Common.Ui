@@ -309,7 +309,7 @@ by the **Build NPM Package as Release** workflow
 `projects/@crucible-common/package.json`.** Leave both at whatever value they
 already hold and let the release workflow set them.
 
-The version in the repository therefore reflects the *last published release*,
+The version in the repository therefore reflects the _last published release_,
 not the changes queued on `main`. A PR whose diff touches only source, specs,
 and docs is what a normal contribution looks like — a version bump in the diff
 is a review comment.
