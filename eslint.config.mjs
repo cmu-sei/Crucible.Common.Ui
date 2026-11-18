@@ -16,7 +16,8 @@ export default [
     ignores: [
       // The shared config's test fixtures break its rules on purpose.
       'projects/eslint-config-crucible/test/fixtures/**',
-      // Protractor e2e harness; Protractor is not installed and nothing runs it.
+      // Protractor e2e harness: CI does not run it, and its Jasmine types are not installed,
+      // so ESLint cannot type-check it.
       'projects/cwd-common-app/e2e/**',
     ],
   }),
