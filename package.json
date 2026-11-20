@@ -49,7 +49,7 @@
     "@angular/language-service": "^21.2.26",
     "@babel/core": "^7.14.8",
     "@cmusei/eslint-config-crucible": "^0.1.1",
-    "@datorama/akita-ngdevtools": "^6.0.1",
+    "@datorama/akita-ngdevtools": "^7.0.0",
     "@types/node": "^22.20.5",
     "@vitest/coverage-v8": "^4.1.9",
     "babel-loader": "^10.1.1",
