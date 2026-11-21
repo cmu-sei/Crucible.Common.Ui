@@ -4,7 +4,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
+import { CrucibleLandingBackgroundDirective } from '../../../crucible-landing-background/directives/crucible-landing-background.directive';
 import { ComnAuthCallbackComponent } from './comn-auth-callback.component';
+import { ComnAuthService } from '../../services/comn-auth.service';
 import { ComnSettingsService } from '../../../comn-settings/services/comn-settings.service';
 
 // Component injects ActivatedRoute/Router and ComnAuthService, which builds a
@@ -19,16 +21,26 @@ const settingsStub: Partial<ComnSettingsService> = {
   },
 };
 
+// Never settles, so the page stays in its waiting state.
+const authStub = {
+  completeAuthentication: () => new Promise<void>(() => undefined),
+  isAuthenticated: () => Promise.resolve(false),
+  startAuthentication: () => Promise.resolve(),
+};
+
 describe('ComnAuthCallbackComponent', () => {
   let component: ComnAuthCallbackComponent;
   let fixture: ComponentFixture<ComnAuthCallbackComponent>;
+  const el = () => fixture.nativeElement as HTMLElement;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ComnAuthCallbackComponent],
+      imports: [CrucibleLandingBackgroundDirective],
       providers: [
         provideRouter([]),
         { provide: ComnSettingsService, useValue: settingsStub },
+        { provide: ComnAuthService, useValue: authStub },
       ],
     }).compileComponents();
 
@@ -39,5 +51,22 @@ describe('ComnAuthCallbackComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('shows the verifying message while waiting', () => {
+    fixture.detectChanges();
+    expect(el().querySelector('#waiting')).toBeTruthy();
+    expect(el().querySelector('#error')).toBeNull();
+  });
+
+  it('shows an error and a sign-in-again button on failure', async () => {
+    authStub.completeAuthentication = () =>
+      Promise.reject<void>(new Error('boom'));
+    component.validate(null);
+    // Let the rejected promise's handler run, then render.
+    await new Promise((resolve) => setTimeout(resolve));
+    fixture.detectChanges();
+    expect(el().querySelector('#error')?.textContent).toContain('boom');
+    expect(el().querySelector('button')).toBeTruthy();
   });
 });

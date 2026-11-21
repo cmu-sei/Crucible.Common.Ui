@@ -1,2 +1,82 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
+
+// Uses the Material system tokens that provideCrucibleTheme sets, so the page
+// follows each app's theme (light/dark and primary color). Fallbacks cover the
+// brief moment before the theme is applied.
+:host {
+  display: block;
+}
+
+.auth-callback {
+  align-items: center;
+  background: var(--mat-sys-surface, #fff);
+  color: var(--mat-sys-on-surface, #1b1b1f);
+  display: flex;
+  font-family: var(--mat-sys-body-large-font, inherit);
+  justify-content: center;
+  // The height is set from the component: the window minus whatever the app
+  // shell (classification banner, top bar) puts above this page, so the page
+  // fills the window without a scrollbar and the banner stays visible.
+  min-height: 100vh;
+}
+
+.auth-callback__card {
+  // Solid surface so the text stays readable over a configured background image.
+  background: var(--mat-sys-surface, #fff);
+  border-radius: 16px;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 420px;
+  padding: 32px;
+  text-align: center;
+}
+
+.auth-callback__title {
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.auth-callback__message {
+  color: var(--mat-sys-on-surface-variant, #46464f);
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+#error .auth-callback__title {
+  color: var(--mat-sys-error, #ba1a1a);
+}
+
+.auth-callback__spinner {
+  animation: auth-callback-spin 0.9s linear infinite;
+  border: 4px solid var(--mat-sys-surface-container-highest, #e3e1ec);
+  border-radius: 50%;
+  border-top-color: var(--mat-sys-primary, #3f51b5);
+  height: 40px;
+  width: 40px;
+}
+
+.auth-callback__button {
+  background: var(--mat-sys-primary, #3f51b5);
+  border: 0;
+  border-radius: 20px;
+  color: var(--mat-sys-on-primary, #fff);
+  cursor: pointer;
+  font: inherit;
+  padding: 10px 24px;
+}
+
+@keyframes auth-callback-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-callback__spinner {
+    animation-duration: 3s;
+  }
+}
