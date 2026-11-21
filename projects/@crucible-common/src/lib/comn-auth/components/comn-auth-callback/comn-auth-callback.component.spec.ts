@@ -83,6 +83,26 @@ describe('ComnAuthCallbackComponent', () => {
     expect(navigate).toHaveBeenCalledWith('/', { replaceUrl: true });
   });
 
+  it('shows an error when sign-in returns no user', async () => {
+    authStub.completeAuthentication.mockResolvedValue(undefined);
+    component.validate(null);
+    await settle();
+    fixture.detectChanges();
+    expect(el().querySelector('#error')).toBeTruthy();
+    expect(navigate).not.toHaveBeenCalled();
+  });
+
+  it('shows why sign-in again failed', async () => {
+    authStub.completeAuthentication.mockRejectedValue(new Error('boom'));
+    authStub.startAuthentication.mockRejectedValue(new Error('idp down'));
+    component.validate(null);
+    await settle();
+    component.signInAgain();
+    await settle();
+    fixture.detectChanges();
+    expect(el().querySelector('#error')?.textContent).toContain('idp down');
+  });
+
   it('shows the error and a sign-in-again button when sign-in fails', async () => {
     authStub.completeAuthentication.mockRejectedValue(new Error('boom'));
     component.validate(null);

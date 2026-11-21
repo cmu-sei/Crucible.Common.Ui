@@ -5,14 +5,12 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 
 <div
   class="auth-callback"
-  role="status"
-  aria-live="polite"
   crucibleLandingBackground
   [style.min-height]="minHeight()"
 >
   @if (errorMessage()) {
     <div id="error" class="auth-callback__card" role="alert">
-      <h1 class="auth-callback__title">We couldn't sign you in</h1>
+      <p class="auth-callback__title">We couldn't sign you in</p>
       <p class="auth-callback__message">{{ errorMessage() }}</p>
       <button
         type="button"
@@ -23,7 +21,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       </button>
     </div>
   } @else {
-    <div class="auth-callback__card">
+    <div class="auth-callback__card" role="status">
       <div class="auth-callback__spinner" aria-hidden="true"></div>
       <p id="waiting" class="auth-callback__title">
         Verifying authentication...

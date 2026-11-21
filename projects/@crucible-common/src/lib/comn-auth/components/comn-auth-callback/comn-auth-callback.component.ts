@@ -4,6 +4,7 @@
 import {
   AfterViewInit,
   Component,
+  DestroyRef,
   ElementRef,
   OnInit,
   inject,
@@ -21,12 +22,14 @@ import { take } from 'rxjs';
 })
 export class ComnAuthCallbackComponent implements OnInit, AfterViewInit {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   /** Window height minus the space the app shell takes above this page. */
   readonly minHeight = signal('100vh');
 
   // A signal so the error shows in zoneless apps too.
   readonly errorMessage = signal('');
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -34,8 +37,14 @@ export class ComnAuthCallbackComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngAfterViewInit() {
-    const top = this.host.nativeElement.getBoundingClientRect().top;
-    this.minHeight.set(`calc(100vh - ${Math.max(0, Math.round(top))}px)`);
+    this.measure();
+    // The classification banner can change height (a narrow window wraps its
+    // text, fonts load), which changes the page height, so measure again.
+    if (typeof ResizeObserver !== 'undefined') {
+      const observer = new ResizeObserver(() => this.measure());
+      observer.observe(document.documentElement);
+      this.destroyRef.onDestroy(() => observer.disconnect());
+    }
   }
 
   ngOnInit() {
@@ -47,34 +56,55 @@ export class ComnAuthCallbackComponent implements OnInit, AfterViewInit {
   validate(frag) {
     void this.authService.completeAuthentication(frag).then(
       (user) => {
-        // Always leave the callback page; a missing state means "go home"
-        // rather than leaving the user stuck on the spinner.
-        const state = user ? user.state : null;
+        if (!user) {
+          // No sign-in came back. Going home would only restart the redirect,
+          // which could loop, so say so instead.
+          this.fail('Sign-in did not complete.');
+          return;
+        }
+        // A missing state means "go home" rather than staying on the spinner.
+        const state = user.state;
         void this.router.navigateByUrl(
           typeof state === 'string' && state ? state : '/',
-          {
-            replaceUrl: true,
-          },
+          { replaceUrl: true },
         );
       },
       (err: unknown) => {
         console.log(err);
-        this.errorMessage.set(
+        this.fail(
           err instanceof Error && err.message
             ? err.message
             : 'Authentication failed.',
         );
-
-        void this.authService.isAuthenticated().then((isAuthenticated) => {
-          if (isAuthenticated) {
-            void this.router.navigateByUrl('/', { replaceUrl: true });
-          }
-        });
       },
     );
   }
 
   signInAgain() {
-    void this.authService.startAuthentication('/');
+    this.authService.startAuthentication('/').catch((err: unknown) => {
+      this.errorMessage.set(
+        err instanceof Error && err.message
+          ? err.message
+          : 'Could not start sign-in.',
+      );
+    });
+  }
+
+  /** Shows the error, unless a session already exists, then goes home. */
+  private fail(message: string) {
+    this.errorMessage.set(message);
+    this.authService
+      .isAuthenticated()
+      .then((isAuthenticated) => {
+        if (isAuthenticated) {
+          void this.router.navigateByUrl('/', { replaceUrl: true });
+        }
+      })
+      .catch(() => undefined);
+  }
+
+  private measure() {
+    const top = this.host.nativeElement.getBoundingClientRect().top;
+    this.minHeight.set(`calc(100vh - ${Math.max(0, Math.round(top))}px)`);
   }
 }
