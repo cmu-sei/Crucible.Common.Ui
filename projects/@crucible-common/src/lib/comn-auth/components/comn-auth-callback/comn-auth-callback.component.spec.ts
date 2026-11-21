@@ -76,6 +76,16 @@ describe('ComnAuthCallbackComponent', () => {
     expect(navigate).toHaveBeenCalledWith('/views/1', { replaceUrl: true });
   });
 
+  it('shows an error when the navigation after sign-in is canceled', async () => {
+    authStub.completeAuthentication.mockResolvedValue({ state: '/views/1' });
+    vi.mocked(router.navigateByUrl).mockResolvedValue(false);
+    vi.spyOn(router, 'url', 'get').mockReturnValue('/auth-callback');
+    component.validate(null);
+    await settle();
+    fixture.detectChanges();
+    expect(el().querySelector('#error')).toBeTruthy();
+  });
+
   it('goes home when sign-in completes without a state', async () => {
     authStub.completeAuthentication.mockResolvedValue({ state: undefined });
     component.validate(null);

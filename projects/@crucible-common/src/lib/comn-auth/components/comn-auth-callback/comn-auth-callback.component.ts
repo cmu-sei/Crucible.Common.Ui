@@ -94,10 +94,7 @@ export class ComnAuthCallbackComponent implements OnInit, AfterViewInit {
         }
         // A missing state means "go home" rather than staying on the spinner.
         const state = user.state;
-        void this.router.navigateByUrl(
-          typeof state === 'string' && state ? state : '/',
-          { replaceUrl: true },
-        );
+        this.goTo(typeof state === 'string' && state ? state : '/');
       },
       (err: unknown) => {
         console.log(err);
@@ -134,6 +131,21 @@ export class ComnAuthCallbackComponent implements OnInit, AfterViewInit {
       })
       .catch((err: unknown) => {
         console.log(err);
+      });
+  }
+
+  /** Leaves this page. A navigation that is canceled leaves it showing. */
+  private goTo(url: string) {
+    this.router
+      .navigateByUrl(url, { replaceUrl: true })
+      .then((navigated) => {
+        if (!navigated && this.router.url.startsWith('/auth-callback')) {
+          this.errorMessage.set('Could not open the page after sign-in.');
+        }
+      })
+      .catch((err: unknown) => {
+        console.log(err);
+        this.errorMessage.set('Could not open the page after sign-in.');
       });
   }
 
