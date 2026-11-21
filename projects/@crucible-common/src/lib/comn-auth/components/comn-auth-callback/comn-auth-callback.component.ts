@@ -31,6 +31,9 @@ export class ComnAuthCallbackComponent implements OnInit, AfterViewInit {
   // A signal so the error shows in zoneless apps too.
   readonly errorMessage = signal('');
 
+  /** True when sign-in worked but the page after it didn't open. */
+  readonly signedIn = signal(false);
+
   /** True while Sign in again starts the redirect, so it can't run twice. */
   readonly retrying = signal(false);
 
@@ -107,6 +110,13 @@ export class ComnAuthCallbackComponent implements OnInit, AfterViewInit {
     );
   }
 
+  /** Sign-in worked, so try the home page instead of signing in again. */
+  goHome() {
+    this.errorMessage.set('');
+    this.signedIn.set(false);
+    this.goTo('/');
+  }
+
   signInAgain() {
     this.retrying.set(true);
     this.authService.startAuthentication('/').catch((err: unknown) => {
@@ -126,7 +136,7 @@ export class ComnAuthCallbackComponent implements OnInit, AfterViewInit {
       .isAuthenticated()
       .then((isAuthenticated) => {
         if (isAuthenticated) {
-          void this.router.navigateByUrl('/', { replaceUrl: true });
+          this.goTo('/');
         }
       })
       .catch((err: unknown) => {
@@ -140,13 +150,18 @@ export class ComnAuthCallbackComponent implements OnInit, AfterViewInit {
       .navigateByUrl(url, { replaceUrl: true })
       .then((navigated) => {
         if (!navigated && this.router.url.startsWith('/auth-callback')) {
-          this.errorMessage.set('Could not open the page after sign-in.');
+          this.openFailed();
         }
       })
       .catch((err: unknown) => {
         console.log(err);
-        this.errorMessage.set('Could not open the page after sign-in.');
+        this.openFailed();
       });
+  }
+
+  private openFailed() {
+    this.signedIn.set(true);
+    this.errorMessage.set('Could not open the page after sign-in.');
   }
 
   private measure() {

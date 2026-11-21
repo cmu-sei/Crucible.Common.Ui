@@ -10,16 +10,28 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
 >
   @if (errorMessage()) {
     <div id="error" class="auth-callback__card" role="alert">
-      <p class="auth-callback__title">We couldn't sign you in</p>
+      <p class="auth-callback__title">
+        @if (signedIn()) {
+          You&rsquo;re signed in
+        } @else {
+          We couldn&rsquo;t sign you in
+        }
+      </p>
       <p class="auth-callback__message">{{ errorMessage() }}</p>
-      <button
-        type="button"
-        class="auth-callback__button"
-        [disabled]="retrying()"
-        (click)="signInAgain()"
-      >
-        Sign in again
-      </button>
+      @if (signedIn()) {
+        <button type="button" class="auth-callback__button" (click)="goHome()">
+          Go to the home page
+        </button>
+      } @else {
+        <button
+          type="button"
+          class="auth-callback__button"
+          [disabled]="retrying()"
+          (click)="signInAgain()"
+        >
+          Sign in again
+        </button>
+      }
     </div>
   } @else {
     <div class="auth-callback__card" role="status">

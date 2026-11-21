@@ -84,6 +84,29 @@ describe('ComnAuthCallbackComponent', () => {
     await settle();
     fixture.detectChanges();
     expect(el().querySelector('#error')).toBeTruthy();
+    expect(el().querySelector('#error')?.textContent).toContain('signed in');
+    expect(el().querySelector('button')?.textContent).toContain('home page');
+  });
+
+  it('shows an error when the navigation after sign-in rejects', async () => {
+    const log = vi.spyOn(console, 'log').mockImplementation(() => undefined);
+    authStub.completeAuthentication.mockResolvedValue({ state: '/views/1' });
+    vi.mocked(router.navigateByUrl).mockRejectedValue(new Error('chunk'));
+    component.validate(null);
+    await settle();
+    fixture.detectChanges();
+    expect(log).toHaveBeenCalled();
+    expect(el().querySelector('#error')).toBeTruthy();
+  });
+
+  it('shows no error when a canceled navigation was replaced by another', async () => {
+    authStub.completeAuthentication.mockResolvedValue({ state: '/views/1' });
+    vi.mocked(router.navigateByUrl).mockResolvedValue(false);
+    vi.spyOn(router, 'url', 'get').mockReturnValue('/views/2');
+    component.validate(null);
+    await settle();
+    fixture.detectChanges();
+    expect(el().querySelector('#error')).toBeNull();
   });
 
   it('goes home when sign-in completes without a state', async () => {
