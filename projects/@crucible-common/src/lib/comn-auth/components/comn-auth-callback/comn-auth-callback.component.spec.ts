@@ -158,7 +158,14 @@ describe('ComnAuthCallbackComponent', () => {
     await settle();
     component.signInAgain();
     expect(component.retrying()).toBe(true);
-    window.dispatchEvent(new Event('pageshow'));
+    // The first load's pageshow isn't a restore.
+    window.dispatchEvent(
+      new PageTransitionEvent('pageshow', { persisted: false }),
+    );
+    expect(component.retrying()).toBe(true);
+    window.dispatchEvent(
+      new PageTransitionEvent('pageshow', { persisted: true }),
+    );
     expect(component.retrying()).toBe(false);
   });
 

@@ -41,9 +41,12 @@ export class ComnAuthCallbackComponent implements OnInit, AfterViewInit {
   ) {}
 
   /** The browser can restore this page from its back/forward cache. */
-  @HostListener('window:pageshow')
-  onPageShow() {
-    this.retrying.set(false);
+  @HostListener('window:pageshow', ['$event'])
+  onPageShow(event: PageTransitionEvent) {
+    // Only a restore, not the first load's pageshow.
+    if (event.persisted) {
+      this.retrying.set(false);
+    }
   }
 
   ngAfterViewInit() {
