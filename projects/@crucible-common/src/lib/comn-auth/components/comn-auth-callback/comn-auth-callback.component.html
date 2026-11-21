@@ -3,5 +3,49 @@ Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 -->
 
-<p id="waiting">Verifying authentication...</p>
-<div id="error">{{ errorMessage }}</div>
+<div
+  class="auth-callback"
+  crucibleLandingBackground
+  [style.min-height]="minHeight()"
+>
+  @if (errorMessage()) {
+    <div
+      id="error"
+      class="auth-callback__card"
+      [attr.role]="signedIn() ? 'status' : 'alert'"
+    >
+      <p
+        class="auth-callback__title"
+        [class.auth-callback__title--error]="!signedIn()"
+      >
+        @if (signedIn()) {
+          You&rsquo;re signed in
+        } @else {
+          We couldn&rsquo;t sign you in
+        }
+      </p>
+      <p class="auth-callback__message">{{ errorMessage() }}</p>
+      @if (signedIn()) {
+        <button type="button" class="auth-callback__button" (click)="goHome()">
+          Go to the home page
+        </button>
+      } @else {
+        <button
+          type="button"
+          class="auth-callback__button"
+          [disabled]="retrying()"
+          (click)="signInAgain()"
+        >
+          Sign in again
+        </button>
+      }
+    </div>
+  } @else {
+    <div class="auth-callback__card" role="status">
+      <div class="auth-callback__spinner" aria-hidden="true"></div>
+      <p id="waiting" class="auth-callback__title">
+        Verifying authentication...
+      </p>
+    </div>
+  }
+</div>

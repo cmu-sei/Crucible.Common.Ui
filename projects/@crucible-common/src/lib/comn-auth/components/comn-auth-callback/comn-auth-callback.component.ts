@@ -1,7 +1,16 @@
 // Copyright 2021 Carnegie Mellon University. All Rights Reserved.
 // Released under a MIT (SEI)-style license. See LICENSE.md in the project root for license information.
 
-import { Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  DestroyRef,
+  ElementRef,
+  HostListener,
+  OnInit,
+  inject,
+  signal,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ComnAuthService } from '../../services/comn-auth.service';
 import { take } from 'rxjs';
@@ -12,13 +21,64 @@ import { take } from 'rxjs';
   styleUrls: ['./comn-auth-callback.component.scss'],
   standalone: false,
 })
-export class ComnAuthCallbackComponent implements OnInit {
-  errorMessage: string;
+export class ComnAuthCallbackComponent implements OnInit, AfterViewInit {
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly destroyRef = inject(DestroyRef);
+
+  /** Window height minus the space the app shell takes above this page. */
+  readonly minHeight = signal('100vh');
+
+  // A signal so the error shows in zoneless apps too.
+  readonly errorMessage = signal('');
+
+  /** True when sign-in worked but the page after it didn't open. */
+  readonly signedIn = signal(false);
+
+  /** True while Sign in again starts the redirect, so it can't run twice. */
+  readonly retrying = signal(false);
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private authService: ComnAuthService,
   ) {}
+
+  /** The browser can restore this page from its back/forward cache. */
+  @HostListener('window:pageshow', ['$event'])
+  onPageShow(event: PageTransitionEvent) {
+    // Only a restore, not the first load's pageshow.
+    if (event.persisted) {
+      this.retrying.set(false);
+    }
+  }
+
+  ngAfterViewInit() {
+    this.measure();
+    // The classification banner can change height (a narrow window wraps its
+    // text, fonts load), which moves this page down without changing the
+    // document's size. Watch the elements above this page, and the document
+    // for window resizes, and measure again.
+    if (typeof ResizeObserver !== 'undefined') {
+      const observer = new ResizeObserver(() => this.measure());
+      observer.observe(document.documentElement);
+      for (
+        let el: HTMLElement | null = this.host.nativeElement;
+        el && el !== document.body;
+        el = el.parentElement
+      ) {
+        // Every earlier sibling, since the banner may sit before an empty
+        // router-outlet rather than right next to this page.
+        for (
+          let sibling = el.previousElementSibling;
+          sibling;
+          sibling = sibling.previousElementSibling
+        ) {
+          observer.observe(sibling);
+        }
+      }
+      this.destroyRef.onDestroy(() => observer.disconnect());
+    }
+  }
 
   ngOnInit() {
     this.route.fragment.pipe(take(1)).subscribe((frag) => {
@@ -27,22 +87,87 @@ export class ComnAuthCallbackComponent implements OnInit {
   }
 
   validate(frag) {
-    this.authService.completeAuthentication(frag).then(
+    void this.authService.completeAuthentication(frag).then(
       (user) => {
-        if (user && user.state) {
-          this.router.navigateByUrl('' + user.state || '/', {
-            replaceUrl: true,
-          });
+        if (!user) {
+          // Not expected for a redirect sign-in, which resolves with a user or
+          // throws. Going home would only restart the redirect, so say so.
+          this.fail('Sign-in did not complete.');
+          return;
         }
+        // A missing state means "go home" rather than staying on the spinner.
+        const state = user.state;
+        this.goTo(typeof state === 'string' && state ? state : '/');
       },
-      (err) => {
+      (err: unknown) => {
         console.log(err);
-        this.errorMessage = err;
-
-        if (this.authService.isAuthenticated()) {
-          this.router.navigateByUrl('/', { replaceUrl: true });
-        }
+        this.fail(
+          err instanceof Error && err.message
+            ? err.message
+            : 'Authentication failed.',
+        );
       },
     );
+  }
+
+  /** Sign-in worked, so try the home page instead of signing in again. */
+  goHome() {
+    this.errorMessage.set('');
+    this.signedIn.set(false);
+    this.goTo('/');
+  }
+
+  signInAgain() {
+    this.retrying.set(true);
+    this.authService.startAuthentication('/').catch((err: unknown) => {
+      this.retrying.set(false);
+      this.errorMessage.set(
+        err instanceof Error && err.message
+          ? err.message
+          : 'Could not start sign-in.',
+      );
+    });
+  }
+
+  /** Shows the error, unless a session already exists, then goes home. */
+  private fail(message: string) {
+    this.errorMessage.set(message);
+    this.authService
+      .isAuthenticated()
+      .then((isAuthenticated) => {
+        if (isAuthenticated) {
+          this.goTo('/');
+        }
+      })
+      .catch((err: unknown) => {
+        console.log(err);
+      });
+  }
+
+  /** Leaves this page. A navigation that is canceled leaves it showing. */
+  private goTo(url: string) {
+    this.router
+      .navigateByUrl(url, { replaceUrl: true })
+      .then((navigated) => {
+        if (!navigated && this.router.url.startsWith('/auth-callback')) {
+          this.openFailed();
+        }
+      })
+      .catch((err: unknown) => {
+        console.log(err);
+        this.openFailed();
+      });
+  }
+
+  private openFailed() {
+    this.signedIn.set(true);
+    this.errorMessage.set('Could not open the page after sign-in.');
+  }
+
+  private measure() {
+    // Distance from the top of the document, so a scrolled page measures the same.
+    const top =
+      this.host.nativeElement.getBoundingClientRect().top + window.scrollY;
+    this.minHeight.set(`calc(100vh - ${Math.max(0, Math.round(top))}px)`);
   }
 }

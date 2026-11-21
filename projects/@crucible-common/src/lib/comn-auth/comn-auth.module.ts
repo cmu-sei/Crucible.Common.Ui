@@ -10,6 +10,7 @@ import {
   SkipSelf,
 } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CrucibleLandingBackgroundDirective } from '../crucible-landing-background/directives/crucible-landing-background.directive';
 import { ComnAuthCallbackComponent } from './components/comn-auth-callback/comn-auth-callback.component';
 import { ComnAuthLogoutComponent } from './components/comn-auth-logout/comn-auth-logout.component';
 import { ComnAuthGuardService } from './services/comn-auth-guard.service';
@@ -38,7 +39,11 @@ const comnAuthRoutes: Routes = [
     ComnAuthQuery,
     ComnAuthStore,
   ],
-  imports: [CommonModule, RouterModule.forChild(comnAuthRoutes)],
+  imports: [
+    CommonModule,
+    CrucibleLandingBackgroundDirective,
+    RouterModule.forChild(comnAuthRoutes),
+  ],
   exports: [
     ComnAuthCallbackComponent,
     ComnAuthLogoutComponent,
