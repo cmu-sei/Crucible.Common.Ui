@@ -30,6 +30,9 @@ export class ComnAuthCallbackComponent implements OnInit, AfterViewInit {
   // A signal so the error shows in zoneless apps too.
   readonly errorMessage = signal('');
 
+  /** True while Sign in again starts the redirect, so it can't run twice. */
+  readonly retrying = signal(false);
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -39,10 +42,21 @@ export class ComnAuthCallbackComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.measure();
     // The classification banner can change height (a narrow window wraps its
-    // text, fonts load), which changes the page height, so measure again.
+    // text, fonts load), which moves this page down without changing the
+    // document's size. Watch the elements above this page, and the document
+    // for window resizes, and measure again.
     if (typeof ResizeObserver !== 'undefined') {
       const observer = new ResizeObserver(() => this.measure());
       observer.observe(document.documentElement);
+      for (
+        let el: HTMLElement | null = this.host.nativeElement;
+        el && el !== document.body;
+        el = el.parentElement
+      ) {
+        if (el.previousElementSibling) {
+          observer.observe(el.previousElementSibling);
+        }
+      }
       this.destroyRef.onDestroy(() => observer.disconnect());
     }
   }
@@ -57,8 +71,8 @@ export class ComnAuthCallbackComponent implements OnInit, AfterViewInit {
     void this.authService.completeAuthentication(frag).then(
       (user) => {
         if (!user) {
-          // No sign-in came back. Going home would only restart the redirect,
-          // which could loop, so say so instead.
+          // Not expected for a redirect sign-in, which resolves with a user or
+          // throws. Going home would only restart the redirect, so say so.
           this.fail('Sign-in did not complete.');
           return;
         }
@@ -81,7 +95,9 @@ export class ComnAuthCallbackComponent implements OnInit, AfterViewInit {
   }
 
   signInAgain() {
+    this.retrying.set(true);
     this.authService.startAuthentication('/').catch((err: unknown) => {
+      this.retrying.set(false);
       this.errorMessage.set(
         err instanceof Error && err.message
           ? err.message
@@ -100,11 +116,15 @@ export class ComnAuthCallbackComponent implements OnInit, AfterViewInit {
           void this.router.navigateByUrl('/', { replaceUrl: true });
         }
       })
-      .catch(() => undefined);
+      .catch((err: unknown) => {
+        console.log(err);
+      });
   }
 
   private measure() {
-    const top = this.host.nativeElement.getBoundingClientRect().top;
+    // Distance from the top of the document, so a scrolled page measures the same.
+    const top =
+      this.host.nativeElement.getBoundingClientRect().top + window.scrollY;
     this.minHeight.set(`calc(100vh - ${Math.max(0, Math.round(top))}px)`);
   }
 }

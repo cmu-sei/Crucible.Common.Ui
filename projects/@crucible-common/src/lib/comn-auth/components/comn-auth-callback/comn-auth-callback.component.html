@@ -15,6 +15,7 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
       <button
         type="button"
         class="auth-callback__button"
+        [disabled]="retrying()"
         (click)="signInAgain()"
       >
         Sign in again

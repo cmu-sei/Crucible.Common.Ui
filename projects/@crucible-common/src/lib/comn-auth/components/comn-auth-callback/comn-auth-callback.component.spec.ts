@@ -129,4 +129,55 @@ describe('ComnAuthCallbackComponent', () => {
     el().querySelector('button')?.click();
     expect(authStub.startAuthentication).toHaveBeenCalledWith('/');
   });
+
+  it('disables the button while sign-in again starts', async () => {
+    authStub.completeAuthentication.mockRejectedValue(new Error('boom'));
+    authStub.startAuthentication.mockReturnValue(new Promise(() => undefined));
+    component.validate(null);
+    await settle();
+    fixture.detectChanges();
+    el().querySelector('button')?.click();
+    fixture.detectChanges();
+    expect(el().querySelector('button')?.disabled).toBe(true);
+  });
+
+  it('logs and stays on the error when the session check fails', async () => {
+    const log = vi.spyOn(console, 'log').mockImplementation(() => undefined);
+    authStub.completeAuthentication.mockRejectedValue(new Error('boom'));
+    authStub.isAuthenticated.mockRejectedValue(new Error('store down'));
+    component.validate(null);
+    await settle();
+    expect(log).toHaveBeenCalledWith(new Error('store down'));
+    expect(navigate).not.toHaveBeenCalled();
+  });
+
+  describe('height', () => {
+    afterEach(() => {
+      vi.unstubAllGlobals();
+    });
+
+    it('watches the document and the elements above, and stops when destroyed', () => {
+      const observe = vi.fn();
+      const disconnect = vi.fn();
+      vi.stubGlobal(
+        'ResizeObserver',
+        class {
+          observe = observe;
+          disconnect = disconnect;
+        },
+      );
+      const wrapper = document.createElement('div');
+      const above = document.createElement('div');
+      document.body.append(above, wrapper);
+      const local = TestBed.createComponent(ComnAuthCallbackComponent);
+      wrapper.append(local.nativeElement as HTMLElement);
+      local.componentInstance.ngAfterViewInit();
+      expect(observe).toHaveBeenCalledWith(document.documentElement);
+      expect(observe).toHaveBeenCalledWith(above);
+      local.destroy();
+      expect(disconnect).toHaveBeenCalled();
+      above.remove();
+      wrapper.remove();
+    });
+  });
 });
