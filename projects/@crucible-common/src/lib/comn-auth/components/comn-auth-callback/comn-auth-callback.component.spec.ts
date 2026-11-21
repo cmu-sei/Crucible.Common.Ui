@@ -86,6 +86,8 @@ describe('ComnAuthCallbackComponent', () => {
     expect(el().querySelector('#error')).toBeTruthy();
     expect(el().querySelector('#error')?.textContent).toContain('signed in');
     expect(el().querySelector('button')?.textContent).toContain('home page');
+    expect(el().querySelector('#error')?.getAttribute('role')).toBe('status');
+    expect(el().querySelector('.auth-callback__title--error')).toBeNull();
   });
 
   it('shows an error when the navigation after sign-in rejects', async () => {
@@ -142,6 +144,8 @@ describe('ComnAuthCallbackComponent', () => {
     await settle();
     fixture.detectChanges();
     expect(el().querySelector('#error')?.textContent).toContain('boom');
+    expect(el().querySelector('#error')?.getAttribute('role')).toBe('alert');
+    expect(el().querySelector('.auth-callback__title--error')).toBeTruthy();
     expect(el().querySelector('button')).toBeTruthy();
     expect(navigate).not.toHaveBeenCalled();
   });

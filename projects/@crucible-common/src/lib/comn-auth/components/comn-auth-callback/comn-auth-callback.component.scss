@@ -46,7 +46,8 @@
   overflow-wrap: anywhere;
 }
 
-#error .auth-callback__title {
+// Only a failed sign-in is an error; "signed in" keeps the normal text color.
+.auth-callback__title--error {
   color: var(--mat-sys-error, #ba1a1a);
 }
 

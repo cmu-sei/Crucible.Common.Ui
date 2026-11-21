@@ -9,8 +9,15 @@ Released under a MIT (SEI)-style license. See LICENSE.md in the project root for
   [style.min-height]="minHeight()"
 >
   @if (errorMessage()) {
-    <div id="error" class="auth-callback__card" role="alert">
-      <p class="auth-callback__title">
+    <div
+      id="error"
+      class="auth-callback__card"
+      [attr.role]="signedIn() ? 'status' : 'alert'"
+    >
+      <p
+        class="auth-callback__title"
+        [class.auth-callback__title--error]="!signedIn()"
+      >
         @if (signedIn()) {
           You&rsquo;re signed in
         } @else {
