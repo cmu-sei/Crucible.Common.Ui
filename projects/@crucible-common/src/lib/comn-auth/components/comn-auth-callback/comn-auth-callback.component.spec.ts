@@ -151,6 +151,17 @@ describe('ComnAuthCallbackComponent', () => {
     expect(navigate).not.toHaveBeenCalled();
   });
 
+  it('enables the button again when the page is restored', async () => {
+    authStub.completeAuthentication.mockRejectedValue(new Error('boom'));
+    authStub.startAuthentication.mockReturnValue(new Promise(() => undefined));
+    component.validate(null);
+    await settle();
+    component.signInAgain();
+    expect(component.retrying()).toBe(true);
+    window.dispatchEvent(new Event('pageshow'));
+    expect(component.retrying()).toBe(false);
+  });
+
   describe('height', () => {
     afterEach(() => {
       vi.unstubAllGlobals();
@@ -168,15 +179,19 @@ describe('ComnAuthCallbackComponent', () => {
       );
       const wrapper = document.createElement('div');
       const above = document.createElement('div');
-      document.body.append(above, wrapper);
+      const outlet = document.createElement('div');
+      document.body.append(above, outlet, wrapper);
       const local = TestBed.createComponent(ComnAuthCallbackComponent);
       wrapper.append(local.nativeElement as HTMLElement);
+      // The page sits in the wrapper; the banner is two siblings back.
       local.componentInstance.ngAfterViewInit();
       expect(observe).toHaveBeenCalledWith(document.documentElement);
       expect(observe).toHaveBeenCalledWith(above);
+      expect(observe).toHaveBeenCalledWith(outlet);
       local.destroy();
       expect(disconnect).toHaveBeenCalled();
       above.remove();
+      outlet.remove();
       wrapper.remove();
     });
   });

@@ -6,6 +6,7 @@ import {
   Component,
   DestroyRef,
   ElementRef,
+  HostListener,
   OnInit,
   inject,
   signal,
@@ -39,6 +40,12 @@ export class ComnAuthCallbackComponent implements OnInit, AfterViewInit {
     private authService: ComnAuthService,
   ) {}
 
+  /** The browser can restore this page from its back/forward cache. */
+  @HostListener('window:pageshow')
+  onPageShow() {
+    this.retrying.set(false);
+  }
+
   ngAfterViewInit() {
     this.measure();
     // The classification banner can change height (a narrow window wraps its
@@ -53,8 +60,14 @@ export class ComnAuthCallbackComponent implements OnInit, AfterViewInit {
         el && el !== document.body;
         el = el.parentElement
       ) {
-        if (el.previousElementSibling) {
-          observer.observe(el.previousElementSibling);
+        // Every earlier sibling, since the banner may sit before an empty
+        // router-outlet rather than right next to this page.
+        for (
+          let sibling = el.previousElementSibling;
+          sibling;
+          sibling = sibling.previousElementSibling
+        ) {
+          observer.observe(sibling);
         }
       }
       this.destroyRef.onDestroy(() => observer.disconnect());
